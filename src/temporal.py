@@ -30,8 +30,10 @@ try:
 
     # 3. Define the Target (Broken) Date and the Timeline (Reference Images)
     target_date = '2021-07-03' 
-    time_window_start = '2021-04-01'
-    time_window_end = '2021-10-31'
+    # CRITICAL FIX: Shrink the temporal window to +/- 3 weeks. 
+    # This ensures the crop growth is mathematically linear during this period!
+    time_window_start = '2021-06-10'
+    time_window_end = '2021-07-25'
 
     print(f"Target Date to Impute: {target_date}")
     print(f"Gathering reference images from {time_window_start} to {time_window_end}...")
