@@ -75,6 +75,25 @@ try:
     slope_a = temporal_regression.select('scale')
     intercept_b = temporal_regression.select('offset')
 
+    # --- PROFESSOR'S EVALUATION REQUESTS ---
+    print("Calculating R-square and Data Point Counts for evaluation...")
+    
+    # Request 1: Count valid data points used in the model (ignores masked clouds)
+    n_points = regression_collection.select('SR_B5').count().rename('N_Points')
+    
+    # Request 2: R-square (Correlation)
+    # Pearsons Correlation expects (X, Y) which we set up as ('t', 'SR_B5')
+    pearsons = regression_collection.reduce(ee.Reducer.pearsonsCorrelation())
+    r_square = pearsons.select('correlation').pow(2).rename('R_Square')
+    
+    # Request 3: Slope and Intercept Matrix
+    slope_matrix = slope_a.rename('Slope')
+    intercept_matrix = intercept_b.rename('Intercept')
+    
+    # Combine all these into a single 4-Band Evaluation Matrix image and FORCE them to all be Float64
+    evaluation_matrix = ee.Image([slope_matrix, intercept_matrix, r_square, n_points]).toDouble().clip(aoi)
+    # ---------------------------------------
+
     # 7. Apply the equation to our Target Date to fill the gaps
     target_date_ee = ee.Date(target_date)
     t0 = ee.Image(target_date_ee.millis()).divide(1000 * 60 * 60 * 24)
@@ -90,7 +109,7 @@ try:
 
     print("Section 2.2.1 complete. Gaps mathematically filled using temporal interpolation.")
 
-    # 8. Export BOTH to Google Drive for Before/After Analysis
+    # 8. Export to Google Drive for Analysis
     
     # Task A: Export the "Before" (Original with gaps)
     task_before = ee.batch.Export.image.toDrive(
@@ -112,25 +131,38 @@ try:
         maxPixels=1e10
     )
 
+    # Task C: Export the Evaluation Matrix for the Professor
+    task_eval = ee.batch.Export.image.toDrive(
+        image=evaluation_matrix,
+        description='STAIR_Evaluation_Matrix',
+        folder='STAIR_Temporal_Interpolation',
+        scale=30,
+        region=aoi,
+        maxPixels=1e10
+    )
+
     task_before.start()
     task_after.start()
-    print("Exporting both 'Before' and 'After' files to Google Drive...")
+    task_eval.start()
+    print("Exporting 'Before', 'After', and 'Evaluation Matrix' files to Google Drive...")
 
     # 9. Task Monitoring Loop
-    while task_before.active() or task_after.active():
-        print(f"Status - Before: {task_before.status()['state']} | After: {task_after.status()['state']}... waiting 10s.")
+    while task_before.active() or task_after.active() or task_eval.active():
+        print(f"Status - Before: {task_before.status()['state']} | After: {task_after.status()['state']} | Eval: {task_eval.status()['state']}... waiting 10s.")
         time.sleep(10)
 
     print(f"\nProcess Finished!")
     print(f"Before Task Status: {task_before.status()['state']}")
     print(f"After Task Status: {task_after.status()['state']}")
+    print(f"Eval Task Status: {task_eval.status()['state']}")
     
-    if task_before.status()['state'] == 'COMPLETED' and task_after.status()['state'] == 'COMPLETED':
-        print("SUCCESS: Both files generated! Check your Google Drive folder: 'STAIR_Temporal'")
+    if task_before.status()['state'] == 'COMPLETED' and task_after.status()['state'] == 'COMPLETED' and task_eval.status()['state'] == 'COMPLETED':
+        print("SUCCESS: All files generated! Check your Google Drive folder: 'STAIR_Temporal_Interpolation'")
     else:
-        print("FAILED: One or both tasks encountered an error on Google's servers.")
+        print("FAILED: One or more tasks encountered an error on Google's servers.")
         print(f"Before Error: {task_before.status().get('error_message', 'None')}")
         print(f"After Error: {task_after.status().get('error_message', 'None')}")
+        print(f"Eval Error: {task_eval.status().get('error_message', 'None')}")
 
 except Exception as e:
     print("\n!!! SCRIPT CRASHED ON YOUR COMPUTER !!!")
