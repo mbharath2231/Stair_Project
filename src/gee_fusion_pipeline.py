@@ -6,7 +6,7 @@ import zipfile
 import io
 
 # 1. Authenticate and Initialize the Cloud Engine
-project_id = "stair-499915" # Your registered project ID
+project_id = "stair-project-509517" # Your registered project ID
 
 try:
     ee.Initialize(project=project_id)

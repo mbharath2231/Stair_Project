@@ -14,7 +14,7 @@ import config
 
 
 def compute_global_correction(
-    image_t1: ee.Image,
+    image_t0: ee.Image,
     mask_t0: ee.Image,
     region: ee.Geometry,
     linear_baseline: ee.Image,
@@ -23,13 +23,13 @@ def compute_global_correction(
     tile_scale: int = 1
 ) -> ee.Image:
     """
-    Compute global spatial offset delta = mean(gaps) - mean(valid) on clear day t1.
+    Compute global spatial offset delta = mean(true_valid) - mean(pred_valid) on target day t0.
     
     Args:
-        image_t1: Clear reference image on t1.
+        image_t0: Actual target image with clouds (true values where valid).
         mask_t0: Binary mask of target date t0 (1 = valid, 0 = cloud/gap).
         region: Geographic region / bounding geometry.
-        linear_baseline: Temporal prediction (L_linear) to apply offset to.
+        linear_baseline: Temporal prediction (L_linear) for target day t0.
         band_name: Spectral band name.
         scale: Resolution scale in meters.
         tile_scale: Earth Engine tileScale for large memory regions.
@@ -37,9 +37,12 @@ def compute_global_correction(
     Returns:
         ee.Image representing the globally corrected prediction.
     """
-    ref_band = image_t1.select(band_name)
+    true_band = image_t0.select(band_name)
+    # The linear_baseline band is named '{band_name}_linear', so we just select the first band
+    pred_band = linear_baseline.select([0]).rename(band_name)
     
-    gap_dict = ref_band.updateMask(mask_t0.eq(0)).reduceRegion(
+    # We calculate the delta only where pixels are valid (mask == 1)
+    true_valid = true_band.updateMask(mask_t0.eq(1)).reduceRegion(
         reducer=ee.Reducer.mean(),
         geometry=region,
         scale=scale,
@@ -47,7 +50,7 @@ def compute_global_correction(
         maxPixels=1e10,
         tileScale=tile_scale
     )
-    valid_dict = ref_band.updateMask(mask_t0.eq(1)).reduceRegion(
+    pred_valid = pred_band.updateMask(mask_t0.eq(1)).reduceRegion(
         reducer=ee.Reducer.mean(),
         geometry=region,
         scale=scale,
@@ -56,14 +59,24 @@ def compute_global_correction(
         tileScale=tile_scale
     )
     
-    mean_gap = ee.Number(gap_dict.get(band_name, 0))
-    mean_valid = ee.Number(valid_dict.get(band_name, 0))
-    delta_global = mean_gap.subtract(mean_valid)
+    has_true = true_valid.contains(band_name)
+    has_pred = pred_valid.contains(band_name)
+    
+    mean_true_val = ee.Algorithms.If(has_true, true_valid.get(band_name), 0)
+    mean_pred_val = ee.Algorithms.If(has_pred, pred_valid.get(band_name), 0)
+    
+    # If the image was 100% masked (completely cloudy), reduceRegion returns null even if the key exists.
+    # We must explicitly check for null to prevent Number.subtract crashing.
+    mean_true = ee.Number(ee.Algorithms.If(ee.Algorithms.IsEqual(mean_true_val, None), 0, mean_true_val))
+    mean_pred = ee.Number(ee.Algorithms.If(ee.Algorithms.IsEqual(mean_pred_val, None), 0, mean_pred_val))
+    
+    delta_global = mean_true.subtract(mean_pred)
     
     return linear_baseline.add(ee.Image.constant(delta_global)).rename(f"{band_name}_global")
 
 
 def compute_adaptive_kmeans_correction(
+    image_t0: ee.Image,
     image_t1: ee.Image,
     mask_t0: ee.Image,
     region: ee.Geometry,
@@ -71,14 +84,16 @@ def compute_adaptive_kmeans_correction(
     n_clusters: int = 4,
     band_name: str = "SR_B5",
     scale: float = 30.0,
-    tile_scale: int = 1
+    tile_scale: int = 1,
+    precomputed_segments: Optional[ee.Image] = None
 ) -> Any:
     """
     Compute land-cover adaptive offset using Weka K-Means clustering on clear day t1.
-    Calculates class-specific offsets: delta_k = mean(gaps_k) - mean(valid_k).
+    Calculates class-specific offsets: delta_k = mean(true_t0_k) - mean(pred_t0_k).
     
     Args:
-        image_t1: Clear reference image on t1.
+        image_t0: Actual target image with clouds (true values where valid).
+        image_t1: Clear reference image on t1 (used only for clustering).
         mask_t0: Binary mask of target date t0.
         region: Geographic region / bounding geometry.
         linear_baseline: Safe temporal prediction.
@@ -86,24 +101,32 @@ def compute_adaptive_kmeans_correction(
         band_name: Spectral band name.
         scale: Resolution scale in meters.
         tile_scale: Earth Engine tileScale.
+        precomputed_segments: Optional pre-clustered image to ensure multi-band consistency.
         
     Returns:
         Tuple of (ee.Image adaptive prediction, ee.Image segments)
     """
     ref_band = image_t1.select(band_name)
+    true_band = image_t0.select(band_name)
+    # The linear_baseline band is named '{band_name}_linear', so we just select the first band
+    pred_band = linear_baseline.select([0]).rename(band_name)
     
-    # Sample pixels to train unsupervised clusterer
-    training_data = ref_band.sample(
-        region=region,
-        scale=scale,
-        numPixels=5000,
-        tileScale=tile_scale
-    )
-    clusterer = ee.Clusterer.wekaKMeans(n_clusters).train(training_data)
-    segments = ref_band.cluster(clusterer).rename("seg")
+    if precomputed_segments is not None:
+        segments = precomputed_segments
+    else:
+        # Sample pixels to train unsupervised clusterer ON THE CLEAR REFERENCE IMAGE
+        training_data = ref_band.sample(
+            region=region,
+            scale=scale,
+            numPixels=5000,
+            tileScale=tile_scale
+        )
+        clusterer = ee.Clusterer.wekaKMeans(n_clusters).train(training_data)
+        segments = ref_band.cluster(clusterer).rename("seg")
     
-    def get_segment_means(value_img: ee.Image, mask_img: ee.Image) -> ee.Image:
-        stack = value_img.rename("val").updateMask(mask_img).addBands(segments)
+    def get_segment_means(value_img: ee.Image) -> ee.Image:
+        # We only calculate the mean where pixels are VALID on t0
+        stack = value_img.rename("val").updateMask(mask_t0.eq(1)).addBands(segments)
         reduction = stack.reduceRegion(
             reducer=ee.Reducer.mean().group(groupField=1, groupName="seg"),
             geometry=region,
@@ -115,16 +138,22 @@ def compute_adaptive_kmeans_correction(
         groups = ee.List(ee.Dictionary(reduction).get("groups", ee.List([])))
         
         def get_key(g): return ee.Dictionary(g).getNumber("seg")
-        def get_val(g): return ee.Dictionary(g).getNumber("mean")
+        def get_val(g): 
+            d = ee.Dictionary(g)
+            has_mean = d.contains("mean")
+            mean_val = ee.Algorithms.If(has_mean, d.get("mean"), 0)
+            return ee.Number(ee.Algorithms.If(ee.Algorithms.IsEqual(mean_val, None), 0, mean_val))
         
         keys = ee.List([-1]).cat(groups.map(get_key))
         vals = ee.List([0.0]).cat(groups.map(get_val))
         return segments.remap(keys, vals, 0).rename("mean_val")
     
-    mean_gap_seg = get_segment_means(ref_band, mask_t0.eq(0))
-    mean_valid_seg = get_segment_means(ref_band, mask_t0.eq(1))
+    # Calculate the mean of the TRUE image per cluster (only valid pixels)
+    mean_true_seg = get_segment_means(true_band)
+    # Calculate the mean of the PREDICTED image per cluster (only valid pixels)
+    mean_pred_seg = get_segment_means(pred_band)
     
-    delta_adap = mean_gap_seg.subtract(mean_valid_seg)
+    delta_adap = mean_true_seg.subtract(mean_pred_seg)
     adaptive_prediction = linear_baseline.add(delta_adap).rename(f"{band_name}_adaptive")
     
     return adaptive_prediction, segments
@@ -160,7 +189,8 @@ def stair_adaptive_pipeline(
     n_clusters: int = 4,
     band_name: str = "SR_B5",
     scale: float = 30.0,
-    tile_scale: int = 1
+    tile_scale: int = 1,
+    precomputed_segments: Optional[ee.Image] = None
 ) -> Dict[str, ee.Image]:
     """
     Execute full STAIR multi-stage restoration pipeline:
@@ -179,6 +209,7 @@ def stair_adaptive_pipeline(
         band_name: Band name to process.
         scale: Scale in meters.
         tile_scale: Tile scale for EE compute.
+        precomputed_segments: Optional pre-clustered image to ensure multi-band consistency.
         
     Returns:
         Dictionary mapping stage names to ee.Image objects.
@@ -195,7 +226,7 @@ def stair_adaptive_pipeline(
     
     # Stage 3a: Global Correction
     pred_global = compute_global_correction(
-        image_t1=image_t1,
+        image_t0=raw_image_t0,
         mask_t0=mask_t0,
         region=region,
         linear_baseline=linear_safe,
@@ -207,6 +238,7 @@ def stair_adaptive_pipeline(
     
     # Stage 3b: Adaptive K-Means
     pred_adaptive, segments = compute_adaptive_kmeans_correction(
+        image_t0=raw_image_t0,
         image_t1=image_t1,
         mask_t0=mask_t0,
         region=region,
@@ -214,7 +246,8 @@ def stair_adaptive_pipeline(
         n_clusters=n_clusters,
         band_name=band_name,
         scale=scale,
-        tile_scale=tile_scale
+        tile_scale=tile_scale,
+        precomputed_segments=precomputed_segments
     )
     stage3b_adaptive = stage1_broken.unmask(pred_adaptive)
     

@@ -110,24 +110,40 @@ def get_landsat_collection(
 def get_modis_collection(
     aoi: ee.Geometry,
     start_date: str,
-    end_date: str
+    end_date: str,
+    apply_mask: bool = True
 ) -> ee.ImageCollection:
     """
-    Query MODIS 250m surface reflectance collection.
+    Query MODIS MOD09GA daily 500m surface reflectance collection.
+    Applies the state_1km cloud/shadow mask and renames bands to match Landsat 8.
     
-    Args:
-        aoi: Earth Engine geometry region of interest.
-        start_date: Start date string (YYYY-MM-DD).
-        end_date: End date string (YYYY-MM-DD).
-        
-    Returns:
-        ee.ImageCollection
+    MODIS Band 1 (Red) -> SR_B4
+    MODIS Band 2 (NIR) -> SR_B5
+    MODIS Band 4 (Green) -> SR_B3
+    MODIS Band 3 (Blue) -> SR_B2
     """
-    return (
-        ee.ImageCollection(config.MODIS_COLLECTION)
+    col = (
+        ee.ImageCollection("MODIS/061/MOD09GA")
         .filterBounds(aoi)
         .filterDate(start_date, end_date)
     )
+    
+    def prep_modis(img):
+        if apply_mask:
+            state = img.select('state_1km')
+            # Bit 0-1: Cloud state (00 = clear)
+            cloud_mask = state.bitwiseAnd(3).eq(0)
+            # Bit 2: Cloud shadow (0 = no shadow)
+            shadow_mask = state.bitwiseAnd(4).eq(0)
+            img = img.updateMask(cloud_mask.And(shadow_mask))
+            
+        # Select and rename bands to exactly match Landsat 8 names
+        return img.select(
+            ['sur_refl_b01', 'sur_refl_b04', 'sur_refl_b03', 'sur_refl_b02'],
+            ['SR_B4', 'SR_B3', 'SR_B2', 'SR_B5']
+        )
+        
+    return col.map(prep_modis)
 
 
 def calculate_ndvi(nir: ee.Image, red: ee.Image, name: str = "ndvi") -> ee.Image:

@@ -3,7 +3,7 @@ import ee
 import folium
 from pathlib import Path
 
-project_id = "stair-499915"
+project_id = "stair-project-509517"
 try:
     ee.Initialize(project=project_id)
 except Exception as e:

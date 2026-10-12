@@ -1,170 +1,91 @@
 """
 STAIR Section 2.2.1: Temporal Linear Interpolation
 =================================================
-Calculates pixel-wise linear regression over clear historical observations to
-predict reflectance for missing or cloud-obscured pixels on a target date:
-    L_linear(p_g, t0) = a * t0 + b
+Calculates pixel-wise time-weighted linear interpolation between the nearest 
+clear observation BEFORE the target date and the nearest clear observation AFTER.
+    L_linear(t0) = R(t1) + [R(t2) - R(t1)] * (t0 - t1) / (t2 - t1)
 """
 
-from typing import Tuple, Optional
+from typing import Tuple
 import ee
-import config
-
-
-def add_time_band(image: ee.Image, band_name: str = "SR_B5") -> ee.Image:
-    """
-    Add a normalized time band 't' (days since epoch) as the independent variable.
-    
-    Args:
-        image: ee.Image from time series.
-        band_name: Target spectral band (dependent variable).
-        
-    Returns:
-        ee.Image with bands ['t', band_name]
-    """
-    date_days = (
-        ee.Image(image.date().millis())
-        .divide(1000 * 60 * 60 * 24)
-        .toFloat()
-        .rename("t")
-    )
-    return image.select(band_name).addBands(date_days).select(["t", band_name])
-
-
-def compute_temporal_regression(
-    collection: ee.ImageCollection,
-    band_name: str = "SR_B5"
-) -> Tuple[ee.Image, ee.Image]:
-    """
-    Fit pixel-wise linear regression across time using ee.Reducer.linearFit().
-    
-    Args:
-        collection: Masked historical image collection.
-        band_name: Target band to fit (e.g. 'SR_B5' for NIR, 'SR_B4' for Red).
-        
-    Returns:
-        Tuple of (slope 'a', offset 'b')
-    """
-    reg_col = collection.map(lambda img: add_time_band(img, band_name))
-    fit = reg_col.reduce(ee.Reducer.linearFit())
-    slope = fit.select("scale").rename("slope")
-    intercept = fit.select("offset").rename("intercept")
-    return slope, intercept
-
-
-def compute_regression_metrics(
-    collection: ee.ImageCollection,
-    band_name: str = "SR_B5",
-    aoi: Optional[ee.Geometry] = None
-) -> ee.Image:
-    """
-    Compute evaluation metrics for the temporal regression:
-      - Valid observation count (N_Points)
-      - Pearson's correlation coefficient squared (R_Square)
-      - Slope and Intercept
-      
-    Args:
-        collection: Masked historical image collection.
-        band_name: Target band.
-        aoi: Optional region geometry to clip to.
-        
-    Returns:
-        Multi-band ee.Image [Slope, Intercept, R_Square, N_Points]
-    """
-    reg_col = collection.map(lambda img: add_time_band(img, band_name))
-    fit = reg_col.reduce(ee.Reducer.linearFit())
-    slope = fit.select("scale").rename("Slope")
-    intercept = fit.select("offset").rename("Intercept")
-    
-    n_points = collection.select(band_name).count().rename("N_Points")
-    pearsons = reg_col.reduce(ee.Reducer.pearsonsCorrelation())
-    r_square = pearsons.select("correlation").pow(2).rename("R_Square")
-    
-    eval_matrix = ee.Image([slope, intercept, r_square, n_points]).toDouble()
-    if aoi is not None:
-        eval_matrix = eval_matrix.clip(aoi)
-    return eval_matrix
-
-
-def compute_temporal_support(
-    collection: ee.ImageCollection,
-    target_date: str,
-    band_name: str = "SR_B5",
-    aoi: Optional[ee.Geometry] = None
-) -> ee.Image:
-    """
-    Evaluate temporal support for every pixel relative to target_date:
-      - N_Before: Count of clear observations before target date (t < t0)
-      - N_After: Count of clear observations after target date (t > t0)
-      - N_Total: Total clear observations used in regression
-      - Temporal_Type:
-          2 = True Interpolation (bracketed: N_Before >= 1 and N_After >= 1)
-          1 = Forward Extrapolation (N_Before >= 1 and N_After == 0)
-          3 = Backward Extrapolation (N_Before == 0 and N_After >= 1)
-          0 = Insufficient data (N_Total < 2)
-
-    Args:
-        collection: Masked historical image collection.
-        target_date: Date string (YYYY-MM-DD).
-        band_name: Target spectral band.
-        aoi: Optional boundary geometry.
-
-    Returns:
-        Multi-band ee.Image [N_Before, N_After, N_Total, Temporal_Type]
-    """
-    t0_millis = ee.Date(target_date).millis()
-    t0_next_day_millis = ee.Date(target_date).advance(1, "day").millis()
-
-    col_before = collection.filter(ee.Filter.lt("system:time_start", t0_millis))
-    col_after = collection.filter(ee.Filter.gte("system:time_start", t0_next_day_millis))
-
-    n_before = col_before.select(band_name).count().rename("N_Before")
-    n_after = col_after.select(band_name).count().rename("N_After")
-    n_total = collection.select(band_name).count().rename("N_Total")
-
-    temporal_type = (
-        ee.Image(0)
-        .where(n_before.gte(1).And(n_after.gte(1)), 2)
-        .where(n_before.gte(1).And(n_after.eq(0)), 1)
-        .where(n_before.eq(0).And(n_after.gte(1)), 3)
-        .rename("Temporal_Type")
-    )
-
-    support_stack = ee.Image([n_before, n_after, n_total, temporal_type]).toInt()
-    if aoi is not None:
-        support_stack = support_stack.clip(aoi)
-    return support_stack
-
 
 def impute_temporal(
+    collection: ee.ImageCollection,
     raw_image: ee.Image,
-    slope: ee.Image,
-    intercept: ee.Image,
     target_date: str,
     band_name: str = "SR_B5"
 ) -> Tuple[ee.Image, ee.Image]:
     """
-    Apply linear temporal equation L_linear = a * t0 + b to fill gaps in raw target image.
+    Apply STAIR time-weighted linear interpolation to fill gaps in target image.
+    For every pixel, finds the closest clear observation before and after t0,
+    and linearly interpolates the reflectance value.
     
     Args:
+        collection: Masked historical image collection.
         raw_image: Cloud-masked target image on target_date.
-        slope: Temporal regression slope (scale).
-        intercept: Temporal regression intercept (offset).
         target_date: Target date string (YYYY-MM-DD).
         band_name: Band to impute.
         
     Returns:
         Tuple of (L_linear prediction, blended gap_filled_image)
     """
-    target_date_ee = ee.Date(target_date)
-    t0_millis = (
-        ee.Image(target_date_ee.millis())
-        .divide(1000 * 60 * 60 * 24)
-        .toFloat()
-    )
-    predicted_linear = t0_millis.multiply(slope).add(intercept).rename(f"{band_name}_linear")
+    t0_millis = ee.Date(target_date).millis()
     
-    # Unmask missing pixels with the linear prediction
+    # 1. Add 't' (time in millis) to all images
+    def add_time(img):
+        t_band = ee.Image.constant(img.date().millis()).rename('t').toFloat()
+        return img.addBands(t_band)
+        
+    col_with_time = collection.map(add_time)
+    
+    # 2. Split collection into Before and After target date
+    col_before = col_with_time.filterDate('2000-01-01', target_date)
+    # Add a negative time band to the 'after' collection so we can use qualityMosaic to find the MINIMUM time
+    col_after = col_with_time.filterDate(ee.Date(target_date).advance(1, 'day'), '2100-01-01')
+    col_after = col_after.map(lambda img: img.addBands(img.select('t').multiply(-1).rename('neg_t')))
+    
+    # 3. Find nearest clear pixels
+    # qualityMosaic('t') gets the max time (most recent clear pixel before t0)
+    # Failsafe: if collection is empty, qualityMosaic returns an image with NO bands. 
+    # We add a fallback to an empty constant image with the right bands to prevent select() crashes.
+    dummy_img = ee.Image.constant(0).rename(band_name).addBands(ee.Image.constant(0).rename('t')).addBands(ee.Image.constant(0).rename('neg_t'))
+    
+    img_before = ee.Image(ee.Algorithms.If(
+        col_before.size().gt(0),
+        col_before.qualityMosaic('t'),
+        dummy_img
+    ))
+    
+    img_after = ee.Image(ee.Algorithms.If(
+        col_after.size().gt(0),
+        col_after.qualityMosaic('neg_t'),
+        dummy_img
+    ))
+    
+    # Extract values and times
+    v_before = img_before.select(band_name)
+    t_before = img_before.select('t')
+    
+    v_after = img_after.select(band_name)
+    t_after = img_after.select('t')
+    
+    # 4. Compute STAIR Temporal Interpolation
+    # weight = (t0 - t_before) / (t_after - t_before)
+    time_diff = t_after.subtract(t_before)
+    # Safeguard against division by zero if somehow t_after == t_before (should be impossible due to dates)
+    safe_time_diff = time_diff.where(time_diff.eq(0), 1)
+    
+    w = ee.Image.constant(t0_millis).subtract(t_before).divide(safe_time_diff)
+    
+    # L = v_before + w * (v_after - v_before)
+    predicted_linear = v_before.add(w.multiply(v_after.subtract(v_before))).rename(f"{band_name}_linear")
+    
+    # Failsafe: If a pixel has NO observations after t0, just use v_before (forward fill). 
+    # If no observations before t0, use v_after (backward fill).
+    # If both were empty (meaning dummy_img was used), it just returns 0, but unmasking with t1 baseline later in adaptive.py will save it.
+    predicted_linear = predicted_linear.unmask(v_before).unmask(v_after)
+    
+    # 5. Patch the raw image gaps
     target_band = raw_image.select(band_name)
     patched_image = target_band.unmask(predicted_linear).rename(f"{band_name}_temporal_patched")
     

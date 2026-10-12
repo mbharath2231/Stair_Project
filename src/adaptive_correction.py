@@ -1,4 +1,5 @@
 import geopandas as gpd
+# pyrefly: ignore [missing-import]
 import ee
 from pathlib import Path
 import time
@@ -9,7 +10,7 @@ print("--- STARTING STAIR 2.2.2 (SMART TRAINING DATA) ---")
 
 try:
     # 1. Initialize Earth Engine
-    project_id = "stair-499915" 
+    project_id = "stair-project-509517" 
     try:
         ee.Initialize(project=project_id)
     except Exception as e:

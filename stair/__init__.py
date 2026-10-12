@@ -17,9 +17,6 @@ from .core import (
 )
 
 from .temporal import (
-    compute_temporal_regression,
-    compute_regression_metrics,
-    compute_temporal_support,
     impute_temporal,
 )
 
@@ -56,9 +53,6 @@ __all__ = [
     "get_landsat_collection",
     "get_modis_collection",
     "calculate_ndvi",
-    "compute_temporal_regression",
-    "compute_regression_metrics",
-    "compute_temporal_support",
     "impute_temporal",
     "compute_global_correction",
     "compute_adaptive_kmeans_correction",

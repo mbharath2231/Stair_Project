@@ -19,7 +19,7 @@ MAPS_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Google Earth Engine Configuration
 # Overridable via environment variable EE_PROJECT_ID
-EE_PROJECT_ID = os.getenv("EE_PROJECT_ID", "stair-499915")
+EE_PROJECT_ID = os.getenv("EE_PROJECT_ID", "stair-project-509517")
 
 # Satellite Collections
 LANDSAT8_COLLECTION = "LANDSAT/LC08/C02/T1_L2"

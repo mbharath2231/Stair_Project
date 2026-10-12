@@ -7,7 +7,7 @@ import time
 print("--- STARTING 6-MONTH SPATIAL TIME-SERIES EXPORT ---")
 
 # 1. Initialize Earth Engine
-project_id = "stair-499915" 
+project_id = "stair-project-509517" 
 try:
     ee.Initialize(project=project_id)
 except Exception as e:

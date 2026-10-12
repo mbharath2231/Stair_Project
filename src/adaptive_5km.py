@@ -9,7 +9,7 @@ print("--- STARTING STAIR LOCALIZED 5KM DEMO ---")
 
 try:
     # 1. Initialize Earth Engine
-    project_id = "stair-499915" 
+    project_id = "stair-project-509517" 
     try:
         ee.Initialize(project=project_id)
     except Exception as e:
