@@ -104,13 +104,13 @@ def fuse_date(
     # 0. Get the full MODIS collection for the summer (needed for temporal interpolation)
     full_modis_col = get_modis_collection(aoi, "2021-05-01", "2021-10-31", apply_mask=True)
     
-    # 1. GAP-FILL THE GOLDEN MODIS (August 4)
+    # 1. Temporally gap-fill the Golden Day MODIS (e.g. July 26)
     golden_modis_filled = gap_fill_multiband(full_modis_col, golden_modis, golden_date, bands)
     
     # 2. Learn the spatial rules using the gap-free Golden MODIS and Golden Landsat
     rules = learn_spatial_rules(golden_landsat, golden_modis_filled, kernel_radius=kernel_radius, bands=bands)
     
-    # 3. GAP-FILL THE TARGET MODIS (e.g. August 5)
+    # 3. Temporally gap-fill the target date MODIS
     pred_start = ee.Date(prediction_date)
     pred_end = pred_start.advance(1, "day")
     

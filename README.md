@@ -37,26 +37,28 @@ The framework is configured for monitoring agricultural dynamics in the **Raisin
 ```
 Stair_Project/
 ├── .gitignore                   # Comprehensive ignores for OS, virtual environments, and outputs
-├── requirements.txt             # Pinned Python dependencies (UTF-8)
+├── requirements.txt             # Pinned Python dependencies
 ├── config.py                    # Central configuration (Earth Engine project ID, default paths, parameters)
 ├── data/
 │   ├── raisin_outline.*         # Watershed boundary shapefile
-│   └── outputs/                 # Export directory for plots and maps (git-ignored)
-│       └── maps/                # Folium HTML maps
-├── stair/                       # Core STAIR Python Library
+│   └── outputs/                 # Export directory for plots and maps
+├── stair/                       # Core STAIR Engine
 │   ├── __init__.py              # Library exports
-│   ├── core.py                  # Earth Engine init, shapefile loader, cloud masking, collection builders
-│   ├── temporal.py              # Section 2.2.1 temporal regression and imputation
-│   ├── adaptive.py              # Section 2.2.2 global and K-Means adaptive correction
-│   ├── fusion.py                # Landsat-MODIS spatiotemporal fusion and NDVI synthesis
-│   ├── diagnostics.py           # CDL crop sampling, 5km chips, staircase fill tracker
-│   └── visualization.py         # Folium HTML map generator and rasterio plotting
-└── scripts/                     # Unified CLI Entrypoints
-    ├── run_temporal.py          # Run temporal imputation (Section 2.2.1)
-    ├── run_adaptive.py          # Run adaptive correction (Section 2.2.2: 5km or full watershed)
-    ├── run_fusion.py            # Run Landsat-MODIS fusion for missing day synthesis
-    ├── run_time_series.py       # Multi-month growing season time-series batch export
-    └── run_visualization.py     # Interactive Folium maps and local GeoTIFF plots
+│   ├── core.py                  # Earth Engine init, cloud masking, collection builders
+│   ├── temporal.py              # Section 2.2.1 temporal linear interpolation
+│   ├── adaptive.py              # Section 2.2.2 K-Means adaptive correction
+│   ├── fusion.py                # Landsat-MODIS spatiotemporal delta fusion
+│   ├── diagnostics.py           # AOI chips and cloud cover evaluation
+│   └── visualization.py         # Folium HTML mapping and GeoTIFF plotting
+├── scripts/                     # Active Production Workflows
+│   ├── validation_test.py       # Hold-out validation on 0% cloud day (July 19 ground truth)
+│   ├── export_august_fusion.py  # STAIR daily 30m fusion (Aug 1-4) & ground truth export
+│   ├── find_best_golden_day.py  # Automated cloud audit to identify clearest Golden Day
+│   ├── export_golden_day.py     # Reference Golden Day (July 26) Landsat & MODIS export
+│   └── generate_paper_figures.py# Publication-quality comparison figures and plots
+└── archive/                     # Preserved Prototypes & Legacy Code
+    ├── legacy_src/              # Monolithic prototype scripts from early exploratory phase
+    └── legacy_scripts/          # One-off scratch tests and superseded batch runners
 ```
 
 ---

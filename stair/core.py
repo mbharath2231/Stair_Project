@@ -135,7 +135,15 @@ def get_modis_collection(
             cloud_mask = state.bitwiseAnd(3).eq(0)
             # Bit 2: Cloud shadow (0 = no shadow)
             shadow_mask = state.bitwiseAnd(4).eq(0)
-            img = img.updateMask(cloud_mask.And(shadow_mask))
+            # Bits 8-9: Cirrus (00 = none)
+            cirrus_mask = state.bitwiseAnd(3 << 8).eq(0)
+            # Bit 10: Internal cloud algorithm flag (0 = no cloud)
+            internal_cloud_mask = state.bitwiseAnd(1 << 10).eq(0)
+            # Reflectance threshold: Red reflectance > 1500 (0.15) indicates cloud/haze over farmland
+            clean_refl_mask = img.select('sur_refl_b01').lt(1500)
+            
+            valid_mask = cloud_mask.And(shadow_mask).And(cirrus_mask).And(internal_cloud_mask).And(clean_refl_mask)
+            img = img.updateMask(valid_mask)
             
         # Select and rename bands to exactly match Landsat 8 names
         return img.select(
