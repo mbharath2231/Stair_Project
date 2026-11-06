@@ -1,0 +1,6193 @@
+{
+  "scope": "Offline inspection of existing artifacts; no QA certification or GEE execution.",
+  "python_sources": [
+    {
+      "path": "stair/adaptive.py",
+      "lines": 347,
+      "syntax": "pass",
+      "functions": [
+        "compute_global_correction",
+        "compute_adaptive_kmeans_correction",
+        "apply_edge_blending",
+        "stair_adaptive_pipeline"
+      ]
+    },
+    {
+      "path": "stair/core.py",
+      "lines": 169,
+      "syntax": "pass",
+      "functions": [
+        "init_earth_engine",
+        "load_aoi",
+        "mask_landsat_clouds",
+        "get_landsat_collection",
+        "get_modis_collection",
+        "calculate_ndvi"
+      ]
+    },
+    {
+      "path": "stair/diagnostics.py",
+      "lines": 105,
+      "syntax": "pass",
+      "functions": [
+        "create_staircase_tracker",
+        "sample_agricultural_pixel",
+        "create_chip_bounds"
+      ]
+    },
+    {
+      "path": "stair/fusion.py",
+      "lines": 208,
+      "syntax": "pass",
+      "functions": [
+        "learn_spatial_rules",
+        "synthesize_missing_day",
+        "gap_fill_multiband",
+        "fuse_date",
+        "stair_dual_fusion_numpy",
+        "stair_dual_fusion_ee"
+      ]
+    },
+    {
+      "path": "stair/temporal.py",
+      "lines": 92,
+      "syntax": "pass",
+      "functions": [
+        "impute_temporal"
+      ]
+    },
+    {
+      "path": "stair/visualization.py",
+      "lines": 230,
+      "syntax": "pass",
+      "functions": [
+        "add_ee_layer",
+        "create_base_map",
+        "create_true_color_map",
+        "create_band_physics_map",
+        "create_cloud_comparison_map",
+        "plot_local_geotiff"
+      ]
+    },
+    {
+      "path": "stair/__init__.py",
+      "lines": 71,
+      "syntax": "pass",
+      "functions": []
+    },
+    {
+      "path": "scripts/export_august_fusion.py",
+      "lines": 94,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "scripts/export_golden_day.py",
+      "lines": 52,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "scripts/find_best_golden_day.py",
+      "lines": 48,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "scripts/generate_paper_figures.py",
+      "lines": 137,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "scripts/run_5day_cloudy_interpolation.py",
+      "lines": 446,
+      "syntax": "pass",
+      "functions": [
+        "get_combined_landsat_collection",
+        "process_evaluation_day",
+        "main"
+      ]
+    },
+    {
+      "path": "scripts/run_5km_5day_analysis.py",
+      "lines": 340,
+      "syntax": "pass",
+      "functions": [
+        "fetch_multiband_geotiff",
+        "to_fcc_rgb",
+        "save_rgb_geotiff",
+        "save_multiband_geotiff",
+        "save_singleband_geotiff",
+        "impute_stair_numpy",
+        "run_5km_5day_analysis"
+      ]
+    },
+    {
+      "path": "scripts/run_5km_stage_by_stage_progression.py",
+      "lines": 296,
+      "syntax": "pass",
+      "functions": [
+        "fetch_multiband_geotiff",
+        "to_fcc_rgb",
+        "save_rgb_geotiff",
+        "save_singleband_geotiff",
+        "run_stage_by_stage_5km"
+      ]
+    },
+    {
+      "path": "scripts/run_all_layers_real_clouds_july29.py",
+      "lines": 310,
+      "syntax": "pass",
+      "functions": [
+        "fetch_multiband_geotiff",
+        "to_fcc_rgb",
+        "save_rgb_geotiff",
+        "save_singleband_geotiff",
+        "run_all_layers_pipeline"
+      ]
+    },
+    {
+      "path": "scripts/run_multi_day_validation.py",
+      "lines": 312,
+      "syntax": "pass",
+      "functions": [
+        "run_validation_for_date",
+        "main"
+      ]
+    },
+    {
+      "path": "scripts/run_real_cloud_fusion_single_day.py",
+      "lines": 269,
+      "syntax": "pass",
+      "functions": [
+        "fetch_multiband_geotiff",
+        "to_fcc_rgb",
+        "save_rgb_geotiff",
+        "save_multiband_geotiff",
+        "save_singleband_geotiff",
+        "run_real_cloud_fusion"
+      ]
+    },
+    {
+      "path": "scripts/run_simulated_gap_validation.py",
+      "lines": 276,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "scripts/run_stair_fusion.py",
+      "lines": 354,
+      "syntax": "pass",
+      "functions": [
+        "fetch_multiband_geotiff",
+        "run_fusion_evaluation"
+      ]
+    },
+    {
+      "path": "scripts/run_visual_stair_fusion_progress.py",
+      "lines": 321,
+      "syntax": "pass",
+      "functions": [
+        "fetch_multiband_geotiff",
+        "to_fcc_rgb",
+        "save_rgb_geotiff",
+        "run_visual_progress"
+      ]
+    },
+    {
+      "path": "scripts/update_clean_drawio.py",
+      "lines": 406,
+      "syntax": "pass",
+      "functions": []
+    },
+    {
+      "path": "scripts/validation_test.py",
+      "lines": 71,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/analyze_watershed_support.py",
+      "lines": 133,
+      "syntax": "pass",
+      "functions": [
+        "analyze_watershed",
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/check_landsat_clouds.py",
+      "lines": 38,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/export_actual_landsat.py",
+      "lines": 25,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/export_fusion_august.py",
+      "lines": 69,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/export_modis_timeseries.py",
+      "lines": 56,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/generate_clayton_raw.py",
+      "lines": 61,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/generate_clayton_timeseries.py",
+      "lines": 144,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/generate_sparse_figures.py",
+      "lines": 138,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/inspect_pixel.py",
+      "lines": 149,
+      "syntax": "pass",
+      "functions": [
+        "inspect_pixel",
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/list_landsat_dates.py",
+      "lines": 21,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/run_adaptive.py",
+      "lines": 148,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/run_fusion.py",
+      "lines": 104,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/run_imputation_validation.py",
+      "lines": 143,
+      "syntax": "pass",
+      "functions": [
+        "create_stripe_mask",
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/run_temporal.py",
+      "lines": 231,
+      "syntax": "pass",
+      "functions": [
+        "list_available_scenes",
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/run_time_series.py",
+      "lines": 128,
+      "syntax": "pass",
+      "functions": [
+        "run_fusion_season",
+        "run_crop_chip",
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/run_visualization.py",
+      "lines": 127,
+      "syntax": "pass",
+      "functions": [
+        "run_cloudy_true_color",
+        "run_band_physics",
+        "run_cloud_comparison",
+        "run_tiff_plot",
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/test_fusion.py",
+      "lines": 71,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_scripts/test_modis_pull.py",
+      "lines": 55,
+      "syntax": "pass",
+      "functions": [
+        "main"
+      ]
+    },
+    {
+      "path": "archive/legacy_src/adaptive_5km.py",
+      "lines": 178,
+      "syntax": "pass",
+      "functions": []
+    },
+    {
+      "path": "archive/legacy_src/adaptive_correction.py",
+      "lines": 166,
+      "syntax": "pass",
+      "functions": []
+    },
+    {
+      "path": "archive/legacy_src/gee_fusion_pipeline.py",
+      "lines": 170,
+      "syntax": "pass",
+      "functions": []
+    },
+    {
+      "path": "archive/legacy_src/generate_6month_dataset.py",
+      "lines": 101,
+      "syntax": "pass",
+      "functions": []
+    },
+    {
+      "path": "archive/legacy_src/pixel_time_series.py",
+      "lines": 136,
+      "syntax": "pass",
+      "functions": [
+        "mask_clouds",
+        "add_time_band"
+      ]
+    },
+    {
+      "path": "archive/legacy_src/red_band_validation.py",
+      "lines": 69,
+      "syntax": "pass",
+      "functions": []
+    },
+    {
+      "path": "archive/legacy_src/Spatial_implementation.py",
+      "lines": 110,
+      "syntax": "pass",
+      "functions": [
+        "mask_clouds",
+        "add_time_band"
+      ]
+    },
+    {
+      "path": "archive/legacy_src/temporal.py",
+      "lines": 170,
+      "syntax": "pass",
+      "functions": []
+    },
+    {
+      "path": "archive/legacy_src/visualise_data.py",
+      "lines": 71,
+      "syntax": "pass",
+      "functions": [
+        "add_ee_layer"
+      ]
+    },
+    {
+      "path": "archive/legacy_src/visualize_bands.py",
+      "lines": 81,
+      "syntax": "pass",
+      "functions": [
+        "add_ee_layer"
+      ]
+    },
+    {
+      "path": "archive/legacy_src/visualize_cloud_fix.py",
+      "lines": 104,
+      "syntax": "pass",
+      "functions": [
+        "add_ee_layer"
+      ]
+    },
+    {
+      "path": "archive/legacy_src/visualize_local_tiff.py",
+      "lines": 36,
+      "syntax": "pass",
+      "functions": []
+    },
+    {
+      "path": "archive/legacy_src/watershed_staircase.py",
+      "lines": 60,
+      "syntax": "pass",
+      "functions": [
+        "mask_clouds"
+      ]
+    },
+    {
+      "path": "config.py",
+      "lines": 52,
+      "syntax": "pass",
+      "functions": []
+    }
+  ],
+  "raster_inventory": [
+    {
+      "path": "data/synthetic_ndvi_20210622.tif",
+      "width": 4229,
+      "height": 2253,
+      "bands": 1,
+      "bits": [
+        64
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 4326,
+      "pixel_scale": [
+        0.00026949458523585647,
+        0.00026949458523585647,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        -84.47334723676445,
+        42.25917641624942,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/0_Reference_Landsat_20220714_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/0_Reference_MODIS_20220714_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day1_20220720_1_MODIS_500m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day1_20220720_4_STAIR_Fused_30m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day1_20220720_4_STAIR_Fused_30m_Reflectance.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        32,
+        32,
+        32
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day1_20220720_5_NDVI_30m.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day2_20220721_1_MODIS_500m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day2_20220721_2_Landsat_LC09_CloudGap_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day2_20220721_3_Landsat_LC09_Imputed_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day2_20220721_4_STAIR_Fused_30m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day2_20220721_4_STAIR_Fused_30m_Reflectance.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        32,
+        32,
+        32
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day2_20220721_5_NDVI_30m.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day3_20220722_1_MODIS_500m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day3_20220722_2_Landsat_LC08_CloudGap_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day3_20220722_3_Landsat_LC08_Imputed_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day3_20220722_4_STAIR_Fused_30m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day3_20220722_4_STAIR_Fused_30m_Reflectance.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        32,
+        32,
+        32
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day3_20220722_5_NDVI_30m.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day4_20220723_1_MODIS_500m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day4_20220723_4_STAIR_Fused_30m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day4_20220723_4_STAIR_Fused_30m_Reflectance.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        32,
+        32,
+        32
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day4_20220723_5_NDVI_30m.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day5_20220724_1_MODIS_500m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day5_20220724_4_STAIR_Fused_30m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day5_20220724_4_STAIR_Fused_30m_Reflectance.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        32,
+        32,
+        32
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/1_Consecutive_5Days_July20_to_July24/Day5_20220724_5_NDVI_30m.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day1_20220511_1_Raw_Cloudy_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day1_20220511_2_MODIS_500m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day1_20220511_3_STAIR_Imputed_Landsat_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day1_20220511_4_STAIR_Fused_30m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day1_20220511_4_STAIR_Fused_30m_Reflectance.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        32,
+        32,
+        32
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day1_20220511_5_NDVI_30m.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day2_20220611_1_Raw_Cloudy_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day2_20220611_2_MODIS_500m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day2_20220611_3_STAIR_Imputed_Landsat_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day2_20220611_4_STAIR_Fused_30m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day2_20220611_4_STAIR_Fused_30m_Reflectance.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        32,
+        32,
+        32
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day2_20220611_5_NDVI_30m.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day3_20220627_1_Raw_Cloudy_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day3_20220627_2_MODIS_500m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day3_20220627_3_STAIR_Imputed_Landsat_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day3_20220627_4_STAIR_Fused_30m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day3_20220627_4_STAIR_Fused_30m_Reflectance.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        32,
+        32,
+        32
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day3_20220627_5_NDVI_30m.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day4_20220729_1_Raw_Cloudy_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day4_20220729_2_MODIS_500m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day4_20220729_3_STAIR_Imputed_Landsat_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day4_20220729_4_STAIR_Fused_30m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day4_20220729_4_STAIR_Fused_30m_Reflectance.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        32,
+        32,
+        32
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day4_20220729_5_NDVI_30m.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day5_20220830_1_Raw_Cloudy_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day5_20220830_2_MODIS_500m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day5_20220830_3_STAIR_Imputed_Landsat_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day5_20220830_4_STAIR_Fused_30m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day5_20220830_4_STAIR_Fused_30m_Reflectance.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        32,
+        32,
+        32
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Landscape_5Day_Analysis/2_Seasonal_5CloudyDays_May_to_August/Season_Day5_20220830_5_NDVI_30m.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Stage_By_Stage_Progression/1_MODIS_Progression/1_MODIS_Stage0_CloudGap_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Stage_By_Stage_Progression/1_MODIS_Progression/1_MODIS_Stage1_Temporal_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Stage_By_Stage_Progression/1_MODIS_Progression/1_MODIS_Stage2_Global_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Stage_By_Stage_Progression/1_MODIS_Progression/1_MODIS_Stage3_Adaptive_CloudFree_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Stage_By_Stage_Progression/2_Landsat_Progression/2_Landsat_Stage0_CloudGap_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Stage_By_Stage_Progression/2_Landsat_Progression/2_Landsat_Stage1_Temporal_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Stage_By_Stage_Progression/2_Landsat_Progression/2_Landsat_Stage2_Global_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Stage_By_Stage_Progression/2_Landsat_Progression/2_Landsat_Stage3_Adaptive_CloudFree_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Stage_By_Stage_Progression/3_Fusion_And_GroundTruth/3_Fusion_1_CloudFree_MODIS_500m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Stage_By_Stage_Progression/3_Fusion_And_GroundTruth/3_Fusion_2_Spatial_Difference_Delta_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Stage_By_Stage_Progression/3_Fusion_And_GroundTruth/3_Fusion_3_STAIR_Fused_Prediction_30m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Stage_By_Stage_Progression/3_Fusion_And_GroundTruth/3_Fusion_4_True_GroundTruth_Landsat_30m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/5km_Stage_By_Stage_Progression/3_Fusion_And_GroundTruth/3_Fusion_5_Absolute_Error_NIR_30m.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/All_Layers_Real_Clouds_20220729/1_Landsat_All_Stages/1_Landsat_Stage0_Raw_RealClouds_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/All_Layers_Real_Clouds_20220729/1_Landsat_All_Stages/1_Landsat_Stage1_Temporal_Interp_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/All_Layers_Real_Clouds_20220729/1_Landsat_All_Stages/1_Landsat_Stage2_Global_Correction_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/All_Layers_Real_Clouds_20220729/1_Landsat_All_Stages/1_Landsat_Stage3_Adaptive_Correction_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/All_Layers_Real_Clouds_20220729/1_Landsat_All_Stages/1_Landsat_Stage4_Diff_Adaptive_Minus_Global_NIR.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/All_Layers_Real_Clouds_20220729/1_Landsat_All_Stages/1_Landsat_Stage4_Diff_Adaptive_Minus_Global_Visual.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/All_Layers_Real_Clouds_20220729/2_MODIS_All_Stages/2_MODIS_Stage0_Raw_RealClouds_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/All_Layers_Real_Clouds_20220729/2_MODIS_All_Stages/2_MODIS_Stage1_Temporal_Interp_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/All_Layers_Real_Clouds_20220729/2_MODIS_All_Stages/2_MODIS_Stage2_Global_Correction_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/All_Layers_Real_Clouds_20220729/2_MODIS_All_Stages/2_MODIS_Stage3_Adaptive_CloudFree_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/All_Layers_Real_Clouds_20220729/3_Fusion_All_Stages/3_Fusion_1_CloudFree_MODIS_30m_Grid_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/All_Layers_Real_Clouds_20220729/3_Fusion_All_Stages/3_Fusion_2_Spatial_Difference_Delta_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/All_Layers_Real_Clouds_20220729/3_Fusion_All_Stages/3_Fusion_3_FINAL_STAIR_Fused_Prediction_30m_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/All_Layers_Real_Clouds_20220729/3_Fusion_All_Stages/3_Fusion_4_NDVI_STAIR_Fused_30m.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/Figure3_PaperAligned_200x200/Figure3_PaperColored_0_CloudGap.tif",
+      "width": 180,
+      "height": 180,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726630.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_PaperAligned_200x200/Figure3_PaperColored_1_Temporal.tif",
+      "width": 180,
+      "height": 180,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726630.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_PaperAligned_200x200/Figure3_PaperColored_2_Global.tif",
+      "width": 180,
+      "height": 180,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726630.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_PaperAligned_200x200/Figure3_PaperColored_3_Adaptive.tif",
+      "width": 180,
+      "height": 180,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726630.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_PaperAligned_200x200/Figure3_PaperColored_4_Diff_Adaptive_Global.tif",
+      "width": 180,
+      "height": 180,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726630.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_PaperAligned_200x200/PaperFigure3_RedBand_20220611_0_CloudGap.tif",
+      "width": 180,
+      "height": 180,
+      "bands": 1,
+      "bits": [
+        64
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726630.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_PaperAligned_200x200/PaperFigure3_RedBand_20220611_1_Temporal.tif",
+      "width": 180,
+      "height": 180,
+      "bands": 1,
+      "bits": [
+        64
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726630.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_PaperAligned_200x200/PaperFigure3_RedBand_20220611_2_Global.tif",
+      "width": 180,
+      "height": 180,
+      "bands": 1,
+      "bits": [
+        64
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726630.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_PaperAligned_200x200/PaperFigure3_RedBand_20220611_3_Adaptive.tif",
+      "width": 180,
+      "height": 180,
+      "bands": 1,
+      "bits": [
+        64
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726630.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_PaperAligned_200x200/PaperScale_20220611_0_CloudGap.tif",
+      "width": 180,
+      "height": 180,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726630.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_PaperAligned_200x200/PaperScale_20220611_1_Temporal.tif",
+      "width": 180,
+      "height": 180,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726630.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_PaperAligned_200x200/PaperScale_20220611_2_Global.tif",
+      "width": 180,
+      "height": 180,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726630.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_PaperAligned_200x200/PaperScale_20220611_3_Adaptive.tif",
+      "width": 180,
+      "height": 180,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726630.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_PaperAligned_200x200/PaperScale_20220611_4_Diff_Adaptive_Global.tif",
+      "width": 180,
+      "height": 180,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726630.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_Single_Farmland_Demonstration/Farmland_20220611_0_CloudGap.tif",
+      "width": 60,
+      "height": 60,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726930.0,
+        4640790.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_Single_Farmland_Demonstration/Farmland_20220611_1_Temporal.tif",
+      "width": 60,
+      "height": 60,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726930.0,
+        4640790.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_Single_Farmland_Demonstration/Farmland_20220611_2_Global.tif",
+      "width": 60,
+      "height": 60,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726930.0,
+        4640790.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_Single_Farmland_Demonstration/Farmland_20220611_3_Adaptive.tif",
+      "width": 60,
+      "height": 60,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726930.0,
+        4640790.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_Single_Farmland_Demonstration/Farmland_20220611_4_Diff_Adaptive_Global.tif",
+      "width": 60,
+      "height": 60,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726930.0,
+        4640790.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_Single_Farmland_Demonstration/Farmland_20220722_0_GroundTruth_Pristine.tif",
+      "width": 60,
+      "height": 60,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727830.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_Single_Farmland_Demonstration/Farmland_20220722_1_CloudGap.tif",
+      "width": 60,
+      "height": 60,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727830.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_Single_Farmland_Demonstration/Farmland_20220722_2_Temporal.tif",
+      "width": 60,
+      "height": 60,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727830.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_Single_Farmland_Demonstration/Farmland_20220722_3_Global.tif",
+      "width": 60,
+      "height": 60,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727830.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_Single_Farmland_Demonstration/Farmland_20220722_4_Adaptive.tif",
+      "width": 60,
+      "height": 60,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727830.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_Single_Farmland_Demonstration/Farmland_20220722_5_Diff_Adaptive_Global.tif",
+      "width": 60,
+      "height": 60,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727830.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_Single_Farmland_Demonstration/Farmland_20220830_0_CloudGap.tif",
+      "width": 60,
+      "height": 60,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        728280.0,
+        4638540.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_Single_Farmland_Demonstration/Farmland_20220830_1_Temporal.tif",
+      "width": 60,
+      "height": 60,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        728280.0,
+        4638540.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_Single_Farmland_Demonstration/Farmland_20220830_2_Global.tif",
+      "width": 60,
+      "height": 60,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        728280.0,
+        4638540.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_Single_Farmland_Demonstration/Farmland_20220830_3_Adaptive.tif",
+      "width": 60,
+      "height": 60,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        728280.0,
+        4638540.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Figure3_Single_Farmland_Demonstration/Farmland_20220830_4_Diff_Adaptive_Global.tif",
+      "width": 60,
+      "height": 60,
+      "bands": 3,
+      "bits": [
+        64,
+        64,
+        64
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        728280.0,
+        4638540.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day1_20220722_GroundTruth_Benchmark/0_CloudGap.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day1_20220722_GroundTruth_Benchmark/1_Temporal.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day1_20220722_GroundTruth_Benchmark/2_Global.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day1_20220722_GroundTruth_Benchmark/3_Adaptive.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day1_20220722_GroundTruth_Benchmark/4_Diff_Adaptive_Global.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day1_20220722_GroundTruth_Benchmark/5_GroundTruth.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day1_20220722_GroundTruth_Benchmark/Zoomed_Farmland_0_CloudGap.tif",
+      "width": 70,
+      "height": 70,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727830.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day1_20220722_GroundTruth_Benchmark/Zoomed_Farmland_1_Temporal.tif",
+      "width": 70,
+      "height": 70,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727830.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day1_20220722_GroundTruth_Benchmark/Zoomed_Farmland_2_Global.tif",
+      "width": 70,
+      "height": 70,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727830.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day1_20220722_GroundTruth_Benchmark/Zoomed_Farmland_3_Adaptive.tif",
+      "width": 70,
+      "height": 70,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727830.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day1_20220722_GroundTruth_Benchmark/Zoomed_Farmland_4_Diff_Adaptive_Global.tif",
+      "width": 70,
+      "height": 70,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727830.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day1_20220722_GroundTruth_Benchmark/Zoomed_Farmland_5_GroundTruth.tif",
+      "width": 70,
+      "height": 70,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727830.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day2_20220611_EarlySummer/0_CloudGap.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day2_20220611_EarlySummer/1_Temporal.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day2_20220611_EarlySummer/2_Global.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day2_20220611_EarlySummer/3_Adaptive.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day2_20220611_EarlySummer/4_Diff_Adaptive_Global.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day2_20220611_EarlySummer/Zoomed_Farmland_0_CloudGap.tif",
+      "width": 70,
+      "height": 70,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726780.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day2_20220611_EarlySummer/Zoomed_Farmland_1_Temporal.tif",
+      "width": 70,
+      "height": 70,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726780.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day2_20220611_EarlySummer/Zoomed_Farmland_2_Global.tif",
+      "width": 70,
+      "height": 70,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726780.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day2_20220611_EarlySummer/Zoomed_Farmland_3_Adaptive.tif",
+      "width": 70,
+      "height": 70,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726780.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day2_20220611_EarlySummer/Zoomed_Farmland_4_Diff_Adaptive_Global.tif",
+      "width": 70,
+      "height": 70,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726780.0,
+        4640940.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day3_20220729_PeakCanopy/0_CloudGap.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day3_20220729_PeakCanopy/1_Temporal.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day3_20220729_PeakCanopy/2_Global.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day3_20220729_PeakCanopy/3_Adaptive.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day3_20220729_PeakCanopy/4_Diff_Adaptive_Global.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day3_20220729_PeakCanopy/Zoomed_Farmland_0_CloudGap.tif",
+      "width": 70,
+      "height": 70,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        729930.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day3_20220729_PeakCanopy/Zoomed_Farmland_1_Temporal.tif",
+      "width": 70,
+      "height": 70,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        729930.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day3_20220729_PeakCanopy/Zoomed_Farmland_2_Global.tif",
+      "width": 70,
+      "height": 70,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        729930.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day3_20220729_PeakCanopy/Zoomed_Farmland_3_Adaptive.tif",
+      "width": 70,
+      "height": 70,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        729930.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/MultiDay_Evidence_Demonstration/QGIS_Layers/Day3_20220729_PeakCanopy/Zoomed_Farmland_4_Diff_Adaptive_Global.tif",
+      "width": 70,
+      "height": 70,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        729930.0,
+        4641090.0,
+        0.0
+      ],
+      "compression": 5
+    },
+    {
+      "path": "outputs/Real_Cloud_Fusion_20220729/QGIS_Layers/1_Raw_Landsat_With_Real_Clouds_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/Real_Cloud_Fusion_20220729/QGIS_Layers/2_Raw_MODIS_With_Real_Clouds_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/Real_Cloud_Fusion_20220729/QGIS_Layers/3_STAIR_Imputed_CloudFree_MODIS_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/Real_Cloud_Fusion_20220729/QGIS_Layers/4_STAIR_Imputed_CloudFree_Landsat_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/Real_Cloud_Fusion_20220729/QGIS_Layers/5_Spatial_Difference_Residual_Delta_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/Real_Cloud_Fusion_20220729/QGIS_Layers/6_FINAL_STAIR_Fused_30m_Prediction_FCC.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/Real_Cloud_Fusion_20220729/QGIS_Layers/6_FINAL_STAIR_Fused_30m_Reflectance.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 3,
+      "bits": [
+        32,
+        32,
+        32
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/Real_Cloud_Fusion_20220729/QGIS_Layers/7_NDVI_STAIR_Fused_30m.tif",
+      "width": 173,
+      "height": 173,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        727050.0,
+        4640640.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Evaluation/1_Prior_Ref_Landsat_20220714.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        32,
+        32,
+        32
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Evaluation/2_Post_Ref_Landsat_Imputed_20220729.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        32,
+        32,
+        32
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Evaluation/3_Target_MODIS_Resampled_20220722.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        32,
+        32,
+        32
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Evaluation/4_STAIR_Fused_Prediction_20220722.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        32,
+        32,
+        32
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Evaluation/5_True_GroundTruth_Landsat_20220722.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        32,
+        32,
+        32
+      ],
+      "sample_format": [
+        3,
+        3,
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Evaluation/6_Error_Heatmap_NIR_20220722.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Evaluation/7_NDVI_STAIR_Fused_20220722.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Evaluation/8_NDVI_GroundTruth_20220722.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 1,
+      "bits": [
+        32
+      ],
+      "sample_format": [
+        3
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Evaluation/QGIS_Layers/1_Prior_Ref_Landsat_20220714_FCC.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Evaluation/QGIS_Layers/2_Post_Ref_Landsat_Imputed_20220729_FCC.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Evaluation/QGIS_Layers/3_Target_MODIS_Resampled_20220722_FCC.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Evaluation/QGIS_Layers/4_STAIR_Fused_Prediction_20220722_FCC.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Evaluation/QGIS_Layers/5_True_GroundTruth_Landsat_20220722_FCC.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Visual_Progress/QGIS_Layers/1_MODIS_Imputation/1_MODIS_0_CloudGap.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Visual_Progress/QGIS_Layers/1_MODIS_Imputation/1_MODIS_1_Temporal.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Visual_Progress/QGIS_Layers/1_MODIS_Imputation/1_MODIS_2_Global.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Visual_Progress/QGIS_Layers/1_MODIS_Imputation/1_MODIS_3_Adaptive_CloudFree.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Visual_Progress/QGIS_Layers/2_Landsat_Imputation/2_Landsat_0_CloudGap.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Visual_Progress/QGIS_Layers/2_Landsat_Imputation/2_Landsat_1_Temporal.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Visual_Progress/QGIS_Layers/2_Landsat_Imputation/2_Landsat_2_Global.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Visual_Progress/QGIS_Layers/2_Landsat_Imputation/2_Landsat_3_Adaptive_CloudFree.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Visual_Progress/QGIS_Layers/3_Fusion/3_Fusion_1_CloudFree_MODIS_30m.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Visual_Progress/QGIS_Layers/3_Fusion/3_Fusion_2_CloudFree_Landsat_30m.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Visual_Progress/QGIS_Layers/3_Fusion/3_Fusion_3_Spatial_Difference_Delta.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    },
+    {
+      "path": "outputs/STAIR_Fusion_Visual_Progress/QGIS_Layers/3_Fusion/3_Fusion_4_STAIR_Fused_30m.tif",
+      "width": 241,
+      "height": 242,
+      "bands": 3,
+      "bits": [
+        8,
+        8,
+        8
+      ],
+      "sample_format": [
+        1,
+        1,
+        1
+      ],
+      "epsg": 32616,
+      "pixel_scale": [
+        30.0,
+        30.0,
+        0.0
+      ],
+      "tie_point": [
+        0.0,
+        0.0,
+        0.0,
+        726030.0,
+        4641690.0,
+        0.0
+      ],
+      "compression": 8
+    }
+  ],
+  "saved_benchmark_grid_match": true,
+  "saved_benchmark_metrics": {
+    "NIR": {
+      "prior": {
+        "n": 58321,
+        "rmse": 0.09209505283456881,
+        "mae": 0.05497219587439456,
+        "bias": -0.008562808105462191,
+        "pearson_r": 0.59657203836054,
+        "r_squared_score": -0.10139860975329529
+      },
+      "modis": {
+        "n": 58321,
+        "rmse": 0.07195328898694578,
+        "mae": 0.05215025129200327,
+        "bias": 0.013603127597735073,
+        "pearson_r": 0.6046956033760612,
+        "r_squared_score": 0.3276843482847859
+      },
+      "fused": {
+        "n": 54704,
+        "rmse": 0.0539869142223116,
+        "mae": 0.03912638445821407,
+        "bias": 0.017528769536219842,
+        "pearson_r": 0.8472880608291312,
+        "r_squared_score": 0.6293448750140854
+      }
+    },
+    "Red": {
+      "prior": {
+        "n": 58322,
+        "rmse": 0.08014561181740495,
+        "mae": 0.036262851773166474,
+        "bias": 0.03048141364000731,
+        "pearson_r": 0.45575204395391816,
+        "r_squared_score": -3.691804478064787
+      },
+      "modis": {
+        "n": 58322,
+        "rmse": 0.032499993941301396,
+        "mae": 0.02260955922820301,
+        "bias": -0.003052074752992109,
+        "pearson_r": 0.5218932269716714,
+        "r_squared_score": 0.2284803915160304
+      },
+      "fused": {
+        "n": 54705,
+        "rmse": 0.036714069920591154,
+        "mae": 0.01628671926672897,
+        "bias": 0.005706684922444253,
+        "pearson_r": 0.6628899326394839,
+        "r_squared_score": -0.00038896588926640163
+      }
+    },
+    "Green": {
+      "prior": {
+        "n": 58322,
+        "rmse": 0.0738400656319002,
+        "mae": 0.03066416021576389,
+        "bias": 0.024898886732139042,
+        "pearson_r": 0.3383226904017806,
+        "r_squared_score": -6.839188098326707
+      },
+      "modis": {
+        "n": 58322,
+        "rmse": 0.023313270209625255,
+        "mae": 0.016708443624797422,
+        "bias": 0.0016599213846268275,
+        "pearson_r": 0.5016169524904949,
+        "r_squared_score": 0.21856414925782242
+      },
+      "fused": {
+        "n": 54705,
+        "rmse": 0.034136977104032504,
+        "mae": 0.013921600881106659,
+        "bias": 0.0055009718803895645,
+        "pearson_r": 0.561303509278457,
+        "r_squared_score": -0.7204573372740153
+      }
+    }
+  },
+  "saved_ndvi_metrics_original_mask": {
+    "prior": {
+      "n": 58321,
+      "rmse": 2.3753408398492053,
+      "mae": 0.1305785861315751,
+      "bias": -0.06344224012892917,
+      "pearson_r": 0.05202589104932908,
+      "r_squared_score": -136.4141187769172
+    },
+    "modis": {
+      "n": 58321,
+      "rmse": 0.18887646214005585,
+      "mae": 0.12122753716656463,
+      "bias": 0.03776544562974013,
+      "pearson_r": 0.4385538339914205,
+      "r_squared_score": 0.13116928787224502
+    },
+    "fused": {
+      "n": 54704,
+      "rmse": 0.10986297118579862,
+      "mae": 0.0586031340174721,
+      "bias": 0.004071665821230518,
+      "pearson_r": 0.8434174606196084,
+      "r_squared_score": 0.7092784395901082
+    }
+  },
+  "saved_benchmark_ranges": {
+    "prior": {
+      "min": -0.07121749967336655,
+      "max": 0.9075624942779541,
+      "nonfinite": 0
+    },
+    "post": {
+      "min": -0.13793249428272247,
+      "max": 0.7747743725776672,
+      "nonfinite": 10851
+    },
+    "modis": {
+      "min": 0.0275211613625288,
+      "max": 0.6067591309547424,
+      "nonfinite": 0
+    },
+    "fused": {
+      "min": 0.0,
+      "max": 0.7522855997085571,
+      "nonfinite": 10851
+    },
+    "truth": {
+      "min": -0.009920000098645687,
+      "max": 0.7104974985122681,
+      "nonfinite": 0
+    }
+  },
+  "common_support_metrics": {
+    "NIR": {
+      "prior": {
+        "n": 54704,
+        "rmse": 0.09340722973283175,
+        "mae": 0.05566874660057694,
+        "bias": -0.008443654717835421,
+        "pearson_r": 0.5932550311666468,
+        "r_squared_score": -0.10956815472701842
+      },
+      "modis": {
+        "n": 54704,
+        "rmse": 0.07261464974633669,
+        "mae": 0.05264422948061122,
+        "bias": 0.013854840587781749,
+        "pearson_r": 0.6065392288288196,
+        "r_squared_score": 0.3294340553798487
+      },
+      "fused": {
+        "n": 54704,
+        "rmse": 0.0539869142223116,
+        "mae": 0.03912638445821407,
+        "bias": 0.017528769536219842,
+        "pearson_r": 0.8472880608291312,
+        "r_squared_score": 0.6293448750140854
+      }
+    },
+    "Red": {
+      "prior": {
+        "n": 54705,
+        "rmse": 0.08194460084232123,
+        "mae": 0.03710506660409921,
+        "bias": 0.03125428112153057,
+        "pearson_r": 0.4471947177668499,
+        "r_squared_score": -3.983615406288629
+      },
+      "modis": {
+        "n": 54705,
+        "rmse": 0.03221145981297849,
+        "mae": 0.02249070281933129,
+        "bias": -0.0028886648026960576,
+        "pearson_r": 0.5217963792052865,
+        "r_squared_score": 0.22993985591959443
+      },
+      "fused": {
+        "n": 54705,
+        "rmse": 0.036714069920591154,
+        "mae": 0.01628671926672897,
+        "bias": 0.005706684922444253,
+        "pearson_r": 0.6628899326394839,
+        "r_squared_score": -0.00038896588926640163
+      }
+    },
+    "Green": {
+      "prior": {
+        "n": 54705,
+        "rmse": 0.07558748130547063,
+        "mae": 0.0314228773799988,
+        "bias": 0.025590419192780954,
+        "pearson_r": 0.3303157969138589,
+        "r_squared_score": -7.435164071889394
+      },
+      "modis": {
+        "n": 54705,
+        "rmse": 0.02300302630949392,
+        "mae": 0.01658766427589023,
+        "bias": 0.0017061441175223553,
+        "pearson_r": 0.5015654870615349,
+        "r_squared_score": 0.218797295128902
+      },
+      "fused": {
+        "n": 54705,
+        "rmse": 0.034136977104032504,
+        "mae": 0.013921600881106659,
+        "bias": 0.0055009718803895645,
+        "pearson_r": 0.561303509278457,
+        "r_squared_score": -0.7204573372740153
+      }
+    }
+  },
+  "benchmark_missing_pixels": 3617,
+  "benchmark_total_pixels": 58322,
+  "same_date_fcc_checks": [
+    {
+      "before": "outputs/Real_Cloud_Fusion_20220729/QGIS_Layers/4_STAIR_Imputed_CloudFree_Landsat_FCC.tif",
+      "after": "outputs/Real_Cloud_Fusion_20220729/QGIS_Layers/6_FINAL_STAIR_Fused_30m_Prediction_FCC.tif",
+      "equal": true,
+      "max_difference": 0
+    },
+    {
+      "before": "outputs/5km_Stage_By_Stage_Progression/2_Landsat_Progression/2_Landsat_Stage3_Adaptive_CloudFree_FCC.tif",
+      "after": "outputs/5km_Stage_By_Stage_Progression/3_Fusion_And_GroundTruth/3_Fusion_3_STAIR_Fused_Prediction_30m_FCC.tif",
+      "equal": true,
+      "max_difference": 0
+    }
+  ],
+  "isolated_numpy_checks": {
+    "weighted_residual": "pass",
+    "first_endpoint": "pass",
+    "second_endpoint": "pass"
+  },
+  "numeric_counterexamples": {
+    "dummy_before_real_after": {
+      "target_time": 10,
+      "before_time": 0,
+      "before_value": 0,
+      "after_time": 20,
+      "after_value": 0.4,
+      "current_formula": 0.2,
+      "expected_backward_fill": 0.4
+    },
+    "double_spatial_offset": {
+      "perfect_temporal_gap": 0.6,
+      "true_clear": 0.2,
+      "pred_clear": 0.2,
+      "ref_gap": 0.6,
+      "ref_clear": 0.2,
+      "current_corrected": 1.0,
+      "truth": 0.6
+    }
+  }
+}

@@ -51,3 +51,7 @@ data/*.html
 # Jupyter / Scratch
 .ipynb_checkpoints/
 scratch/
+.pytest_cache/
+.pytest_tmp/
+data/temporal/
+outputs/temporal_validation/

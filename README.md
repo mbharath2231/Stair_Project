@@ -1,5 +1,14 @@
 # STAIR: Spatio-Temporal Adaptive Image Restoration & Fusion
 
+> **Current development status (2026-11-06):** The maintained first stage is the
+> validated temporal interpolation workflow. Start with
+> [the temporal-stage guide](docs/TEMPORAL_STAGE.md). It includes real Clayton
+> Landsat data, independent holdouts, support diagnostics, and reproducible visuals.
+> Global/adaptive correction will be developed against this baseline next.
+> The older feature descriptions and commands below describe historical
+> experiments; several listed runners have moved into `archive/` and are not the
+> maintained entry points. The code is a research implementation in development.
+
 This repository provides a modular, production-grade Python framework implementing the **STAIR** (Spatio-Temporal Adaptive Image Restoration) methodology and spatiotemporal data fusion between **Landsat 8** (30m high spatial resolution, 16-day revisit) and **MODIS** (250m coarse spatial resolution, daily revisit) using **Google Earth Engine (GEE)**.
 
 The framework is configured for monitoring agricultural dynamics in the **Raisin River Watershed** and can be extended to any Area of Interest (AOI).
