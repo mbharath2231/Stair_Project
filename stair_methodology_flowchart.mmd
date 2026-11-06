@@ -1,0 +1,113 @@
+flowchart TD
+    %% ==========================================
+    %% GLOBAL STYLES & CLASSES
+    %% ==========================================
+    classDef inputNode fill:#fef3c7,stroke:#d97706,stroke-width:1.5px,color:#111827;
+    classDef prepNode fill:#e0e7ff,stroke:#4f46e5,stroke-width:1.5px,color:#111827;
+    classDef impNode fill:#ecfeff,stroke:#0891b2,stroke-width:1.5px,color:#111827;
+    classDef fusNode fill:#f3e8ff,stroke:#7c3aed,stroke-width:1.5px,color:#111827;
+    classDef valNode fill:#f0fdf4,stroke:#16a34a,stroke-width:1.5px,color:#111827;
+    classDef outcomeNode fill:#15803d,stroke:#166534,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef fusionOutcome fill:#6b21a8,stroke:#581c87,stroke-width:2px,color:#ffffff,font-weight:bold;
+    classDef insightNode fill:#fefce8,stroke:#ca8a04,stroke-width:1.5px,stroke-dasharray: 4 4,color:#854d0e,font-size:11px;
+
+    %% ==========================================
+    %% MODULE A & B: DATA INPUTS
+    %% ==========================================
+    subgraph MODULE_A ["Module A & B: Satellite Observations & Reference Catalogs"]
+        A1["Landsat 8 & 9<br/>30 m Resolution · 16-Day Revisit"]:::inputNode
+        A2["MODIS MCD43A4<br/>500 m Resolution · Daily Revisit"]:::inputNode
+        A3["Domain: Clayton Township, MI<br/>7 km × 7 km Study Extent"]:::inputNode
+        B1["Clear Reference Scene (t1)<br/>Structural & Land-Cover Baseline"]:::inputNode
+        B2["Multi-Temporal Archive<br/>Full Growing Season Collection"]:::inputNode
+    end
+
+    %% ==========================================
+    %% MODULE C: PREPROCESSING & MASKING
+    %% ==========================================
+    subgraph MODULE_C ["Module C: Quality Screening & Shadow-Safe Masking"]
+        C1["Pixel Quality Screening<br/>QA bitmask flags: cloud, shadow, cirrus, dilated"]:::prepNode
+        C2["Edge & Shadow Dilation<br/>6-pixel buffer expansion for diffuse edges"]:::prepNode
+        C3["Permanent Water Guard<br/>JRC Surface Water & NDWI protect lakes"]:::prepNode
+        C4["Binary Partitioning<br/>Clear Mask (Cf) & Cloud Gap Mask (Cg)"]:::prepNode
+    end
+
+    %% ==========================================
+    %% STAGE 1: CLOUD IMPUTATION PIPELINE
+    %% ==========================================
+    subgraph STAGE_1 ["Stage 1: Multi-Scale Adaptive Cloud Imputation (STAIR Section 2.2)"]
+        subgraph STEP_1_1 ["1.1 Temporal Linear Interpolation"]
+            D1["Nearest Clear-Neighbor Search<br/>Locates closest clear scene before & after target date"]:::impNode
+            D2["Time-Weighted Trajectory<br/>Blends observations proportional to elapsed calendar days"]:::impNode
+            D3["Unidirectional Fallback<br/>Forward/backward fill for season boundary edge cases"]:::impNode
+        end
+
+        subgraph STEP_1_2 ["1.2 Whole-Scene Global Spatial Correction"]
+            D4["Scene-Wide Drift Measurement<br/>Mean discrepancy between true data & temporal prediction"]:::impNode
+            D5["Landscape Disparity Offset<br/>Captures terrain/surface differences via reference day"]:::impNode
+            D6["Additive Baseline Alignment<br/>Applies uniform offset across entire cloud gap"]:::impNode
+        end
+
+        subgraph STEP_1_3 ["1.3 Land-Cover Adaptive Spatial Correction"]
+            D7["Unsupervised Land Clustering<br/>Weka K-Means (k=4) groups crops, forest, water"]:::impNode
+            D8["Class-Specific Bias Calibration<br/>Calculates independent offsets per land class"]:::impNode
+            D9["Sample Size Safeguard<br/>Reverts rare classes (<30 px) to global shift"]:::impNode
+            D10["Boundary Edge Feathering<br/>Focal smoothing eliminates seam lines at gap edges"]:::impNode
+        end
+
+        D_OUT["✓ 100% Cloud-Free Landsat Image (30 m)"]:::outcomeNode
+    end
+
+    %% ==========================================
+    %% STAGE 2: SPATIOTEMPORAL FUSION
+    %% ==========================================
+    subgraph STAGE_2 ["Stage 2: Spatiotemporal Fusion (STAIR Section 2.3)"]
+        E1["Concurrent Reference Pairing<br/>Landsat (30 m) + MODIS (500 m) on Golden Day (T1)"]:::fusNode
+        E2["Coordinate & Scale Matching<br/>Resamples 500 m MODIS to 30 m grid"]:::fusNode
+        E3["High-Resolution Residual Isolation<br/>Extracts parcel edges & crop rows (Landsat - MODIS)"]:::fusNode
+        E4["Proximity-Weighted Blending<br/>Weights reference residuals by calendar day proximity"]:::fusNode
+        E5["Daily 30 m Synthesis<br/>Injects spatial detail onto daily target MODIS"]:::fusNode
+        E_OUT["✓ Fused 30 m Daily Synthetic Product"]:::fusionOutcome
+    end
+
+    %% ==========================================
+    %% MODULE E: VALIDATION & ACCURACY
+    %% ==========================================
+    subgraph MODULE_E ["Module E: Quantitative Verification & Benchmarking"]
+        F1["Simulated Gap Validation<br/>1.5 km artificial cloud mask over clear ground truth"]:::valNode
+        F2["Multi-Phase Phenology Evaluation<br/>Tested across 6 growing season stages (2022)"]:::valNode
+        F3["Statistical Error Derivation<br/>MAE, RMSE, Pearson Correlation (R), Error Reduction %"]:::valNode
+        F4["GIS-Ready Multi-Band Deliverables<br/>Calibrated GeoTIFFs (EPSG:32616) & QGIS layers"]:::valNode
+    end
+
+    %% ==========================================
+    %% OPTIONAL RESEARCH INSIGHT CALLOUTS
+    %% ==========================================
+    INSIGHT_1["Insight: Prevents Posey Lake & wetlands<br/>from false shadow misclassification"]:::insightNode
+    INSIGHT_2["Insight: Separates Corn vs. Soy spectral responses<br/>avoiding uniform vegetative bias"]:::insightNode
+    INSIGHT_3["Insight: Achieved 20% to 40% error reduction<br/>over raw temporal interpolation"]:::insightNode
+
+    %% ==========================================
+    %% PIPELINE CONNECTIONS & DATA FLOW
+    %% ==========================================
+    MODULE_A --> MODULE_C
+    C1 --> C2 --> C3 --> C4
+    C4 --> D1
+    
+    %% Imputation flow
+    D1 --> D2 --> D3 --> D4 --> D5 --> D6 --> D7 --> D8 --> D9 --> D10 --> D_OUT
+    
+    %% Fusion flow
+    D_OUT ==> E1
+    E1 --> E2 --> E3 --> E4 --> E5 --> E_OUT
+    
+    %% Output to Validation
+    D_OUT --> F1
+    E_OUT --> F1
+    F1 --> F2 --> F3 --> F4
+
+    %% Linking insights (dashed lines)
+    C3 -.-> INSIGHT_1
+    D8 -.-> INSIGHT_2
+    D_OUT -.-> INSIGHT_3
+

@@ -1,0 +1,115 @@
+<mxfile host="app.diagrams.net" modified="2026-11-03T14:00:00.000Z" agent="Mozilla/5.0" version="24.0.0">
+  <diagram id="stair_diagram" name="STAIR_2x2_Framework">
+    <mxGraphModel dx="1400" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1250" pageHeight="1020" background="#0F172A" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TITLE BAR -->
+        <mxCell id="title" value="&lt;b&gt;&lt;font style=&quot;font-size: 22px;&quot; color=&quot;#FFFFFF&quot;&gt;STAIR Spatiotemporal Fusion Framework (Luo et al., 2018)&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 13px;&quot; color=&quot;#94A3B8&quot;&gt;Balanced 2×2 Methodological Architecture for Cloud Imputation and Daily High-Resolution Agricultural Synthesis&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="60" y="25" width="1120" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- QUADRANT 1: TOP-LEFT (DATA ACQUISITION) -->
+        <mxCell id="q1" value="&lt;b&gt;1. DATA ACQUISITION &amp;amp; QUALITY SCREENING&lt;/b&gt;&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Primary Satellite Observations:&lt;/b&gt;&lt;br&gt;
+• Landsat 8 &amp;amp; 9: 30 m · 16-Day Revisit (NIR, Red, Green)&lt;br&gt;
+• MODIS MCD43A4: 500 m · Daily Coverage (Nadir BRDF)&lt;br&gt;
+• Clear Reference Scene (t₁): Cloud-free structural baseline&lt;br&gt;
+• Full-Season Archive: Multi-temporal training catalog&lt;br&gt;
+• Study Area AOI: 5 km × 5 km Extent (Clayton Township, MI)&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Quality Screening &amp;amp; Water Guard:&lt;/b&gt;&lt;br&gt;
+• QA_PIXEL Bitmasks: Cloud, Shadow, Dilated &amp;amp; Cirrus flags&lt;br&gt;
+• 6-Pixel Buffer Dilation to catch diffuse haze &amp;amp; shadow edges&lt;br&gt;
+• JRC Global Surface Water + NDWI Guard: Protects lakes&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Quality Partitioned Layers:&lt;/b&gt;&lt;br&gt;
+• Clear Surface Mask (C_f): Valid calibration pixels&lt;br&gt;
+• Cloud Gap Mask (C_g): Missing target pixels to restore" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2.5;align=left;verticalAlign=top;spacingLeft=16;spacingTop=16;spacingRight=16;spacingBottom=16;fontSize=11.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="60" y="100" width="480" height="370" as="geometry" />
+        </mxCell>
+
+        <!-- QUADRANT 2: TOP-RIGHT (CLOUD IMPUTATION) -->
+        <mxCell id="q2" value="&lt;b&gt;2. STAIR CLOUD IMPUTATION PIPELINE (SEC. 2.2)&lt;/b&gt;&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Stage 2.2.1: Temporal Linear Interpolation:&lt;/b&gt;&lt;br&gt;
+• Nearest clear observations before (t_bef) and after (t_aft)&lt;br&gt;
+• Proportional weight: w = (t₀ − t_bef) / (t_aft − t_bef)&lt;br&gt;
+• Formula: L_linear = R(t_bef) + w × [ R(t_aft) − R(t_bef) ]&lt;br&gt;
+• Forward/backward fill fallback for season overpass boundaries&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Stage 2.2.2a: Global Spatial Drift Correction:&lt;/b&gt;&lt;br&gt;
+• Temporal drift: Δ_temp = mean(L, C_f, t₀) − mean(L_linear, C_f, t₀)&lt;br&gt;
+• Spatial gap offset: Δ_spatial = mean(L, C_g, t₁) − mean(L, C_f, t₁)&lt;br&gt;
+• Formula: L_global = L_linear + (Δ_temp + Δ_spatial)&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Stage 2.2.2b: Land-Cover Adaptive K-Means Correction:&lt;/b&gt;&lt;br&gt;
+• Unsupervised Weka K-Means (k = 4) clustering on clear day t₁&lt;br&gt;
+• Class-specific offsets: Δ_temp(c) &amp;amp; Δ_spatial(c) per crop type&lt;br&gt;
+• 1.5 px focal mean boundary feathering eliminates seamlines&lt;br&gt;
+• Formula: L_adaptive = L_linear + δ(c)&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Output:&lt;/b&gt; ✓ 100% Cloud-Free Landsat Image (30 m Resolution)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ECFEFF;strokeColor=#0891B2;strokeWidth=2.5;align=left;verticalAlign=top;spacingLeft=16;spacingTop=16;spacingRight=16;spacingBottom=16;fontSize=11.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="700" y="100" width="480" height="370" as="geometry" />
+        </mxCell>
+
+        <!-- QUADRANT 3: BOTTOM-LEFT (SPATIOTEMPORAL FUSION) -->
+        <mxCell id="q3" value="&lt;b&gt;3. SPATIOTEMPORAL DUAL FUSION ENGINE (SEC. 2.3)&lt;/b&gt;&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Dual Reference Pair Selection:&lt;/b&gt;&lt;br&gt;
+• Golden Day (T₁): Concurrent clear Landsat (30 m) &amp;amp; MODIS (500 m)&lt;br&gt;
+• Post-Reference (T₂): Imputed Landsat (30 m) &amp;amp; MODIS (500 m)&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Spatial Scale &amp;amp; Grid Alignment:&lt;/b&gt;&lt;br&gt;
+• Bilinear interpolation resamples 500 m MODIS to 30 m grid&lt;br&gt;
+• Aligns coordinates, projections, and pixel bounds to Landsat grid&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Spatial Difference Residual Isolation:&lt;/b&gt;&lt;br&gt;
+• ε(T₁) = L(T₁) − M(T₁) &amp;amp; ε(T₂) = L̂(T₂) − M(T₂)&lt;br&gt;
+• Extracts 30 m farm field boundaries &amp;amp; crop rows blurred at 500 m&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Proximity-Weighted Daily Synthesis:&lt;/b&gt;&lt;br&gt;
+• Time weights: w₁ = (T₂ − t_p) / (T₂ − T₁) ; w₂ = (t_p − T₁) / (T₂ − T₁)&lt;br&gt;
+• Formula: I(t_p) = M(t_p) + w₁·ε(T₁) + w₂·ε(T₂)&lt;br&gt;
+• Clamped to valid physical reflectance range [0.0, 1.0]&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Output:&lt;/b&gt; ✓ Fused 30 m Daily Synthetic Product (Daily Phenology)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#7C3AED;strokeWidth=2.5;align=left;verticalAlign=top;spacingLeft=16;spacingTop=16;spacingRight=16;spacingBottom=16;fontSize=11.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="60" y="580" width="480" height="370" as="geometry" />
+        </mxCell>
+
+        <!-- QUADRANT 4: BOTTOM-RIGHT (VERIFICATION & DELIVERABLES) -->
+        <mxCell id="q4" value="&lt;b&gt;4. QUANTITATIVE VERIFICATION &amp;amp; DELIVERABLES&lt;/b&gt;&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Ground-Truth Benchmark Proof:&lt;/b&gt;&lt;br&gt;
+• 1.5 km simulated cloud patch over 0% clear benchmark&lt;br&gt;
+• Multi-season validation across 6 phenological phases (2022)&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Quantitative Accuracy Assessment:&lt;/b&gt;&lt;br&gt;
+• Evaluated inside cloud gap: MAE, RMSE, Pearson Correlation (R), R²&lt;br&gt;
+• Documented Gain: 20% to 40% error reduction over baseline&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Geospatial Deliverables &amp;amp; Research Applications:&lt;/b&gt;&lt;br&gt;
+• Multi-band calibrated GeoTIFF stacks (EPSG:32616)&lt;br&gt;
+• Continuous daily NDVI agricultural time-series&lt;br&gt;
+• Ready for GIS ingestion in QGIS / ArcGIS&lt;br&gt;&lt;br&gt;
+&lt;b&gt;Flow Legend:&lt;/b&gt;&lt;br&gt;
+[Amber: Inputs] · [Cyan: Impute] · [Purple: Fusion] · [Green: Deliverables]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;strokeWidth=2.5;align=left;verticalAlign=top;spacingLeft=16;spacingTop=16;spacingRight=16;spacingBottom=16;fontSize=11.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;arcSize=4;" vertex="1" parent="1">
+          <mxGeometry x="700" y="580" width="480" height="370" as="geometry" />
+        </mxCell>
+
+        <!-- ARROW 1: Q1 -> Q2 (Top Horizontal Channel) -->
+        <mxCell id="edge1" value="Feeds Masked Target &amp;amp; Quality Masks" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=#0891B2;strokeWidth=2.5;fontSize=11;fontColor=#0E7490;fontStyle=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="q1" target="q2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ARROW 2: Q1 -> Q3 (Left Vertical Channel) -->
+        <mxCell id="edge2" value="Supplies Daily MODIS M(t_p)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;dashed=1;strokeColor=#7C3AED;strokeWidth=2;fontSize=11;fontColor=#6D28D9;fontStyle=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="q1" target="q3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ARROW 3: Q2 -> Q3 (Routed via Central Runway, No Overlapping Diagonal) -->
+        <mxCell id="edge3" value="Supplies Imputed Landsat T₂ Reference" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;exitX=0.25;exitY=1;exitDx=0;exitDy=0;strokeColor=#7C3AED;strokeWidth=2.5;fontSize=11;fontColor=#6D28D9;fontStyle=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="q2" target="q3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="820" y="525" />
+              <mxPoint x="420" y="525" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ARROW 4: Q3 -> Q4 (Bottom Horizontal Channel) -->
+        <mxCell id="edge4" value="Synthesized 30m Product for Verification" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=#16A34A;strokeWidth=2.5;fontSize=11;fontColor=#15803D;fontStyle=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="q3" target="q4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

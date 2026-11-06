@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.mmin.js';
+  mermaid.initialize({ startOnLoad: true });
+</script>
+</head>
+<body>
+<pre class="mermaid">
+flowchart LR
+    subgraph COL_LEFT [" "]
+        direction TB
+        M1["Quadrant 1: Input Data"]
+        M3["Quadrant 3: STAIR Fusion"]
+    end
+    subgraph COL_RIGHT [" "]
+        direction TB
+        M2["Quadrant 2: Cloud Imputation"]
+        M4["Quadrant 4: Deliverables"]
+    end
+    M1 --> M2
+    M1 -.-> M3
+    M2 ==> M3
+    M3 --> M4
+    style COL_LEFT fill:none,stroke:none;
+    style COL_RIGHT fill:none,stroke:none;
+</pre>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<mxfile host="app.diagrams.net" modified="2026-11-03T14:00:00.000Z" agent="Mozilla/5.0" version="24.0.0">
+  <diagram id="stair_detailed" name="STAIR_Detailed_Flowchart">
+    <mxGraphModel dx="1600" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1540" pageHeight="1280" background="#0F172A" math="0" shadow="1">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- MASTER TITLE -->
+        <mxCell id="title" value="&lt;b&gt;&lt;font style=&quot;font-size: 22px;&quot; color=&quot;#FFFFFF&quot;&gt;STAIR Spatiotemporal Fusion Framework (Luo et al., 2018)&lt;/font&gt;&lt;/b&gt;&lt;br&gt;&lt;font style=&quot;font-size: 13px;&quot; color=&quot;#94A3B8&quot;&gt;Detailed End-to-End Methodological Architecture: Satellite Data Intake → Multi-Scale Imputation → Spatiotemporal Fusion → Validation&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="60" y="25" width="1420" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- ========================================== -->
+        <!-- FRAME 1: DATA ACQUISITION & QUALITY SCREENING -->
+        <!-- ========================================== -->
+        <mxCell id="f1" value="1. DATA ACQUISITION &amp;amp; QUALITY SCREENING" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#D97706;strokeWidth=2.5;align=left;verticalAlign=top;spacingLeft=16;spacingTop=12;fontFamily=Helvetica;fontSize=13;fontColor=#92400E;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="110" width="590" height="490" as="geometry" />
+        </mxCell>
+
+        <mxCell id="101" value="Landsat 8 &amp;amp; 9&lt;br&gt;30m · 16-Day Revisit" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="85" y="160" width="165" height="44" as="geometry" />
+        </mxCell>
+
+        <mxCell id="102" value="MODIS MCD43A4&lt;br&gt;500m · Daily Nadir BRDF" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="160" width="170" height="44" as="geometry" />
+        </mxCell>
+
+        <mxCell id="103" value="Reference Scene (t₁)&lt;br&gt;Clear Structural Baseline" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="160" width="165" height="44" as="geometry" />
+        </mxCell>
+
+        <mxCell id="104" value="Pixel Quality Screening&lt;br&gt;QA_PIXEL bitmasks: cloud, shadow, cirrus &amp;amp; dilated flags" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#E0E7FF;strokeColor=#4F46E5;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="85" y="235" width="540" height="42" as="geometry" />
+        </mxCell>
+
+        <mxCell id="105" value="6-Pixel Buffer Dilation&lt;br&gt;Captures diffuse cloud &amp;amp; shadow edges" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#E0E7FF;strokeColor=#4F46E5;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="85" y="305" width="260" height="44" as="geometry" />
+        </mxCell>
+
+        <mxCell id="106" value="Permanent Water Guard&lt;br&gt;JRC Global Water + NDWI protects lakes" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#E0E7FF;strokeColor=#4F46E5;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="365" y="305" width="260" height="44" as="geometry" />
+        </mxCell>
+
+        <mxCell id="107" value="Clear Surface Mask (C_f)&lt;br&gt;Valid unclouded calibration pixels" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#ECFDF5;strokeColor=#059669;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#065F46;fontFamily=Helvetica;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="85" y="380" width="260" height="48" as="geometry" />
+        </mxCell>
+
+        <mxCell id="108" value="Cloud Gap Mask (C_g)&lt;br&gt;Missing cloudy pixels to restore" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FEF2F2;strokeColor=#DC2626;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#991B1B;fontFamily=Helvetica;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="365" y="380" width="260" height="48" as="geometry" />
+        </mxCell>
+
+        <mxCell id="109" value="Domain: Clayton Township, MI (5 km × 5 km Agricultural Chip, EPSG:32616)" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FFFBEB;strokeColor=#F59E0B;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#B45309;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="85" y="460" width="540" height="34" as="geometry" />
+        </mxCell>
+
+        <mxCell id="110" value="Partitions scene into clear calibration pixels (C_f) and cloudy restoration gap (C_g)" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FEF3C7;strokeColor=#D97706;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#92400E;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="85" y="510" width="540" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- Edges inside Frame 1 -->
+        <mxCell id="111" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#D97706;strokeWidth=1.5;" edge="1" parent="1" source="101" target="104"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="112" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#D97706;strokeWidth=1.5;" edge="1" parent="1" source="102" target="104"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="113" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#D97706;strokeWidth=1.5;" edge="1" parent="1" source="103" target="104"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="114" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#4F46E5;strokeWidth=1.5;" edge="1" parent="1" source="104" target="105"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="115" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#4F46E5;strokeWidth=1.5;" edge="1" parent="1" source="105" target="106"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="116" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#059669;strokeWidth=1.5;" edge="1" parent="1" source="106" target="107"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="117" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#DC2626;strokeWidth=1.5;" edge="1" parent="1" source="106" target="108"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ========================================== -->
+        <!-- FRAME 2: MULTI-SCALE CLOUD IMPUTATION PIPELINE -->
+        <!-- ========================================== -->
+        <mxCell id="f2" value="2. MULTI-SCALE CLOUD IMPUTATION PIPELINE (SEC. 2.2)" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;fillColor=#ECFEFF;strokeColor=#0891B2;strokeWidth=2.5;align=left;verticalAlign=top;spacingLeft=16;spacingTop=12;fontFamily=Helvetica;fontSize=13;fontColor=#0E7490;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="110" width="590" height="490" as="geometry" />
+        </mxCell>
+
+        <mxCell id="118" value="2.1 Nearest Clear Search&lt;br&gt;Closest scenes: t_bef &amp;amp; t_aft" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#CFFAFE;strokeColor=#0891B2;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="835" y="160" width="250" height="44" as="geometry" />
+        </mxCell>
+
+        <mxCell id="119" value="Temporal Linear Interpolation&lt;br&gt;L_linear = R(t_bef) + w·[R(t_aft) − R(t_bef)]" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#CFFAFE;strokeColor=#0891B2;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1125" y="160" width="250" height="44" as="geometry" />
+        </mxCell>
+
+        <mxCell id="120" value="2.2 Temporal Drift Measurement&lt;br&gt;Δ_temp = mean(C_f, t₀) − mean(L_linear, C_f)" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#CFFAFE;strokeColor=#0891B2;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="835" y="235" width="250" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="121" value="Global Spatial Drift Offset&lt;br&gt;L_global = L_linear + (Δ_temp + Δ_spatial)" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#CFFAFE;strokeColor=#0891B2;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1125" y="235" width="250" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="122" value="2.3 Weka K-Means Clustering&lt;br&gt;(k = 4) groups crop types on clear day t₁" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#CFFAFE;strokeColor=#0891B2;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="835" y="315" width="250" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="123" value="Land-Cover Adaptive Calibration&lt;br&gt;Class-specific shift δ(c) + 1.5 px feathering" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#CFFAFE;strokeColor=#0891B2;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1125" y="315" width="250" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="124" value="✓ 100% Cloud-Free Landsat Image (30 m Resolution)&lt;br&gt;&lt;font style=&quot;font-size: 9.5px; font-weight: normal;&quot;&gt;Zero Seamlines · All farm parcel boundaries preserved&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#06B6D4;strokeColor=#0891B2;strokeWidth=2;align=center;verticalAlign=middle;fontSize=11;fontColor=#FFFFFF;fontFamily=Helvetica;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="835" y="395" width="540" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="125" value="Parallel MODIS Imputation: Daily 500m MODIS also made 100% cloud-free" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#ECFEFF;strokeColor=#06B6D4;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#0E7490;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="835" y="465" width="540" height="34" as="geometry" />
+        </mxCell>
+
+        <mxCell id="126" value="Resolves atmospheric drift and intra-class phenological differences seamlessly" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#CFFAFE;strokeColor=#0891B2;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#0E7490;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="835" y="515" width="540" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- Edges inside Frame 2 -->
+        <mxCell id="127" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#0891B2;strokeWidth=1.5;" edge="1" parent="1" source="118" target="119"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="128" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#0891B2;strokeWidth=1.5;" edge="1" parent="1" source="119" target="120"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="129" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#0891B2;strokeWidth=1.5;" edge="1" parent="1" source="120" target="121"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="130" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#0891B2;strokeWidth=1.5;" edge="1" parent="1" source="121" target="122"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="131" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#0891B2;strokeWidth=1.5;" edge="1" parent="1" source="122" target="123"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="132" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#0891B2;strokeWidth=2;" edge="1" parent="1" source="123" target="124"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="133" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#06B6D4;strokeWidth=1.5;" edge="1" parent="1" source="124" target="125"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ========================================== -->
+        <!-- FRAME 3: SPATIOTEMPORAL DUAL FUSION ENGINE -->
+        <!-- ========================================== -->
+        <mxCell id="f3" value="3. SPATIOTEMPORAL DUAL FUSION ENGINE (SEC. 2.3)" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#7C3AED;strokeWidth=2.5;align=left;verticalAlign=top;spacingLeft=16;spacingTop=12;fontFamily=Helvetica;fontSize=13;fontColor=#6D28D9;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="700" width="590" height="490" as="geometry" />
+        </mxCell>
+
+        <mxCell id="134" value="Dual Reference Pairing&lt;br&gt;Golden Day (T₁) &amp;amp; Post-Ref (T₂ Imputed)" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#F3E8FF;strokeColor=#7C3AED;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="85" y="750" width="260" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="135" value="Scale &amp;amp; Grid Alignment&lt;br&gt;Resamples 500m MODIS to 30m Landsat grid" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#F3E8FF;strokeColor=#7C3AED;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="365" y="750" width="260" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="136" value="Spatial Residual Isolation&lt;br&gt;ε(T) = Landsat(30m) − MODIS(30m)" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#F3E8FF;strokeColor=#7C3AED;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="85" y="830" width="260" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="137" value="Intra-Parcel Structural Extraction&lt;br&gt;Captures 30m fence lines, roads &amp;amp; ditches" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#F3E8FF;strokeColor=#7C3AED;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="365" y="830" width="260" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="138" value="Proximity-Weighted Daily Synthesis&lt;br&gt;I_hat(t_p) = MODIS(t_p) + w₁·ε(T₁) + w₂·ε(T₂)" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#F3E8FF;strokeColor=#7C3AED;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="85" y="910" width="540" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="139" value="✓ Fused 30 m Daily Synthetic Product&lt;br&gt;&lt;font style=&quot;font-size: 9.5px; font-weight: normal;&quot;&gt;Combines Daily Phenological Radiometry + Crisp 30m Field Geometry&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#8B5CF6;strokeColor=#7C3AED;strokeWidth=2;align=center;verticalAlign=middle;fontSize=11;fontColor=#FFFFFF;fontFamily=Helvetica;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="85" y="990" width="540" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="140" value="Physical reflectance clamped to [0.0, 1.0] · Cloud-free on any calendar day" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#FAF5FF;strokeColor=#8B5CF6;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#6D28D9;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="85" y="1065" width="540" height="34" as="geometry" />
+        </mxCell>
+
+        <mxCell id="141" value="Unmixes 500m pixels using high-frequency spatial blueprints from reference pairs" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#F3E8FF;strokeColor=#7C3AED;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#6D28D9;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="85" y="1115" width="540" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- Edges inside Frame 3 -->
+        <mxCell id="142" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#7C3AED;strokeWidth=1.5;" edge="1" parent="1" source="134" target="135"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="143" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#7C3AED;strokeWidth=1.5;" edge="1" parent="1" source="135" target="136"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="144" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#7C3AED;strokeWidth=1.5;" edge="1" parent="1" source="136" target="137"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="145" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#7C3AED;strokeWidth=1.5;" edge="1" parent="1" source="137" target="138"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="146" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#7C3AED;strokeWidth=2;" edge="1" parent="1" source="138" target="139"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="147" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#8B5CF6;strokeWidth=1.5;" edge="1" parent="1" source="139" target="140"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ========================================== -->
+        <!-- FRAME 4: QUANTITATIVE VERIFICATION & GIS DELIVERABLES -->
+        <!-- ========================================== -->
+        <mxCell id="f4" value="4. QUANTITATIVE VERIFICATION &amp;amp; GIS DELIVERABLES" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;strokeWidth=2.5;align=left;verticalAlign=top;spacingLeft=16;spacingTop=12;fontFamily=Helvetica;fontSize=13;fontColor=#166534;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="810" y="700" width="590" height="490" as="geometry" />
+        </mxCell>
+
+        <mxCell id="148" value="Ground-Truth Benchmark Proof&lt;br&gt;1.5 km simulated cloud patch over clear day" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="835" y="750" width="250" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="149" value="Multi-Season Phenology Evaluation&lt;br&gt;Tested across 6 crop growth stages (2022)" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1125" y="750" width="250" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="150" value="Statistical Verification&lt;br&gt;MAE, RMSE, Pearson (R), R² (20-40% Gain)" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="835" y="830" width="250" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="151" value="Absolute Error Heatmap (NIR)&lt;br&gt;Near-zero error (&amp;lt; 0.02) over farm parcels" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1125" y="830" width="250" height="46" as="geometry" />
+        </mxCell>
+
+        <mxCell id="152" value="GIS Deliverables: Calibrated Multi-Band GeoTIFFs&lt;br&gt;Native UTM Zone 16N / EPSG:32616 projection" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#DCFCE7;strokeColor=#16A34A;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#111827;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="835" y="910" width="540" height="44" as="geometry" />
+        </mxCell>
+
+        <mxCell id="153" value="✓ Continuous Daily NDVI Time-Series for QGIS / ArcGIS&lt;br&gt;&lt;font style=&quot;font-size: 9.5px; font-weight: normal;&quot;&gt;Agricultural Monitoring Across Entire Growing Season&lt;/font&gt;" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#22C55E;strokeColor=#16A34A;strokeWidth=2;align=center;verticalAlign=middle;fontSize=11;fontColor=#FFFFFF;fontFamily=Helvetica;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="835" y="990" width="540" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="154" value="Status: Operational · Tested on 5km x 5km Contiguous Landscape &amp;amp; Farm Zooms" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#22C55E;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#166534;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="835" y="1065" width="540" height="34" as="geometry" />
+        </mxCell>
+
+        <mxCell id="155" value="Ready for direct drag-and-drop into QGIS with pre-configured False Color Composites" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;fillColor=#F0FDF4;strokeColor=#16A34A;strokeWidth=1.5;align=center;verticalAlign=middle;fontSize=10.5;fontColor=#166534;fontFamily=Helvetica;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="835" y="1115" width="540" height="32" as="geometry" />
+        </mxCell>
+
+        <!-- Edges inside Frame 4 -->
+        <mxCell id="156" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#16A34A;strokeWidth=1.5;" edge="1" parent="1" source="148" target="149"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="157" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#16A34A;strokeWidth=1.5;" edge="1" parent="1" source="149" target="150"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="158" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#16A34A;strokeWidth=1.5;" edge="1" parent="1" source="150" target="151"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="159" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#16A34A;strokeWidth=1.5;" edge="1" parent="1" source="151" target="152"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="160" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#16A34A;strokeWidth=2;" edge="1" parent="1" source="152" target="153"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="161" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#22C55E;strokeWidth=1.5;" edge="1" parent="1" source="153" target="154"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- ============================================================= -->
+        <!-- INTER-FRAME CLEAN CONNECTOR ARROWS (ROUTED THROUGH RUNWAYS)   -->
+        <!-- ============================================================= -->
+
+        <!-- ARROW 1: Box 1 (C_g Mask) -> Box 2 (Imputation Stage 2.1) -->
+        <!-- Exits 108 right at (625, 404), enters central runway at x=730, goes up to y=182, enters 118 left -->
+        <mxCell id="162" value="Feeds Cloud Gap C_g&lt;br&gt;into Imputation Engine" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0891B2;strokeWidth=2.5;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;fontColor=#0E7490;fontFamily=Helvetica;fontStyle=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="108" target="118">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="730" y="404" />
+              <mxPoint x="730" y="182" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ARROW 2: Box 1 (MODIS) -> Box 3 (Fusion Scale Alignment) -->
+        <!-- Drops vertically through the 100 px horizontal runway between Tier 1 & 2 -->
+        <mxCell id="163" value="Supplies Daily MODIS M(t_p)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#7C3AED;strokeWidth=2;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;fontColor=#6D28D9;fontFamily=Helvetica;fontStyle=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="110" target="135">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="355" y="650" />
+              <mxPoint x="495" y="650" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ARROW 3: Box 2 (Imputed Landsat 124) -> Box 3 (Fusion Dual Reference 134) -->
+        <!-- Exits 124 left into central runway, drops to central horizontal runway y=650, travels left to x=215, enters 134 top -->
+        <mxCell id="164" value="Supplies Imputed 100% Cloud-Free Landsat (30 m) as Fusion Reference Pair T₂" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#7C3AED;strokeWidth=2.5;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=10;fontColor=#6D28D9;fontFamily=Helvetica;fontStyle=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="124" target="134">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="750" y="420" />
+              <mxPoint x="750" y="650" />
+              <mxPoint x="215" y="650" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ARROW 4: Box 3 (Fused 30m Product 139) -> Box 4 (Continuous Daily NDVI 153) -->
+        <!-- Perfectly straight horizontal arrow from (625, 1015) to (835, 1015) across the 160 px runway -->
+        <mxCell id="165" value="Synthesized 30m Product&lt;br&gt;for Continuous Daily NDVI" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#16A34A;strokeWidth=2.5;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;fontColor=#15803D;fontFamily=Helvetica;fontStyle=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="139" target="153">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ARROW 5: Box 3 (Fused 30m Product 139) -> Box 4 (Ground Truth Verification 148) -->
+        <mxCell id="166" value="Supplies Product for Blind Validation" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#16A34A;strokeWidth=2;dashed=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=10;fontColor=#15803D;fontFamily=Helvetica;fontStyle=1;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="139" target="148">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="710" y="1002" />
+              <mxPoint x="710" y="773" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

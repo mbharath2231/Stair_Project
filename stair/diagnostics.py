@@ -8,7 +8,7 @@ Provides tools for:
   - Time-lapse stack generation for validation
 """
 
-from typing import Tuple, List, Optional
+from typing import List, Optional, Tuple
 import ee
 import config
 
@@ -103,45 +103,3 @@ def create_chip_bounds(
     """
     return center_point.buffer(radius_meters).bounds()
 
-
-def build_time_series_frame(
-    raw_image: ee.Image,
-    slope: ee.Image,
-    intercept: ee.Image,
-    band_name: str = "SR_B5",
-    bounds: Optional[ee.Geometry] = None
-) -> ee.Image:
-    """
-    Build a 3-layer diagnostic stack for a single time series overpass:
-      - Band 1: Raw data (including clouds)
-      - Band 2: STAIR imputed only (mathematical prediction)
-      - Band 3: Final patched data (clear pixels + imputed holes)
-      
-    Args:
-        raw_image: Unmasked Landsat overpass image.
-        slope: Temporal regression slope.
-        intercept: Temporal regression intercept.
-        band_name: Spectral band.
-        bounds: Optional bounding geometry to clip to.
-        
-    Returns:
-        3-band ee.Image with double precision.
-    """
-    from .core import mask_landsat_clouds
-    
-    raw_band = raw_image.select(band_name).rename("Band1_Raw_With_Clouds")
-    
-    date_days = (
-        ee.Image(raw_image.date().millis())
-        .divide(1000 * 60 * 60 * 24)
-        .toFloat()
-    )
-    stair_imputed = date_days.multiply(slope).add(intercept).rename("Band2_STAIR_Imputed_Only")
-    
-    masked_band = mask_landsat_clouds(raw_image).select(band_name)
-    final_patched = masked_band.unmask(stair_imputed).rename("Band3_Final_Patched")
-    
-    stack = ee.Image([raw_band, stair_imputed, final_patched]).toDouble()
-    if bounds is not None:
-        stack = stack.clip(bounds)
-    return stack

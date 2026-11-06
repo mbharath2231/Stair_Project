@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>STAIR Refined Methodological Flowchart</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 30px;
+      background-color: #0b1120;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+      max-width: 1200px;
+    }
+    .header h1 {
+      margin: 0 0 8px 0;
+      font-size: 26px;
+      color: #38bdf8;
+    }
+    .header p {
+      margin: 0;
+      font-size: 14px;
+      color: #94a3b8;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      max-width: 1400px;
+      width: 100%;
+    }
+    .card {
+      border-radius: 14px;
+      padding: 24px;
+      border: 2px solid;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .card-q1 { border-color: #d97706; background: #1c1917; }
+    .card-q2 { border-color: #0891b2; background: #082f49; }
+    .card-q3 { border-color: #7c3aed; background: #2e1065; }
+    .card-q4 { border-color: #16a34a; background: #052e16; }
+    
+    .card-title {
+      font-size: 16px;
+      font-weight: bold;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      letter-spacing: 0.5px;
+    }
+    .card-q1 .card-title { color: #f59e0b; }
+    .card-q2 .card-title { color: #38bdf8; }
+    .card-q3 .card-title { color: #c084fc; }
+    .card-q4 .card-title { color: #4ade80; }
+
+    .node-row {
+      display: flex;
+      gap: 12px;
+    }
+    .node {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 11.5px;
+      line-height: 1.45;
+      flex: 1;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+    .node b { color: #f8fafc; display: block; margin-bottom: 4px; font-size: 12px; }
+    .node-amber { border-color: #d97706; background: rgba(217, 119, 6, 0.15); }
+    .node-indigo { border-color: #4f46e5; background: rgba(79, 70, 229, 0.15); }
+    .node-cyan { border-color: #0891b2; background: rgba(8, 145, 178, 0.15); }
+    .node-purple { border-color: #7c3aed; background: rgba(124, 58, 237, 0.15); }
+    .node-green { border-color: #16a34a; background: rgba(22, 163, 74, 0.15); }
+
+    .node-outcome-cyan {
+      background: linear-gradient(135deg, #0891b2, #0e7490);
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      box-shadow: 0 6px 16px rgba(8, 145, 178, 0.4);
+      border: 1px solid #38bdf8;
+    }
+    .node-outcome-purple {
+      background: linear-gradient(135deg, #7c3aed, #5b21b6);
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
+      border: 1px solid #c084fc;
+    }
+    .node-outcome-green {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      color: white;
+      font-weight: bold;
+      text-align: center;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      box-shadow: 0 6px 16px rgba(22, 163, 74, 0.4);
+      border: 1px solid #4ade80;
+    }
+
+    .arrow-indicator {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 600;
+      gap: 6px;
+      margin: -2px 0;
+    }
+    .bridge-banner {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 11px;
+      text-align: center;
+      color: #cbd5e1;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>STAIR Spatiotemporal Fusion Framework (Luo et al., 2018)</h1>
+    <p>Refined 2×2 Methodological Architecture: Satellite Intake → Multi-Scale Imputation → Spatiotemporal Fusion → Verification</p>
+  </div>
+
+  <div class="grid-container">
+    <!-- QUADRANT 1: DATA INTAKE & QUALITY SCREENING -->
+    <div class="card card-q1">
+      <div class="card-title">1. DATA ACQUISITION &amp; QUALITY SCREENING</div>
+      
+      <div class="node-row">
+        <div class="node node-amber"><b>Landsat 8 &amp; 9</b>30m · 16-Day Revisit (NIR, Red, Green)</div>
+        <div class="node node-amber"><b>MODIS MCD43A4</b>500m · Daily Nadir BRDF Reflectance</div>
+        <div class="node node-amber"><b>Clear Reference (t₁)</b>Structural Land-Cover Baseline</div>
+      </div>
+
+      <div class="arrow-indicator">▼ Passes Raw Pixels to Quality Screening</div>
+
+      <div class="node node-indigo"><b>Pixel Quality Screening</b>QA_PIXEL bitmasks: cloud, shadow, dilated &amp; cirrus flags</div>
+
+      <div class="node-row">
+        <div class="node node-indigo"><b>6-Pixel Buffer Dilation</b>Captures diffuse cloud &amp; shadow edges</div>
+        <div class="node node-indigo"><b>Permanent Water Guard</b>JRC Surface Water + NDWI protects lakes</div>
+      </div>
+
+      <div class="arrow-indicator">▼ Quality Partitioning</div>
+
+      <div class="node-row">
+        <div class="node" style="border-color:#10b981; background:rgba(16,185,129,0.18);"><b>Clear Surface Mask (C_f)</b>Valid unclouded calibration pixels</div>
+        <div class="node" style="border-color:#ef4444; background:rgba(239,68,68,0.18);"><b>Cloud Gap Mask (C_g)</b>Missing cloudy pixels to restore</div>
+      </div>
+
+      <div class="bridge-banner">Domain: Clayton Township, MI (7 km × 7 km Agricultural Chip, EPSG:32616)</div>
+    </div>
+
+    <!-- QUADRANT 2: MULTI-SCALE CLOUD IMPUTATION -->
+    <div class="card card-q2">
+      <div class="card-title">2. MULTI-SCALE CLOUD IMPUTATION PIPELINE (SEC. 2.2)</div>
+
+      <div class="node-row">
+        <div class="node node-cyan"><b>2.1 Nearest Clear Search</b>Closest scenes: t_bef &amp; t_aft</div>
+        <div class="node node-cyan"><b>Temporal Linear Interpolation</b>w = (t₀ − t_bef) / (t_aft − t_bef)<br>Fills gaps along linear trajectory</div>
+      </div>
+
+      <div class="arrow-indicator">▼ Corrects Temporal Illumination Drift</div>
+
+      <div class="node-row">
+        <div class="node node-cyan"><b>2.2 Temporal Drift Measurement</b>Δ_temp = mean(C_f, t₀) − mean(C_f, interp)</div>
+        <div class="node node-cyan"><b>Global Spatial Drift Offset</b>L_global = L_interp + Δ_temp + Δ_spatial</div>
+      </div>
+
+      <div class="arrow-indicator">▼ Land-Cover Specific Calibration</div>
+
+      <div class="node-row">
+        <div class="node node-cyan"><b>2.3 Weka K-Means (k=4)</b>Clusters crops, forest, and water on t₁</div>
+        <div class="node node-cyan"><b>Land-Cover Adaptive Calibration</b>Applies crop-specific shift δ(c) + 1.5px feathering</div>
+      </div>
+
+      <div class="node-outcome-cyan">✓ 100% Cloud-Free Landsat Image (30 m Resolution)<br><span style="font-size:11.5px; font-weight:normal; opacity:0.9;">All farm parcel boundaries preserved · Zero boundary seamlines</span></div>
+    </div>
+
+    <!-- QUADRANT 3: SPATIOTEMPORAL DUAL FUSION -->
+    <div class="card card-q3">
+      <div class="card-title">3. SPATIOTEMPORAL DUAL FUSION ENGINE (SEC. 2.3)</div>
+
+      <div class="node-row">
+        <div class="node node-purple"><b>Dual Reference Pairing</b>Golden Day (T₁) &amp; Imputed Post-Ref (T₂)</div>
+        <div class="node node-purple"><b>Scale &amp; Grid Alignment</b>Resamples 500m MODIS to 30m Landsat grid</div>
+      </div>
+
+      <div class="arrow-indicator">▼ High-Resolution Spatial Residual Isolation</div>
+
+      <div class="node-row">
+        <div class="node node-purple"><b>Residual Isolation</b>ε(T) = Landsat(30m) − MODIS(30m)</div>
+        <div class="node node-purple"><b>Intra-Parcel Structural Extraction</b>Captures 30m field boundaries, roads &amp; ditches</div>
+      </div>
+
+      <div class="node-purple"><b>Proximity-Weighted Daily Synthesis</b>I(t_p) = MODIS(t_p) + w₁·ε(T₁) + w₂·ε(T₂)<br><span style="font-size:10.5px; opacity:0.85;">Weights by calendar day proximity · Clamped to physical range [0.0, 1.0]</span></div>
+
+      <div class="node-outcome-purple">✓ Fused 30 m Daily Synthetic Product<br><span style="font-size:11.5px; font-weight:normal; opacity:0.9;">Daily MODIS Phenology + Crisp 30m Landsat Field Geometry</span></div>
+    </div>
+
+    <!-- QUADRANT 4: VERIFICATION & DELIVERABLES -->
+    <div class="card card-q4">
+      <div class="card-title">4. QUANTITATIVE VERIFICATION &amp; GIS DELIVERABLES</div>
+
+      <div class="node-row">
+        <div class="node node-green"><b>Ground-Truth Benchmark Proof</b>1.5 km simulated cloud patch over clear day</div>
+        <div class="node node-green"><b>Multi-Season Phenology Evaluation</b>Tested across 6 crop growth stages (2022)</div>
+      </div>
+
+      <div class="arrow-indicator">▼ Statistical Derivation &amp; Error Mapping</div>
+
+      <div class="node-row">
+        <div class="node node-green"><b>Statistical Verification</b>MAE, RMSE, Pearson (R), R² (20-40% gain)</div>
+        <div class="node node-green"><b>Absolute Error Heatmap (NIR)</b>Near-zero error (&lt; 0.02) over farm parcels</div>
+      </div>
+
+      <div class="node-green"><b>GIS Deliverables: Calibrated Multi-Band GeoTIFFs</b>Native UTM Zone 16N / EPSG:32616 projection</div>
+
+      <div class="node-outcome-green">✓ Continuous Daily NDVI Time-Series for QGIS / ArcGIS<br><span style="font-size:11.5px; font-weight:normal; opacity:0.9;">Uninterrupted 30m Agricultural Monitoring Across Entire Growing Season</span></div>
+    </div>
+  </div>
+</body>
+</html>

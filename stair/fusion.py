@@ -8,6 +8,7 @@ for dates when Landsat is unavailable or obscured by clouds.
 """
 
 from typing import Tuple, Dict
+import numpy as np
 import ee
 import config
 from .core import calculate_ndvi
@@ -121,3 +122,87 @@ def fuse_date(
     
     # 4. Apply the math to synthesize 30m Landsat!
     return synthesize_missing_day(target_modis_filled, rules, aoi)
+
+
+def stair_dual_fusion_numpy(
+    ref1_landsat: np.ndarray,
+    ref1_modis: np.ndarray,
+    ref2_landsat: np.ndarray,
+    ref2_modis: np.ndarray,
+    target_modis: np.ndarray,
+    w1: float,
+    w2: float,
+    clip_range: Tuple[float, float] = (0.0, 1.0)
+) -> np.ndarray:
+    """
+    Execute STAIR Spatiotemporal Fusion (Section 2.3, Luo et al., 2018) using numpy arrays.
+    
+    Formula:
+        epsilon(T1) = L(T1) - M(T1)
+        epsilon(T2) = L_imputed(T2) - M(T2)
+        Delta(tp) = w1 * epsilon(T1) + w2 * epsilon(T2)
+        I(tp) = M(tp) + Delta(tp)
+        
+    Args:
+        ref1_landsat: Gap-free Landsat surface reflectance array at T1.
+        ref1_modis: Resampled MODIS surface reflectance array at T1.
+        ref2_landsat: STAIR-imputed gap-free Landsat array at T2.
+        ref2_modis: Resampled MODIS surface reflectance array at T2.
+        target_modis: Daily MODIS surface reflectance array at target date tp.
+        w1: Temporal weight for reference 1: (T2 - tp) / (T2 - T1).
+        w2: Temporal weight for reference 2: (tp - T1) / (T2 - T1).
+        clip_range: Physical reflectance bounds to clip result (default [0.0, 1.0]).
+        
+    Returns:
+        Synthesized 30m resolution prediction array at target date tp.
+    """
+    eps_t1 = ref1_landsat - ref1_modis
+    eps_t2 = ref2_landsat - ref2_modis
+    delta_interp = w1 * eps_t1 + w2 * eps_t2
+    fused = target_modis + delta_interp
+    if clip_range is not None:
+        fused = np.clip(fused, clip_range[0], clip_range[1])
+    return fused
+
+
+def stair_dual_fusion_ee(
+    ref1_landsat: ee.Image,
+    ref1_modis: ee.Image,
+    ref2_landsat: ee.Image,
+    ref2_modis: ee.Image,
+    target_modis: ee.Image,
+    w1: float,
+    w2: float,
+    bands: list = ["SR_B5", "SR_B4", "SR_B3"]
+) -> ee.Image:
+    """
+    Execute STAIR Spatiotemporal Fusion (Section 2.3, Luo et al., 2018) directly in Earth Engine.
+    
+    Formula:
+        epsilon(T1) = L(T1) - M(T1)
+        epsilon(T2) = L_imputed(T2) - M(T2)
+        Delta(tp) = w1 * epsilon(T1) + w2 * epsilon(T2)
+        I(tp) = M(tp) + Delta(tp)
+    """
+    fused_bands = []
+    w1_img = ee.Image.constant(w1)
+    w2_img = ee.Image.constant(w2)
+    
+    for band in bands:
+        l1 = ref1_landsat.select(band)
+        m1 = ref1_modis.select(band).resample('bilinear').reproject(crs=l1.projection(), scale=30.0)
+        
+        l2 = ref2_landsat.select(band)
+        m2 = ref2_modis.select(band).resample('bilinear').reproject(crs=l1.projection(), scale=30.0)
+        
+        mt = target_modis.select(band).resample('bilinear').reproject(crs=l1.projection(), scale=30.0)
+        
+        eps1 = l1.subtract(m1)
+        eps2 = l2.subtract(m2)
+        
+        delta = eps1.multiply(w1_img).add(eps2.multiply(w2_img))
+        fused = mt.add(delta).clamp(0.0, 1.0).rename(band)
+        fused_bands.append(fused)
+        
+    return ee.Image(fused_bands)
+

@@ -1,0 +1,53 @@
+flowchart TB
+    %% =========================================================================
+    %% STAIR METHODOLOGICAL FRAMEWORK (Luo et al., 2018)
+    %% 2x2 Square Grid Architecture (2 Horizontal Top, 2 Horizontal Bottom)
+    %% Balanced ~1:1 Aspect Ratio Designed for Journals and Screen Presentations
+    %% =========================================================================
+
+    %% Quadrant Card Styles (Uniform Dark Text, Color-Coded Borders)
+    classDef cardQ1 fill:#fffbeb,stroke:#d97706,stroke-width:2px,color:#111827,font-size:11.5px,text-align:left;
+    classDef cardQ2 fill:#f0fdfa,stroke:#0891b2,stroke-width:2px,color:#111827,font-size:11.5px,text-align:left;
+    classDef cardQ3 fill:#faf5ff,stroke:#7c3aed,stroke-width:2px,color:#111827,font-size:11.5px,text-align:left;
+    classDef cardQ4 fill:#f0fdf4,stroke:#16a34a,stroke-width:2px,color:#111827,font-size:11.5px,text-align:left;
+
+    %% =========================================================================
+    %% ROW 1 (TOP HALF): QUADRANT 1 (LEFT) & QUADRANT 2 (RIGHT)
+    %% =========================================================================
+    subgraph ROW_TOP [" "]
+        direction LR
+
+        %% QUADRANT 1: DATA INTAKE & PREPROCESSING
+        M1["<b>1. DATA ACQUISITION &amp; QUALITY SCREENING</b><br/><br/><b>Primary Satellite Observations:</b><br/>• Landsat 8 &amp; 9: 30 m · 16-Day Revisit (NIR, Red, Green)<br/>• MODIS MCD43A4: 500 m · Daily Coverage (Nadir BRDF)<br/>• Clear Reference Scene (t₁): Cloud-free structural baseline<br/>• Full-Season Archive: Multi-temporal training catalog<br/>• Study Area AOI: 7 km × 7 km Extent (Clayton Township, MI)<br/><br/><b>Quality Screening &amp; Water Guard:</b><br/>• QA_PIXEL Bitmasks: Cloud, Shadow, Dilated &amp; Cirrus flags<br/>• 6-Pixel Buffer Dilation to catch diffuse haze &amp; shadow edges<br/>• JRC Global Surface Water + NDWI Guard: Protects lakes<br/><br/><b>Quality Partitioned Layers:</b><br/>• Clear Surface Mask (C_f): Valid calibration pixels<br/>• Cloud Gap Mask (C_g): Missing target pixels to restore"]:::cardQ1
+
+        %% QUADRANT 2: STAIR CLOUD IMPUTATION
+        M2["<b>2. STAIR CLOUD IMPUTATION PIPELINE (SEC. 2.2)</b><br/><br/><b>Stage 2.2.1: Temporal Linear Interpolation:</b><br/>• Nearest clear observations before (t_bef) and after (t_aft)<br/>• Proportional weight: w = (t₀ − t_bef) / (t_aft − t_bef)<br/>• Formula: L_linear = R(t_bef) + w × [ R(t_aft) − R(t_bef) ]<br/>• Forward/backward fill fallback for season overpass boundaries<br/><br/><b>Stage 2.2.2a: Global Spatial Drift Correction:</b><br/>• Temporal drift: Δ_temp = mean(L, C_f, t₀) − mean(L_linear, C_f, t₀)<br/>• Spatial gap offset: Δ_spatial = mean(L, C_g, t₁) − mean(L, C_f, t₁)<br/>• Formula: L_global = L_linear + (Δ_temp + Δ_spatial)<br/><br/><b>Stage 2.2.2b: Land-Cover Adaptive K-Means Correction:</b><br/>• Unsupervised Weka K-Means (k = 4) clustering on clear day t₁<br/>• Class-specific offsets: Δ_temp(c) &amp; Δ_spatial(c) per crop type<br/>• 1.5 px focal mean boundary feathering eliminates seamlines<br/>• Formula: L_adaptive = L_linear + δ(c)<br/><br/><b>Output:</b> ✓ 100% Cloud-Free Landsat Image (30 m Resolution)"]:::cardQ2
+
+        M1 -->|"Feeds Masked Target<br/>&amp; Quality Masks"| M2
+    end
+
+    %% =========================================================================
+    %% ROW 2 (BOTTOM HALF): QUADRANT 3 (LEFT) & QUADRANT 4 (RIGHT)
+    %% =========================================================================
+    subgraph ROW_BTM [" "]
+        direction LR
+
+        %% QUADRANT 3: SPATIOTEMPORAL DUAL FUSION
+        M3["<b>3. SPATIOTEMPORAL DUAL FUSION ENGINE (SEC. 2.3)</b><br/><br/><b>Dual Reference Pair Selection:</b><br/>• Golden Day (T₁): Concurrent clear Landsat (30 m) &amp; MODIS (500 m)<br/>• Post-Reference (T₂): Imputed Landsat (30 m) &amp; MODIS (500 m)<br/><br/><b>Spatial Scale &amp; Grid Alignment:</b><br/>• Bilinear interpolation resamples 500 m MODIS to 30 m grid<br/>• Aligns coordinates, projections, and pixel bounds to Landsat grid<br/><br/><b>Spatial Difference Residual Isolation:</b><br/>• ε(T₁) = L(T₁) − M(T₁) &amp; ε(T₂) = L̂(T₂) − M(T₂)<br/>• Extracts 30 m farm field boundaries &amp; crop rows blurred at 500 m<br/><br/><b>Proximity-Weighted Daily Synthesis:</b><br/>• Time weights: w₁ = (T₂ − t_p) / (T₂ − T₁) ; w₂ = (t_p − T₁) / (T₂ − T₁)<br/>• Formula: I(t_p) = M(t_p) + w₁·ε(T₁) + w₂·ε(T₂)<br/>• Clamped to valid physical reflectance range [0.0, 1.0]<br/><br/><b>Output:</b> ✓ Fused 30 m Daily Synthetic Product (Daily Phenology)"]:::cardQ3
+
+        %% QUADRANT 4: VALIDATION & RESEARCH DELIVERABLES
+        M4["<b>4. QUANTITATIVE VERIFICATION &amp; DELIVERABLES</b><br/><br/><b>Ground-Truth Benchmark Proof:</b><br/>• 1.5 km simulated cloud patch over 0% clear benchmark<br/>• Multi-season validation across 6 phenological phases (2022)<br/><br/><b>Quantitative Accuracy Assessment:</b><br/>• Evaluated inside cloud gap: MAE, RMSE, Pearson Correlation (R), R²<br/>• Documented Gain: 20% to 40% error reduction over baseline<br/><br/><b>Geospatial Deliverables &amp; Research Applications:</b><br/>• Multi-band calibrated GeoTIFF stacks (EPSG:32616)<br/>• Continuous daily NDVI agricultural time-series<br/>• Ready for GIS ingestion in QGIS / ArcGIS<br/><br/><b>Flow Legend:</b><br/>[Amber: Inputs] · [Indigo: Prep] · [Cyan: Impute] · [Purple: Fusion] · [Green: Deliverables]"]:::cardQ4
+
+        M3 -->|"Synthesized 30 m Product<br/>for Verification"| M4
+    end
+
+    %% =========================================================================
+    %% INTER-ROW CONNECTORS (Top Half to Bottom Half)
+    %% =========================================================================
+    M1 -.->|"Supplies Target Daily<br/>MODIS Observation M(t_p)"| M3
+    M2 ==>|"Supplies Imputed<br/>Landsat T₂ Reference"| M3
+    M2 -->|"Direct Imputation<br/>Accuracy Assessment"| M4
+
+    %% Make row containers invisible so only the 4 square quadrants show
+    style ROW_TOP fill:none,stroke:none;
+    style ROW_BTM fill:none,stroke:none;
