@@ -1,5 +1,11 @@
 # STAIR: Spatio-Temporal Adaptive Image Restoration & Fusion
 
+For device migration, current readiness checks, and the staged pipeline plan,
+start with [the current work checkpoint](docs/WORK_STATE.md) and
+[the device continuation guide](docs/CONTINUATION.md).
+Run `python scripts/check_project.py` with your project Python to check local
+dependencies and fingerprint the observation cache without network access.
+
 > **Current development status (2026-11-06):** The maintained first stage is the
 > validated temporal interpolation workflow. Start with
 > [the temporal-stage guide](docs/TEMPORAL_STAGE.md). It includes real Clayton
