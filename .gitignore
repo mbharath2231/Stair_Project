@@ -55,3 +55,4 @@ scratch/
 .pytest_tmp/
 data/temporal/
 outputs/temporal_validation/
+outputs/spatial_validation/

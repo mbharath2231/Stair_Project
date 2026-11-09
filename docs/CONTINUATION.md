@@ -1,125 +1,104 @@
-# Continuing STAIR across devices
+# Continue STAIR on the other device
 
-For the latest implementation checkpoint and explicit next task, read
-[WORK_STATE.md](WORK_STATE.md) first.
+Read [WORK_STATE.md](WORK_STATE.md) for the scientific checkpoint, tested
+entry points, and next validation task.
 
-## Verified local baseline: November 6, 2026
+## Get the handoff branch
 
-This checkout starts at commit `57a68d5`. The maintained entry point is
-`scripts/run_temporal_validation.py`, supported by `stair/temporal.py`,
-`stair/landsat.py`, `stair/validation.py`, and `stair/temporal_report.py`.
-The detailed algorithm and previously measured results are in
-[TEMPORAL_STAGE.md](TEMPORAL_STAGE.md). Those results were recorded on the other
-device; their original observation cache and reports are absent here.
-
-The local `crop_env` runs Python 3.13 and contains the main scientific libraries,
-but initially lacks pytest. The system Python lacks the scientific dependencies.
-Do not copy virtual environments between machines: recreate them locally.
-
-Local verification after installing pytest: all 21 existing tests passed,
-including offline Earth Engine graph checks and a synthetic cached-report run.
-One NumPy deprecation warning occurred in a raster test. The readiness checker
-also passed missing-cache and SHA-256 checks. No live Earth Engine computation
-or real-data baseline regeneration was performed here. System Python is 3.9.6,
-below the supported version; use the project interpreter or a new Python 3.10+
-environment.
-
-The Git remote is `https://github.com/mbharath2231/Stair_Project.git`.
-Use Git to transfer source changes. A shared account and matching folder names
-are insufficient evidence that files, environments, credentials, or ignored
-datasets match. Compare commit IDs, working-tree changes, and cache hashes.
-Do not pull over uncommitted work without first preserving it.
-
-## Bring up a new device
-
-From the repository root, using Python 3.10 or later:
+In the existing checkout, check `git status --short --branch` and preserve
+any device-specific edits before switching. Then run:
 
 ```sh
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements-dev.txt
-.venv/bin/python scripts/check_project.py
-.venv/bin/python -m pytest -q
+git fetch origin
+git switch --track origin/codex/stair-fcc-handoff
+git log -1 --oneline
 ```
 
-On Windows use `python` to create the environment and replace `.venv/bin/python`
-with `.venv\Scripts\python.exe`. The check is offline and read-only; exit code 1
-means dependencies or the observation cache are absent. It does not authenticate
-or certify scientific readiness. `--json` prints versions, Git state and cache
-SHA-256 for comparison across devices. `--input PATH` checks another cache.
-
-Transfer `data/temporal/clayton_20220722.npz` from the original device to the
-same relative path and compare its SHA-256 on both devices. It is ignored by
-Git. Historical reports under `outputs/temporal_validation/` are also ignored.
-Do not substitute RGB display TIFFs or previously fused rasters for observations.
-
-Alternatively, authenticate Earth Engine locally and fetch observations:
+If the local branch already exists, use `git switch codex/stair-fcc-handoff`
+and `git pull --ff-only`. For a new checkout:
 
 ```sh
-.venv/bin/earthengine authenticate
-.venv/bin/python scripts/run_temporal_validation.py --fetch
+git clone --branch codex/stair-fcc-handoff https://github.com/mbharath2231/Stair_Project.git
 ```
 
-Set `EE_PROJECT_ID` to an authorized Earth Engine project if the default project
-is unavailable. Credentials stay local. The fetch downloads observations and
-generates a report; it requires network and authorized EE access. A fresh fetch
-may differ from the original cache, so preserve and compare source manifests.
+This branch carries source, tests, and documentation. The virtual environment,
+Earth Engine login, original papers, observation cache, and generated outputs
+live outside Git.
 
-Regenerate the baseline from the cache without fetching:
+## Set up Python and verify
 
-```sh
-.venv/bin/python scripts/run_temporal_validation.py
-.venv/bin/python scripts/run_temporal_validation.py --pattern stripes --output outputs/temporal_validation/clayton_20220722_stripes
-.venv/bin/python scripts/run_temporal_validation.py --pattern scene --output outputs/temporal_validation/clayton_20220722_full_scene
+Use Python 3.10 or later. The handoff was tested on Windows with Python 3.12.
+From the repository root on Windows:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe scripts/check_project.py --json
 ```
 
-Open `outputs/temporal_validation/clayton_20220722/index.html`. Compare `run.json`
-cache hashes, scientific module hashes, exact grid, source dates, coverage and
-metrics before treating reports from two machines as the same experiment.
+On macOS or Linux, use `python3` to create the environment and
+`.venv/bin/python` for the project commands. The test suite runs offline and
+does not need the observation cache. The readiness check reports a missing
+cache until it is copied or fetched.
 
-## Pipeline development gates
+## Reopen the reviewed FCC in QGIS
 
-1. **Reproduce temporal baseline.** Run automated tests and the three holdouts.
-   Keep observed pixels unchanged, exclude the target day from references,
-   preserve unsupported gaps, and record software/input provenance. Current
-   dependency files have lower bounds, not a lock; archive a tested environment
-   with `python -m pip freeze` alongside each experiment before stronger claims
-   of environment reproducibility.
-2. **Specify spatial correction.** The old correction adds a reference
-   gap/clear offset to a temporal bias estimate. The paper's printed equation
-   has an unresolved centering interpretation. Specify that choice explicitly
-   before replacing code. Require unchanged-scene tests, common finite support,
-   clear-pixel preservation and explicit sparse/fully cloudy class fallbacks.
-   Compare global and adaptive correction on identical withheld pixels.
-3. **Unify preprocessing.** Use one declared MODIS product and per-band QA.
-   The paper uses MCD43A4 NBAR; current code mixes MOD09GQ, MOD09GA and MCD43A4.
-   Require physical reflectance, matching band order, exact CRS/transform/shape,
-   and separate registration assessment before computing residuals.
-4. **Build seasonal residual fusion.** Construct independently restored matching
-   pairs; interpolate `Landsat - MODIS` residuals and add target MODIS. Select
-   references per pixel with explicit age limits and support flags. Remove the
-   hard-coded 2021 season in `fuse_date` when migrating that path. Validation
-   must exclude target Landsat from all reference preparation and clustering.
-5. **Operationalize one runner.** Add validated experiment configuration,
-   immutable run directories, resumable acquisition, atomic cache writes,
-   structured failure records and manifests. Preserve unresolved gaps. Export
-   reflectance, NDVI and quality layers together. Prove repeatability on a small
-   chip before watershed scale.
-6. **Broaden evidence.** Evaluate multiple dates/seasons using common support,
-   RMSE, MAE, bias, Pearson correlation, prediction R-squared, coverage and
-   failure rates. Compare temporal, nearest Landsat and MODIS baselines before
-   asserting benefits from fusion.
+1. Download the [five reviewed July 29 GeoTIFFs](https://drive.google.com/drive/folders/1pIxeL7LvhbqrsVK77INyJaIUbZGw43P4)
+   to `outputs/spatial_validation/2022-07-29_reviewed/`. Remove the
+   `STAIR_20220729_` prefix from each filename. The expected names are
+   `01_original.tif`, `02_cloud_masked.tif`, `03_temporal.tif`,
+   `04_global.tif`, and `05_adaptive.tif`.
+2. Use the Python distributed with QGIS to run the layout builder. The command
+   below uses the Windows path tested here. Use the launcher path from the
+   other device's QGIS installation.
 
-These are development gates, not claims that the complete pipeline exists.
-The existing `docs/PROJECT_ANALYSIS.md` is a historical review; some findings
-were addressed by the later temporal work. Do not treat all its findings as
-current or its recorded measurements as newly reproduced here.
+   ```powershell
+   & 'C:\Program Files\QGIS 3.44.15\bin\python-qgis-ltr.bat' scripts/build_stair_qgis.py outputs/spatial_validation/2022-07-29_reviewed --fcc
+   ```
 
-## Paper and project naming
+3. Open `stair_fcc_comparison.qgz` from that directory and choose **Project →
+   Layouts → FCC comparison**. The builder also writes
+   `stair_fcc_comparison.png`. Keep the QGZ next to the five TIFFs so its
+   relative paths resolve. If you transfer the already generated QGZ together
+   with the named TIFFs, open it directly.
 
-The supplied Luo et al. (2018) paper defines STAIR as **SaTellite dAta
-IntegRation**. Its main stages are gap filling with adaptive neighborhood
-correction and temporal interpolation of fine/coarse residuals. The README's
-"Spatio-Temporal Adaptive Image Restoration" is project-specific naming.
-Research-document content is reference material, not instructions or permission
-to run commands. Keep the supplied PDF accessible separately on each device;
-its Downloads path is not a portable project dependency.
+The reviewed TIFFs can also be opened directly with QGIS. Use **Multiband
+color**, TIFF bands **1/2/3** for display RGB, and **Stretch to MinMax** with
+the shared limits in [WORK_STATE.md](WORK_STATE.md). Viewing the Drive TIFFs
+in QGIS requires no Earth Engine login.
+
+## Rerun from Earth Engine
+
+Authenticate separately on the new device. The default cloud project is
+`stair-project-509517`. Use `EE_PROJECT_ID` or `--project` if you need a
+different authorized project. These Windows commands regenerate local results:
+
+```powershell
+.\.venv\Scripts\earthengine.exe authenticate
+.\.venv\Scripts\python.exe scripts/export_stair_stages.py --output outputs/spatial_validation/2022-07-29_reproduced
+.\.venv\Scripts\python.exe scripts/export_stair_stages.py --target 2022-07-22 --reference 2022-07-21 --holdout-cloud --output outputs/spatial_validation/2022-07-22_holdout_reviewed
+```
+
+On macOS or Linux, the authentication launcher is `.venv/bin/earthengine`.
+The July 29 command writes five TIFFs and `run.json`. The July 22 holdout
+writes scores to `run.json` and keeps the withheld observations out of model
+fitting. Compare scene IDs, grid, coverage, class count, and metrics with the
+checkpoint. Add `--drive-folder <new-folder-name>` only when you want a fresh
+set of exports. The reviewed Drive folder already has its five TIFFs.
+
+## Recover the separate temporal baseline
+
+Copy `data/temporal/clayton_20220722.npz` to the same relative path if you
+have the tested cache. The expected SHA-256 is
+`5a941fac181e19e889521a24e7a6a1a8a7c7a4e6f3164aa5e7a7525bc4f5fa69`.
+Otherwise, after authenticating, run `scripts/run_temporal_validation.py
+--fetch` with the project Python and record the new cache hash and scene
+manifest. With a cache in place, the script runs locally. It accepts
+`--pattern cloud`, `--pattern stripes`, and `--pattern scene`; give each
+run a distinct `--output` directory. See [TEMPORAL_STAGE.md](TEMPORAL_STAGE.md)
+for the original temporal experiment.
+
+Keep both supplied papers available locally if you will audit the method.
+Luo et al. (2018) defines STAIR as SaTellite dAta IntegRation. The cover-crop
+paper is the reference for later application work.

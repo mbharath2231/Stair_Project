@@ -1,73 +1,83 @@
-# STAIR working state
+# STAIR work checkpoint
 
-Updated 2026-11-08. Read this file at the start of an implementation session,
-then check `git status`, the current commit, and `docs/TEMPORAL_STAGE.md` before
-editing. This file records the intended next step; Git records source changes.
+Updated 2026-11-09. This is the checkpoint for continuing on the other
+device. See [CONTINUATION.md](CONTINUATION.md) for setup and exact commands.
 
-## Goal
+## Start here
 
-Build one reproducible STAIR gap-filling pipeline with temporal interpolation,
-global correction, and adaptive correction. Each stage must have explicit
-support and fallback behavior and must be evaluated on held-out clear pixels.
-Only after these three stages are implemented and validated should work move on
-to Landsat-MODIS fusion or cover-crop analysis.
+- Reopen the July 29 **false-color composite (FCC)** in QGIS and reproduce
+  the July 22 cloud-shaped holdout on the new device.
+- Then validate temporal, global, and adaptive stages on additional
+  independent dates or chips. Use identical held-out pixels for all three
+  stages, report coverage and per-band RMSE, MAE, and bias, and compare the
+  same field areas using a shared FCC stretch. Check clear-pixel preservation
+  and fallback behavior before extending to Landsat–MODIS fusion.
+- The QGIS deliverable is five GeoTIFF stages for one date and grid: original,
+  QA-masked, temporal, global, and adaptive. Keep that sequence and omit
+  difference rasters.
 
-## Current checkpoint
+## Maintained code
 
-- Last reviewed starting commit: `57a68d587ac2bceb6e560a8d1aa47c635459b5e9`.
-- Maintained temporal implementation: `stair/temporal.py` and
-  `scripts/run_temporal_validation.py`.
-- Local automated suite: 21 tests passed on November 6, 2026, including
-  offline Earth Engine graph checks and a synthetic end-to-end report run.
-- The real observation cache `data/temporal/clayton_20220722.npz` is absent in
-  this checkout. The measured real-data results in `docs/TEMPORAL_STAGE.md`
-  were produced on the other device and have not been reproduced here.
-- Local project interpreter `crop_env/bin/python` is Python 3.13.9. Pytest was
-  installed into that ignored environment. Recreate environments per device;
-  never treat virtual environments or Earth Engine credentials as shared files.
-- Working tree also contains uncommitted cross-device changes in
-  `README.md`, `docs/CONTINUATION.md`, and `scripts/check_project.py`.
+| Path | Responsibility |
+| --- | --- |
+| `stair/landsat.py`, `stair/temporal.py` | Landsat Collection 2 Level 2 reflectance and QA. Pixelwise two-sided temporal interpolation within 32 days per side, with the target excluded from references. |
+| `stair/spatial.py` | Scene-wide and class-specific spatial offsets, reproducible reference segmentation, and sparse-support fallbacks. |
+| `scripts/export_stair_stages.py` | Materialize and check the five stages on Earth Engine, write local TIFFs and a run manifest, and optionally export to Drive. The current grid is fixed to Clayton. |
+| `scripts/build_stair_qgis.py --fcc` | Build the QGIS project and full-chip and field-detail panels from existing TIFFs. Run with QGIS Python. |
+| `scripts/run_temporal_validation.py` | Separate cached temporal experiment with cloud, stripe, and full-scene holdout options. See [TEMPORAL_STAGE.md](TEMPORAL_STAGE.md). |
 
-## Next implementation session
+The handoff includes the reviewed spatial path, based on Git commit
+`31964f8`. All 24 tests passed on Windows with Python 3.12.14. The older
+`stair/adaptive.py` and fusion runners are historical paths. The Clayton
+results below use `stair/spatial.py`.
 
-1. Inspect `git status` and preserve any edits already in progress. Run
-   `crop_env/bin/python scripts/check_project.py --json` (or the current device's
-   project interpreter) to record the commit, packages, and cache fingerprint.
-2. Obtain the exact existing observation cache from the other device or fetch
-   original observations with Earth Engine. Confirm its `run.json` provenance
-   and hash before comparing reported real-data scores.
-3. Treat temporal-only prediction as the frozen baseline. Add a held-out
-   validation path that passes only the artificially gapped target and allowed
-   references to correction code; truth is available only to scoring.
-4. Resolve and document the spatial-correction equation before modifying
-   `stair/adaptive.py`. The current implementation combines clear-pixel temporal
-   bias and reference gap/clear contrast. The paper text available so far does
-   not settle whether this double-counts spatial contrast. Do not choose an
-   equation solely because it improves this one validation chip.
-5. Implement and compare global correction first. Then implement adaptive
-   class-specific correction using shared, reproducible segments. At each stage
-   require exact preservation of observed clear pixels, constant-scene and
-   unchanged-scene invariants, no fabricated zeros, explicit sparse-support
-   fallbacks, identical holdout masks, and saved diagnostics/metrics.
-6. Compare temporal, global, and adaptive outputs on the same cloud-shaped,
-   stripe, and full-scene holdouts. Report coverage, unresolved pixels, RMSE,
-   MAE, bias, correlation, and prediction R-squared. Re-run offline Earth Engine
-   graph checks; run actual Earth Engine parity only when authorized credentials
-   and the real cache are available.
-7. Update `docs/TEMPORAL_STAGE.md`, this checkpoint, and the README only after
-   observed results support the description. Commit changes when the user asks
-   or when explicitly agreed; until then leave them available for review.
+## July 29 Clayton run
 
-## Cross-device working rule
+- Target Landsat 8 scene `LC08_021031_20220729`. Independent clear reference
+  `LC08_020031_20220722`. The full source list is in the generated `run.json`.
+- A 167 × 167 grid at 30 m, EPSG:32616, affine transform
+  `[30, 0, 727110, 0, -30, 4640580]`. The three float32 bands are
+  `SR_B5`, `SR_B4`, and `SR_B3`, with NoData `-9999`.
+- All 16,375 QA-clear pixels were preserved exactly. All 11,514 QA gaps
+  had temporal support and were filled. The updated adaptive stage selected
+  seven reference classes. The earlier Drive folder used four fixed classes.
+- The [reviewed Drive folder](https://drive.google.com/drive/folders/1pIxeL7LvhbqrsVK77INyJaIUbZGw43P4)
+  contains the five updated TIFFs, verified against the local results.
+- **FCC display RGB is TIFF bands 1/2/3**, or Landsat NIR/Red/Green (5/4/3).
+  Shared surface-reflectance limits are 0.08–0.60, 0.005–0.165, and
+  0.01–0.15 respectively, from rounded July 29 QA-clear percentiles.
+  In the west-central cloud gap, global correction reduces the cyan cast
+  and adaptive correction makes smaller local adjustments.
 
-Use the Git remote and commit history to move source. Before starting, compare
-the local commit and status with this checkpoint. Preserve uncommitted edits on
-either machine before synchronizing. Move the ignored `.npz` observation cache
-through a user-controlled file transfer and verify SHA-256 on both devices.
-Install dependencies from `requirements-dev.txt` into a new local environment.
-Never copy virtual environments, authentication files, or credentials. Do not
-claim a previous experiment was reproduced until the input-cache hash and
-scientific module hashes match.
+## Method choice and validation
 
-When resuming this project, continue from this checkpoint and the current Git
-state; do not restart the audit or overwrite work already present.
+The spatial correction uses the reference gap-to-clear contrast from Luo
+et al. (2018), Section 2.2.2. The printed formula leaves the centering of
+the temporal term ambiguous. Here the correction is
+`temporal + mean(clear target) + mean(gap reference) - mean(clear reference) - mean(gap temporal)`
+on paired finite support. Subtracting the gap mean preserves an unchanged
+scene. The adaptive stage applies this calculation within each spectral
+class of the independent reference. It selects the maximum gap statistic
+over K = 2 through 8 using seed 42, up to 2,000 sample pixels and 20 uniform
+null draws. Each offset requires at least 30 supported clear and 30
+supported gap pixels. A sparse class inherits the global offset, and
+insufficient global support retains the temporal estimate.
+
+July 29 has no same-day clear truth in its natural gaps. The accuracy
+experiment uses a separate July 22 target and July 21 reference, with
+withheld clear observations used only for scoring. The Earth Engine
+cloud holdout rerun selected five classes and scored all 6,385 withheld
+pixels. The stripe holdout scored all 8,489 pixels using the cached NumPy
+workflow. The current Earth Engine CLI exposes the cloud holdout only.
+
+| July 22 holdout and band | Temporal RMSE | Global RMSE | Adaptive RMSE |
+| --- | ---: | ---: | ---: |
+| Cloud, NIR | 0.03377 | 0.02821 | 0.02808 |
+| Cloud, Red | 0.01912 | 0.01776 | 0.01763 |
+| Cloud, Green | 0.01548 | 0.01344 | 0.01334 |
+| Stripe, Red | 0.01715 | 0.01607 | 0.01595 |
+
+Global correction accounts for most of the RMSE gain on this chip.
+Adaptive correction gives a smaller additional gain. Its cloud-holdout
+NIR MAE rises slightly from 0.01992 to 0.01996. Treat the FCC inspection
+and the controlled holdout as separate evidence.

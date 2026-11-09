@@ -6,11 +6,11 @@ start with [the current work checkpoint](docs/WORK_STATE.md) and
 Run `python scripts/check_project.py` with your project Python to check local
 dependencies and fingerprint the observation cache without network access.
 
-> **Current development status (2026-11-06):** The maintained first stage is the
-> validated temporal interpolation workflow. Start with
-> [the temporal-stage guide](docs/TEMPORAL_STAGE.md). It includes real Clayton
-> Landsat data, independent holdouts, support diagnostics, and reproducible visuals.
-> Global/adaptive correction will be developed against this baseline next.
+> **Current development status (2026-11-09).** The maintained Clayton workflow
+> compares temporal interpolation, global correction, and adaptive correction
+> on real Landsat data. The [work checkpoint](docs/WORK_STATE.md) records the
+> validation results and the [device guide](docs/CONTINUATION.md) explains how
+> to reopen the five-stage false-color comparison in QGIS.
 > The older feature descriptions and commands below describe historical
 > experiments; several listed runners have moved into `archive/` and are not the
 > maintained entry points. The code is a research implementation in development.
