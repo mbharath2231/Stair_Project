@@ -56,3 +56,4 @@ scratch/
 data/temporal/
 outputs/temporal_validation/
 outputs/spatial_validation/
+outputs/fusion_validation/

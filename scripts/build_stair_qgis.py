@@ -45,13 +45,13 @@ def red_renderer(layer):
     return renderer
 
 
-def fcc_renderer(layer):
+def fcc_renderer(layer, stretch=FCC_STRETCH):
     provider = layer.dataProvider()
     # TIFF bands 1/2/3 store Landsat NIR/Red/Green (5/4/3).
     renderer = QgsMultiBandColorRenderer(provider, 1, 2, 3)
     setters = (renderer.setRedContrastEnhancement, renderer.setGreenContrastEnhancement,
                renderer.setBlueContrastEnhancement)
-    for band, ((low, high), set_enhancement) in enumerate(zip(FCC_STRETCH, setters), 1):
+    for band, ((low, high), set_enhancement) in enumerate(zip(stretch, setters), 1):
         enhancement = QgsContrastEnhancement(provider.dataType(band))
         enhancement.setContrastEnhancementAlgorithm(QgsContrastEnhancement.StretchToMinimumMaximum)
         enhancement.setMinimumValue(low)
@@ -60,7 +60,7 @@ def fcc_renderer(layer):
     return renderer
 
 
-def renderer_matches(renderer, fcc):
+def renderer_matches(renderer, fcc, stretch=FCC_STRETCH):
     if not fcc:
         return isinstance(renderer, QgsSingleBandPseudoColorRenderer) and renderer.band() == 2
     if not isinstance(renderer, QgsMultiBandColorRenderer):
@@ -72,7 +72,7 @@ def renderer_matches(renderer, fcc):
         enhancement
         and enhancement.contrastEnhancementAlgorithm() == QgsContrastEnhancement.StretchToMinimumMaximum
         and (enhancement.minimumValue(), enhancement.maximumValue()) == bounds
-        for enhancement, bounds in zip(enhancements, FCC_STRETCH)
+        for enhancement, bounds in zip(enhancements, stretch)
     )
 
 

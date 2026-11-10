@@ -25,6 +25,16 @@ This branch carries source, tests, and documentation. The virtual environment,
 Earth Engine login, original papers, observation cache, and generated outputs
 live outside Git.
 
+## Open the latest fusion results
+
+Download and fully extract the
+[spring QGIS packages](https://drive.google.com/drive/folders/1wpdxaci5AXc_LljR3KscUgpXQo3YUm8_).
+Open `fusion_week.qgz` in a March or April package for the weekly FCC.
+Open `spring_review.qgz` in the NDVI package for the cross-month review.
+Keep the extracted rasters beside their project files. The
+[March fusion audit](WORK_STATE.md#march-13-fusion-audit) records the error
+analysis and the next validation task.
+
 ## Set up Python and verify
 
 Use Python 3.10 or later. The handoff was tested on Windows with Python 3.12.
