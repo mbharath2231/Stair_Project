@@ -22,7 +22,7 @@ SPRING_FCC = ((0.10, 0.50), (0.03, 0.25), (0.04, 0.20))
 VIRIDIS = ("#440154", "#443983", "#31688e", "#21918c", "#35b779", "#90d743", "#fde725")
 
 
-def ndvi_renderer(layer, bounds):
+def ndvi_renderer(layer, bounds, band=1):
     low, high = bounds
     ramp = QgsColorRampShader(low, high)
     ramp.setColorRampType(Qgis.ShaderInterpolationMethod.Linear)
@@ -32,7 +32,7 @@ def ndvi_renderer(layer, bounds):
     ])
     shader = QgsRasterShader(low, high)
     shader.setRasterShaderFunction(ramp)
-    renderer = QgsSingleBandPseudoColorRenderer(layer.dataProvider(), 1, shader)
+    renderer = QgsSingleBandPseudoColorRenderer(layer.dataProvider(), band, shader)
     renderer.setClassificationMin(low)
     renderer.setClassificationMax(high)
     return renderer

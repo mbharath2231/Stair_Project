@@ -3,6 +3,78 @@
 Updated 2026-11-16. This is the checkpoint for continuing on either device.
 See [CONTINUATION.md](CONTINUATION.md) for setup and exact commands.
 
+## Clayton false-color imagery, March–October 2005–2025
+
+Run `python scripts/collect_historical_fcc.py` with Earth Engine access
+to build the local archive under `data/clayton_fcc_march_october/`.
+Each year has a `Landsat` folder with individual Collection 2 Tier 1
+Level 2 scenes and a `MODIS` folder with one MCD43A4.061 image per
+calendar date. Each TIFF stores float surface reflectance in
+NIR, Red, Green order for display as RGB. The source bands are 4/3/2
+for Landsat 5/7, 5/4/3 for Landsat 8/9, and 2/1/4 for MODIS.
+
+Landsat files use the 30 m Clayton grid and retain clouds and shadows
+from the source scenes. MODIS files use the product's native nominal
+500 m sinusoidal cells and retain available retrievals of both quality
+classes. Missing source pixels remain NoData. Each annual `index.json`
+records the Earth Engine asset ID and valid pixel count for every
+TIFF. Open the TIFFs directly in QGIS with RGB bands 1/2/3.
+Load `Clayton_FCC_shared.qml` from the archive root to apply the
+same display stretch across images.
+
+## Clayton historical archive, March–October 2005–2025
+
+Download the two surface-reflectance bands used for NDVI from Earth Engine
+and run the Clayton model from the local cache:
+
+```sh
+python scripts/collect_ndvi_inputs.py --start-year 2005 --end-year 2025 --march-october
+python scripts/run_daily_ndvi.py --start-year 2005 --end-year 2025 --march-october --fallback
+```
+
+The archive uses Landsat Collection 2 Tier 1 Level 2 and MODIS
+MCD43A4.061. Landsat 5/7 use `SR_B4` for NIR and `SR_B3` for Red.
+Landsat 8/9 use `SR_B5` and `SR_B4`. MODIS uses
+`Nadir_Reflectance_Band2` and `Nadir_Reflectance_Band1`.
+The annual NPZ files in `data/ndvi_inputs/march_october/` store aligned
+NIR and Red in that order, separate Landsat and MODIS date lists, and
+Landsat scene IDs. The arrays use the Clayton 30 m grid. MODIS comes
+from the nominal 500 m product and is bilinearly resampled.
+Input caches include 32 days on either side for interpolation at the
+season boundaries. Landsat 7 scan gaps and unsupported inputs stay masked.
+
+Run `python scripts/export_ndvi_reflectance.py` to export the cached
+surface reflectance to `outputs/daily_ndvi/march_october/reflectance/<year>/`.
+Each year has separate Landsat Red, Landsat NIR, MODIS Red, and MODIS
+NIR TIFFs with 245 date-labeled bands and the same grid as the NDVI stacks.
+Open `outputs/daily_ndvi/march_october/Clayton_2005_review.qgz` for
+preselected dates and fixed symbology. Rebuild it using QGIS Python with
+`scripts/build_historical_qgis.py outputs/daily_ndvi/march_october`.
+When opening an annual TIFF directly, use singleband symbology and select
+one date. QGIS can assign the first three dates as RGB channels by default.
+
+The output index is `outputs/daily_ndvi/march_october/with_fallback/dataset.json`.
+Each annual folder contains matching 245-band Landsat, MODIS, and modeled NDVI
+GeoTIFFs, plus the annual source raster and `run.json`. Band 1 is March 1
+and band 245 is October 31 in every year. The Landsat stack shows NoData
+on dates without a valid observation. In the modeled output, the source
+raster distinguishes Landsat observations, fusion, and Landsat-only
+interpolation. The annual report gives the date-level holdout comparison
+and records the SHA-256 of the input cache.
+
+The Clayton download contains 1,010 Landsat acquisition dates and 5,145
+MODIS product dates inside the 21 seasons. The modeled product has 92.6%
+pixel-day coverage with the flagged fallbacks enabled and 85 dates with
+no supported pixels. On 379 held-out Landsat dates with common valid
+pixels, NDVI RMSE was 0.0850 for two-pair fusion, 0.0856 for Landsat
+interpolation with the same pairs, 0.0826 for nearest-clear Landsat
+interpolation, and 0.1513 for MODIS alone.
+
+The Clayton runs use native mission reflectance. Cross-mission spectral
+harmonization and Landsat–MODIS co-registration remain open before analyzing
+long-term NDVI trends. Keep watershed expansion contingent on the Clayton
+evaluation.
+
 ## Watershed MODIS restoration
 
 The watershed runner now uses neighboring QA-approved MODIS observations
@@ -49,6 +121,47 @@ the project successfully. The QGIS desktop could not be launched in this macOS
 session because Apple pasteboard services returned an error; open the project
 manually in QGIS. Cross-sensor registration analysis and additional withheld
 dates remain next. Keep targets out of all anchor and offset selection.
+
+## Daily NDVI for Clayton Township, 2016–2025
+
+NDVI is `(NIR - Red) / (NIR + Red)` from scaled surface reflectance.
+Use Landsat 8/9 `SR_B5` and `SR_B4` and MODIS MCD43A4.061
+`Nadir_Reflectance_Band2` and `Nadir_Reflectance_Band1` in that order.
+The collection cached 464 Landsat acquisition dates and 3,653 MODIS product
+dates inside the decade, plus boundary padding for interpolation. The archive
+uses the 167 × 167, 30 m Clayton grid in EPSG:32616.
+
+```sh
+python scripts/collect_ndvi_inputs.py
+python scripts/run_daily_ndvi.py
+python scripts/run_daily_ndvi.py --fallback
+```
+
+The first command requires Earth Engine authentication and writes
+`data/ndvi_inputs/clayton_<year>.npz`. The model then runs locally. It
+interpolates the nearest QA-clear paired Landsat–MODIS residuals up to 32 days
+on either side, per pixel. It adds the residual to daily MODIS reflectance
+before calculating NDVI. Clear same-day Landsat takes priority. Anchors use
+observed pixels from scenes with at least 60% clear coverage. The model
+leaves unresolved pixels masked and aligns both sensors on one grid.
+Independent cross-sensor registration is pending.
+
+Output is under `outputs/daily_ndvi/strict/` and
+`outputs/daily_ndvi/with_fallback/`. Each year has an NDVI GeoTIFF and a
+matching source-code GeoTIFF, both with one ISO-date-labelled band per day.
+The source codes are 0 NoData, 1 Landsat observation, 2 two-pair fusion,
+3 single-pair fusion within 16 days, and 4 Landsat-only interpolation.
+Codes 3 and 4 are enabled by `--fallback`. Each `dataset.json` lists the
+year files and validation summary. The annual `run.json` records daily
+coverage, source scenes, input checksum, and leave-one-date-out scores.
+
+The strict output has NDVI on 40.5% of pixel-days. The fallback output has
+NDVI on 76.8%, including 84.5% from March through May. It has 496 calendar
+days with no supported pixels, predominantly in winter. Across 148 withheld
+dates with shared valid pixels, NDVI RMSE was 0.0830 for two-pair fusion,
+0.0865 for Landsat-only interpolation using the same pairs, 0.0836 for
+nearest-clear Landsat interpolation, and 0.1485 for MODIS. These scores use
+the same 3,248,364 pixel-date comparisons across methods.
 
 ## March 13 fusion audit
 

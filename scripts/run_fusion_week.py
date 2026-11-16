@@ -17,6 +17,7 @@ sys.path.insert(0, str(ROOT))
 from scripts.export_stair_stages import BANDS, CRS, SIZE, TRANSFORM, WINDOW, download, write_local
 from stair.fusion import stair_dual_fusion_numpy
 from stair.landsat import landsat_reflectance_collection
+from stair.ndvi import ndvi
 from stair.spatial import fit_spatial_offsets, segment_reference
 from stair.temporal import interpolate_temporal_numpy
 from stair.validation import score_holdout
@@ -25,6 +26,15 @@ MODIS_PRODUCT = "MODIS/061/MCD43A4"
 MODIS_BANDS = (2, 1, 4)  # Correspond to Landsat NIR, Red, Green.
 FCC_LOW = np.array([0.08, 0.005, 0.01])
 FCC_HIGH = np.array([0.60, 0.165, 0.15])
+
+
+def prepare_modis(image, bands=BANDS):
+    """Map the selected MODIS bands to the corresponding Landsat bands."""
+    numbers = [MODIS_BANDS[BANDS.index(band)] for band in bands]
+    reflectance = image.select([f"Nadir_Reflectance_Band{number}" for number in numbers], bands)
+    quality = image.select([f"BRDF_Albedo_Band_Mandatory_Quality_Band{number}" for number in numbers], bands)
+    valid = quality.eq(0).And(reflectance.gte(0)).And(reflectance.lte(32766)).reduce(ee.Reducer.min())
+    return reflectance.updateMask(valid).multiply(0.0001).toFloat().resample("bilinear")
 
 
 def read_inputs(prior, later, days):
@@ -55,10 +65,7 @@ def read_inputs(prior, later, days):
         if day.replace("-", "_") not in available:
             raise ValueError(f"No MCD43A4 retrieval for {day}")
         image = ee.Image(coarse.filterDate(day, ee.Date(day).advance(1, "day")).first())
-        refl = image.select([f"Nadir_Reflectance_Band{band}" for band in MODIS_BANDS], BANDS)
-        qa = image.select([f"BRDF_Albedo_Band_Mandatory_Quality_Band{band}" for band in MODIS_BANDS])
-        good = qa.eq(0).And(refl.gte(0)).And(refl.lte(32766)).reduce(ee.Reducer.min())
-        images.append(refl.updateMask(good).multiply(0.0001).toFloat().resample("bilinear"))
+        images.append(prepare_modis(image))
     modis = dict(zip(modis_days, np.split(download(ee.Image.cat(images)), len(images))))
     return landsat, modis, scenes
 
@@ -91,13 +98,6 @@ def restore_anchor(allowed, anchor):
     info["unresolved_pixels"] = int((~np.isfinite(predicted).all(axis=0)).sum())
     np.testing.assert_array_equal(predicted[:, clear], observed[:, clear])
     return predicted, info
-
-
-def ndvi(reflectance):
-    nir, red = reflectance[:2]
-    total = nir + red
-    valid = np.isfinite(total) & (total > 0) & (nir >= 0) & (red >= 0)
-    return np.divide(nir - red, total, out=np.full_like(total, np.nan), where=valid)[None]
 
 
 def compare(truth, methods, bands):

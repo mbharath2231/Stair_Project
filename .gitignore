@@ -57,3 +57,6 @@ data/temporal/
 outputs/temporal_validation/
 outputs/spatial_validation/
 outputs/fusion_validation/
+data/ndvi_inputs/
+data/clayton_fcc_march_october/
+outputs/daily_ndvi/

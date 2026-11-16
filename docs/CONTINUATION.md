@@ -28,7 +28,9 @@ live outside Git.
 ## Open the latest fusion results
 
 The [output download index](../outputs/README.md) links to the GitHub draft
-release and lists the QGIS and cache archives.
+releases and lists the QGIS and cache archives. For the 2005–2025
+false-color imagery and historical Clayton work, follow the Clayton
+historical handoff entry and extract the ZIPs into the repository root.
 
 The latest watershed run and its baseline are described in
 [WATERSHED_PILOT.md](WATERSHED_PILOT.md). Extract the watershed handoff ZIPs

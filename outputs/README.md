@@ -1,5 +1,28 @@
 # STAIR output downloads
 
+## Clayton historical imagery and validation
+
+Sign in with a GitHub account that can push to this repository and open the
+[Clayton historical handoff](https://github.com/mbharath2231/Stair_Project/releases/tag/untagged-d2de7b254ab20b9d8f7c)
+draft release. Extract the ZIPs you want into the repository root. Each
+archive contains its repository-relative paths. Use the release's
+`SHA256SUMS.txt` to verify the downloads.
+
+| ZIP | Contents |
+| --- | --- |
+| `clayton-fcc-2005-2025.zip` | March–October Landsat and MODIS false-color TIFFs and the shared QGIS style |
+| `clayton-reflectance-input-cache-2005-2025.zip` | Historical Red and NIR inputs for model reruns |
+| `clayton-reflectance-geotiffs-2005-2025.zip` | Landsat and MODIS annual Red and NIR TIFFs |
+| `clayton-ndvi-2005-2025.zip` | Historical NDVI outputs, source layers, and reports |
+| `clayton-ndvi-2016-2025-full-year.zip` | Earlier full-year NDVI inputs and outputs |
+| `clayton-pilot-qgis-and-validation.zip` | Weekly fusion, temporal, and spatial validation outputs |
+
+For the false-color images, open TIFFs in
+`data/clayton_fcc_march_october/<year>/Landsat/` or `<year>/MODIS/`.
+The 2005 historical review project uses both the historical NDVI and
+reflectance GeoTIFF ZIPs. See the [work checkpoint](../docs/WORK_STATE.md)
+for dataset details and reproduction commands.
+
 ## Clayton Township March and April fusion
 
 | Week | QGIS archive |
