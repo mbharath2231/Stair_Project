@@ -27,6 +27,15 @@ live outside Git.
 
 ## Open the latest fusion results
 
+The latest watershed run and its baseline are described in
+[WATERSHED_PILOT.md](WATERSHED_PILOT.md). Extract the watershed handoff ZIPs
+into `outputs/fusion_validation/` in the new checkout. Each archive
+includes its run folder, so extract it directly into `fusion_validation`.
+Open `raisin_2022-07-22_modis_fill/raisin_fusion_gap_review.qgz` for the
+revised run and `raisin_2022-07-22_five_days/raisin_fusion_gap_review.qgz`
+for the original run. The Landsat cache archive is useful for reruns.
+The projects and their TIFFs open without Earth Engine credentials.
+
 Download and fully extract the
 [spring QGIS packages](https://drive.google.com/drive/folders/1wpdxaci5AXc_LljR3KscUgpXQo3YUm8_).
 Open `fusion_week.qgz` in a March or April package for the weekly FCC.

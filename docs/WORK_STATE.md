@@ -1,7 +1,54 @@
 # STAIR work checkpoint
 
-Updated 2026-11-10. This is the checkpoint for continuing on the other
-device. See [CONTINUATION.md](CONTINUATION.md) for setup and exact commands.
+Updated 2026-11-16. This is the checkpoint for continuing on either device.
+See [CONTINUATION.md](CONTINUATION.md) for setup and exact commands.
+
+## Watershed MODIS restoration
+
+The watershed runner now uses neighboring QA-approved MODIS observations
+from inside the prediction period and attempts temporal interpolation when
+a whole MODIS retrieval is absent. The Landsat holdout stays in place.
+A separate run with 16 days per side in
+`outputs/fusion_validation/raisin_2022-07-22_modis_fill/` reached
+99.46–99.53% fusion coverage on the same five days. The new QGIS project's
+MODIS temporal fill source layer identifies cells using more distant input.
+On the July 22 withheld benchmark, shared-support NDVI RMSE went from
+0.06207 to 0.06221, and newly supported pixels with valid NDVI scored
+0.12105. See [the watershed pilot results](WATERSHED_PILOT.md).
+
+## River Raisin watershed pilot
+
+The [watershed pilot](WATERSHED_PILOT.md) processed five consecutive dates
+from July 22 to July 26, 2022. The portable QGIS project and all restoration
+and fusion layers are under `outputs/fusion_validation/raisin_2022-07-22_five_days/`.
+The watershed contains 3,130,003 pixels at 30 m. Valid fusion coverage was
+99.27–99.45%. July 22 was the independently withheld Landsat benchmark.
+There was no Landsat acquisition over the polygon on July 23–26.
+
+July 22 NDVI RMSE was 0.06201 for STAIR, 0.06238 for nearest-clear Landsat
+interpolation, and 0.06154 for Landsat interpolation using STAIR's anchors.
+The same-anchor result motivates checking registration and anchor selection
+across more withheld acquisitions before increasing the run length.
+
+## Multi-date spring fusion review regenerated on this device
+
+Regenerated the March 13–19 and April 14–20, 2024 validation runs with the
+existing weekly runner. Each week withheld its Landsat target from prediction
+and used it only for scoring. The combined spring NDVI review uses the same
+15,983 corn/soy pixels on both benchmark dates. Results reproduce the prior
+checkpoint: March NDVI RMSE 0.04759 for fusion, 0.03222 for Landsat-only, and
+0.12463 for MODIS-only; April RMSE 0.06086, 0.06522, and 0.14997 respectively.
+March-to-April NDVI change RMSE is 0.04399, correlation 0.731, with 96.7%
+direction agreement among 5,083 pixels whose observed change magnitude is at
+least 0.05. These are two benchmark dates from one chip, not broad accuracy
+evidence.
+
+Artifacts are under `outputs/fusion_validation/` (ignored by Git). The combined
+project is `spring_2024_phenology/spring_review.qgz`. PyQGIS built and reopened
+the project successfully. The QGIS desktop could not be launched in this macOS
+session because Apple pasteboard services returned an error; open the project
+manually in QGIS. Cross-sensor registration analysis and additional withheld
+dates remain next. Keep targets out of all anchor and offset selection.
 
 ## March 13 fusion audit
 

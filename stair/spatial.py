@@ -70,7 +70,12 @@ def segment_reference(reference, *, seed=42, sample_limit=2000, null_draws=20):
         centers_by_count[count] = centers
     centers = centers_by_count[max(scores, key=scores.get)]
     physical_centers = centers * scale + lower
-    labels, _ = _assign(pixels / scale, physical_centers / scale)
+    # Bound the pixel-by-class distance array on watershed-scale rasters.
+    labels = np.empty(len(pixels), dtype=np.intp)
+    scaled_centers = physical_centers / scale
+    for start in range(0, len(pixels), 100_000):
+        chunk = slice(start, start + 100_000)
+        labels[chunk], _ = _assign(pixels[chunk] / scale, scaled_centers)
     segments = np.full(valid.shape, np.nan)
     segments[valid] = labels
     return segments, physical_centers, scale, scores
