@@ -27,6 +27,9 @@ live outside Git.
 
 ## Open the latest fusion results
 
+The [output download index](../outputs/README.md) links to the GitHub draft
+release and lists the QGIS and cache archives.
+
 The latest watershed run and its baseline are described in
 [WATERSHED_PILOT.md](WATERSHED_PILOT.md). Extract the watershed handoff ZIPs
 into `outputs/fusion_validation/` in the new checkout. Each archive
