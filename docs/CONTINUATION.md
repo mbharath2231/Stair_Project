@@ -49,6 +49,16 @@ Keep the extracted rasters beside their project files. The
 [March fusion audit](WORK_STATE.md#march-13-fusion-audit) records the error
 analysis and the next validation task.
 
+## Continue the Clayton cloud-filling evaluation
+
+The [cloud-filling validation guide](CLOUD_FILLING_VALIDATION.md) records the
+March 13 and April 14, 2024, and July 22, 2022 results. It includes commands to
+regenerate the density plots, five-stage Landsat GeoTIFFs, NDVI and signed
+error GeoTIFFs, and their QGIS layouts. To reopen existing outputs on another
+device, transfer and extract `clayton_cloud_fill_qgis.zip` or
+`clayton_cloud_fill_ndvi_qgis.zip` from `outputs/fusion_validation/` and open
+the QGIS project inside the extracted folder.
+
 ## Set up Python and verify
 
 Use Python 3.10 or later. The handoff was tested on Windows with Python 3.12.
