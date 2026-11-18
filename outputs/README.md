@@ -1,5 +1,32 @@
 # STAIR output downloads
 
+## Clayton training comparison and cloud validation, November 18
+
+The [latest handoff release](https://github.com/mbharath2231/Stair_Project/releases/tag/untagged-b2806ae9169ed4d2b92d)
+contains the trained models and the QGIS reviews from this checkpoint.
+Sign in with the GitHub account used for this repository to access the
+draft release. Extract both ZIPs into the repository root and verify
+their SHA-256 checksums using the release's `SHA256SUMS.txt`.
+
+| ZIP | Contents |
+| --- | --- |
+| `clayton-training-history-qgis-and-models.zip` | Both fitted ridge corrections, 224 GeoTIFFs for withheld 2025 acquisitions, metrics, plots and the fixed-scale NIR/red/NDVI QGIS project |
+| `clayton-cloud-fill-validation.zip` | Five-stage reflectance and NDVI QGIS projects, their TIFFs, and cloud holdout density reports |
+
+Open
+`outputs/fusion_validation/history_comparison_2005_2025/training_history_comparison.qgz`
+for the training comparison. Its `rasters/` folder must remain beside
+the project. The training periods are March–October 2005–2024 and
+March–August 2024, with 2025 reserved for evaluation.
+The [comparison guide](../docs/TRAINING_HISTORY_COMPARISON.md) records the
+model choice, results, limitations and exact reproduction commands.
+
+To rerun training, also download
+`clayton-reflectance-input-cache-2005-2025.zip` from the historical
+handoff below and extract it into the repository root. The cached
+experiment runs offline. Source code and setup instructions are on
+branch `codex/stair-fcc-handoff`.
+
 ## Clayton historical imagery and validation
 
 Sign in with a GitHub account that can push to this repository and open the

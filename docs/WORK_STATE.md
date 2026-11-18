@@ -1,7 +1,26 @@
 # STAIR work checkpoint
 
-Updated 2026-11-16. This is the checkpoint for continuing on either device.
+Updated 2026-11-18. This is the checkpoint for continuing on either device.
 See [CONTINUATION.md](CONTINUATION.md) for setup and exact commands.
+
+## Twenty-year versus six-month fusion training
+
+Implemented and ran the date-balanced ridge correction described in
+[TRAINING_HISTORY_COMPARISON.md](TRAINING_HISTORY_COMPARISON.md).
+Long-history training uses March–October 2005–2024. The user selected
+March–August 2024 for the short history. Both are evaluated on withheld
+2025 acquisitions with the existing fusion and Landsat/MODIS controls.
+The fitted models and fixed-scale QGIS comparison are in
+`outputs/fusion_validation/history_comparison_2005_2025/`.
+NIR RMSE improves with long-history training. NDVI gains are small and
+the nearest-clear Landsat control has the lowest NDVI RMSE in this test.
+Coverage, sensor-era sensitivity and additional withheld years remain
+part of the next evaluation. The guide records results and limitations.
+The [November 18 handoff](https://github.com/mbharath2231/Stair_Project/releases/tag/untagged-b2806ae9169ed4d2b92d)
+draft release provides both trained models, QGIS projects, GeoTIFFs and
+evaluation reports for transfer. See [outputs/README.md](../outputs/README.md)
+for archive contents and extraction paths. The historical input cache is
+available from the earlier historical handoff for offline reproduction.
 
 ## Clayton false-color imagery, March–October 2005–2025
 
@@ -339,6 +358,36 @@ results below use `stair/spatial.py`.
   and adaptive correction makes smaller local adjustments.
 
 ## Method choice and validation
+
+### Cloud holdout probability densities
+
+Run the cloud-shaped holdout with `--density-report` to save
+`cloud_holdout_density.png` and add the matched-pixel statistics to
+`run.json`. For example:
+
+```sh
+python scripts/export_stair_stages.py --target 2022-07-22 --reference 2022-07-21 --holdout-cloud --density-report --output outputs/spatial_validation/cloud_density/2022-07-22
+```
+
+The upper plots compare Gaussian kernel density estimates of reflectance
+for withheld Landsat and the three fill stages. The lower plots show the
+distribution of fill minus withheld value at the same pixel. All methods
+use the same eligible pixels within a date. The report records empirical
+Wasserstein distance, paired RMSE and bias, and paired error percentiles.
+
+The July 22, 2022 run scored 6,385 pixels. Two additional runs used
+April 6, 2024 with March 29 as spatial reference (6,089 pixels) and
+April 14, 2024 with April 13 as reference (6,385 pixels). Red RMSE for
+temporal, global, and adaptive filling was 0.01912, 0.01776, and 0.01763
+on July 22, 0.01181, 0.01243, and 0.01203 on April 6, and 0.03107,
+0.02540, and 0.02651 on April 14. For the April 14 Red band, adaptive
+filling reduced the distribution distance from 0.01408 to 0.01083
+relative to global correction, while increasing paired RMSE. Results
+are descriptive for these dates and this chip. Equivalence would require
+a pre-specified error tolerance and validation across additional scenes
+and masks.
+
+### Spatial correction
 
 The spatial correction uses the reference gap-to-clear contrast from Luo
 et al. (2018), Section 2.2.2. The printed formula leaves the centering of

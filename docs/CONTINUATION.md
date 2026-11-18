@@ -49,6 +49,26 @@ Keep the extracted rasters beside their project files. The
 [March fusion audit](WORK_STATE.md#march-13-fusion-audit) records the error
 analysis and the next validation task.
 
+## Continue the training comparison
+
+The subsequent [training-history comparison](TRAINING_HISTORY_COMPARISON.md)
+trains two identical ridge corrections using 2005–2024 and March–August
+2024 supervision, then evaluates withheld 2025 Landsat acquisitions.
+It provides offline reproduction commands and the fixed-scale NIR, red
+and NDVI QGIS review in
+`outputs/fusion_validation/history_comparison_2005_2025/`.
+
+Download the model/QGIS and cloud-validation ZIPs from the
+[November 18 handoff release](https://github.com/mbharath2231/Stair_Project/releases/tag/untagged-b2806ae9169ed4d2b92d)
+while signed in to the repository's GitHub account. Extract the ZIPs into
+the repository root. To reproduce training, also extract the historical
+input-cache ZIP listed in the [output download index](../outputs/README.md).
+Open `training_history_comparison.qgz` inside the extracted training folder.
+
+The next scientific work is to explain the coverage gaps, compare anchor
+quality and test additional independent years. NIR gains and small NDVI
+gains from the ridge correction are recorded in the comparison guide.
+
 ## Continue the Clayton cloud-filling evaluation
 
 The [cloud-filling validation guide](CLOUD_FILLING_VALIDATION.md) records the

@@ -167,6 +167,12 @@ def build(args):
         metadata["holdout_metrics"] = {
             name: score_holdout(truth, array, holdout, BANDS) for name, array in zip(STAGES[2:], arrays[2:])
         }
+        if args.density_report:
+            from stair.holdout_density import write_holdout_density
+            metadata["density_validation"] = write_holdout_density(
+                args.output / "cloud_holdout_density.png", truth, dict(zip(STAGES[2:], arrays[2:])),
+                holdout, BANDS, args.target,
+            )
     if not args.holdout_cloud or args.drive_folder:
         for name, array in zip(STAGES, arrays):
             write_local(args.output / f"{name}.tif", array, args.target, name)
@@ -203,8 +209,12 @@ def main():
     parser.add_argument("--output", type=Path)
     parser.add_argument("--drive-folder", help="Optional Drive destination for the five TIFFs")
     parser.add_argument("--holdout-cloud", action="store_true", help="Score an artificial gap on a clear target")
+    parser.add_argument("--density-report", action="store_true",
+                        help="Compare reflectance density and paired errors for the cloud holdout")
     parser.add_argument("--wait-existing", action="store_true", help="Monitor tasks recorded in the output directory")
     args = parser.parse_args()
+    if args.density_report and not args.holdout_cloud:
+        parser.error("--density-report requires --holdout-cloud")
     if args.output is None:
         args.output = ROOT / "outputs/spatial_validation" / (args.target + ("_holdout" if args.holdout_cloud else ""))
     args.output.mkdir(parents=True, exist_ok=True)

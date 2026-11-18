@@ -76,14 +76,18 @@ class DailyNDVI:
                 values[use_landsat], flags[use_landsat] = landsat_only[use_landsat], 4
         return np.where(use_observed, actual, values), np.where(use_observed, 1, flags).astype(np.uint8)
 
-    def holdout(self, day):
-        """Predict without copying or bracketing with the target Landsat date."""
+    def holdout_reflectance(self, day):
+        """Return NIR/Red controls with the entire target Landsat day excluded."""
         fitted = self._interpolate(self.pairs, self.pair_days, self.pair_ordinals, day).prediction
         landsat_only = self._interpolate(self.landsat_values, self.landsat_days, self.landsat_ordinals, day).prediction
         coarse = self.modis.get(day, self.missing)
         return {
-            "fusion": ndvi(coarse + fitted[:2]),
-            "same_pairs_landsat": ndvi(fitted[2:]),
-            "landsat_only": ndvi(landsat_only),
-            "modis_only": ndvi(coarse),
+            "fusion": coarse + fitted[:2],
+            "same_pairs_landsat": fitted[2:],
+            "landsat_only": landsat_only,
+            "modis_only": coarse,
         }
+
+    def holdout(self, day):
+        """Predict NDVI with the entire target Landsat day excluded."""
+        return {name: ndvi(image) for name, image in self.holdout_reflectance(day).items()}
