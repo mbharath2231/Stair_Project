@@ -49,7 +49,26 @@ Keep the extracted rasters beside their project files. The
 [March fusion audit](WORK_STATE.md#march-13-fusion-audit) records the error
 analysis and the next validation task.
 
-## Continue the training comparison
+## Continue the Landsat and MODIS comparison
+
+The latest experiment fits Landsat-only, MODIS-only and fused linear
+corrections for each training history. Download
+`clayton-sensor-comparison.zip` and extract it into the repository root.
+[Sensor comparison handoff](https://github.com/mbharath2231/Stair_Project/releases/tag/untagged-9ec4a8fa9ad617609df6)
+
+Open the QGIS project in
+`outputs/fusion_validation/sensor_comparison_2005_2025/`. The run's
+`run.json` records the training dates and comparison pixels. The same
+folder has the six saved fits and a CSV of per-date scores. The
+[comparison guide](TRAINING_HISTORY_COMPARISON.md#separate-landsat-and-modis-inputs)
+describes how to reproduce the results with the historical input cache.
+
+Use the linear fits, existing fusion and plain Landsat interpolation as
+benchmarks for the planned nonlinear comparison. Keep the training
+inputs, target values and evaluation pixels consistent across model
+types. Tune nonlinear models within the training years.
+
+## Continue the original training history comparison
 
 The subsequent [training-history comparison](TRAINING_HISTORY_COMPARISON.md)
 trains two identical ridge corrections using 2005–2024 and March–August

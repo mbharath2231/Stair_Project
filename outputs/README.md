@@ -1,8 +1,22 @@
 # STAIR output downloads
 
+## Clayton Landsat and MODIS comparison
+
+Sign in to GitHub with the account used for this repository and download
+`clayton-sensor-comparison.zip` from the draft release. It contains the six
+linear fits, 352 GeoTIFFs, QGIS layouts, and evaluation results. Verify
+the archive against `SHA256SUMS.txt` and extract it into the repository
+root. [Sensor comparison handoff](https://github.com/mbharath2231/Stair_Project/releases/tag/untagged-9ec4a8fa9ad617609df6)
+
+Open
+`outputs/fusion_validation/sensor_comparison_2005_2025/training_history_comparison.qgz`
+and keep its `rasters/` folder beside it. To rerun training, use the
+historical input cache listed below and the
+[sensor comparison instructions](../docs/TRAINING_HISTORY_COMPARISON.md#separate-landsat-and-modis-inputs).
+
 ## Clayton training comparison and cloud validation, November 18
 
-The [latest handoff release](https://github.com/mbharath2231/Stair_Project/releases/tag/untagged-b2806ae9169ed4d2b92d)
+The [training and cloud validation handoff](https://github.com/mbharath2231/Stair_Project/releases/tag/untagged-b2806ae9169ed4d2b92d)
 contains the trained models and the QGIS reviews from this checkpoint.
 Sign in with the GitHub account used for this repository to access the
 draft release. Extract both ZIPs into the repository root and verify

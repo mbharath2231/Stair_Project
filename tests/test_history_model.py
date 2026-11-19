@@ -91,3 +91,39 @@ def test_training_generator_limits_label_period_and_rejects_test_year_context(mo
     manifest["end_exclusive"] = "2025-02-01"
     with pytest.raises(ValueError, match="Training context reaches the test year"):
         list(experiment.training_samples(tmp_path, [2024], "2024-03-01", "2024-09-01", 0.6, []))
+
+
+def test_sensor_fits_use_shared_training_pixels_and_predict_with_one_sensor(monkeypatch, tmp_path):
+    before, target, after = "2024-06-01", "2024-06-10", "2024-06-20"
+    image = np.array([[[0.4, 0.5]], [[0.1, 0.2]]])
+    landsat = {before: image - 0.01, target: image, after: image + 0.01}
+    modis = {day: value - 0.05 for day, value in landsat.items()}
+    modis[target][:, :, 1] = np.nan
+    monkeypatch.setattr(experiment, "read_cache", lambda *_: ({"end_exclusive": "2024-12-03"}, landsat, modis))
+    for source in experiment.SENSOR_LABELS:
+        samples = experiment.training_samples(tmp_path, [2024], target, after, 0.60, [],
+                                              source=source, matched=True)
+        model = fit_correction(samples, input_source=source)
+        assert model.training_dates == (target,)
+        assert model.training_pixel_dates == 1
+        path = tmp_path / f"{source}.npz"
+        model.save(path)
+        loaded = HistoryCorrection.load(path)
+        assert loaded.input_source == source
+        if source != "fusion":
+            prediction = loaded.predict(image, None, "2025-06-10")
+            assert np.isfinite(prediction).all()
+            with pytest.raises(ValueError, match="second reflectance input"):
+                loaded.predict(image, image, "2025-06-10")
+
+
+def test_load_original_fusion_archive_without_input_source(tmp_path):
+    from stair.history_model import FEATURES
+
+    path = tmp_path / "old.npz"
+    np.savez_compressed(path, coefficients=np.zeros((7, 2)), ridge=0.001, features=FEATURES,
+                        training_dates=["2024-06-10"], training_pixel_dates=1)
+    model = HistoryCorrection.load(path)
+    assert model.input_source == "fusion"
+    image = np.array([[[0.4]], [[0.1]]])
+    np.testing.assert_array_equal(model.predict(image, image, "2025-06-10"), image)

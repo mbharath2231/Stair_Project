@@ -25,6 +25,14 @@ def build(directory):
     project.setFilePathStorage(Qgis.FilePathType.Relative)
     parent = project.layerTreeRoot().addGroup("Select variable, date and model")
     labels = {"truth": "QA-clear Landsat reference", **report["methods"]}
+    sensor_comparison = report.get("sensor_comparison")
+    layouts = {"training histories": (PRIMARY, HEADINGS, "comparison")}
+    if sensor_comparison:
+        for history, models in sensor_comparison["models"].items():
+            name = f"sensor comparison, {sensor_comparison['histories'][history]}"
+            layouts[name] = (("truth", *models.values()),
+                             ("Landsat reference", *(sensor_comparison["labels"][source] for source in models)),
+                             f"{history}_sensors")
     supported = [row for row in report["dates"] if row["scores"]["NDVI"]["common_pixels"]]
     selected = []
     for month in sorted({row["date"][:7] for row in supported}):
@@ -71,27 +79,29 @@ def build(directory):
         levels = [low + i * (high - low) / (len(VIRIDIS) - 1) for i in range(len(VIRIDIS))]
         legend = tuple((color, f"{0.0 if abs(value) < 1e-9 else value:.2f}")
                        for color, value in zip(VIRIDIS, levels))
-        rows = [(row["date"], [layers[variable, row["date"], name] for name in PRIMARY], extent)
-                for row in selected]
         units = "NDVI" if variable == "NDVI" else f"{variable} surface reflectance"
-        layout = make_layout(
-            project, f"{variable} | training histories", "Clayton Township | Training-history comparison",
-            HEADINGS, rows, "scene", subtitle=f"Withheld 2025 Landsat acquisitions | {units} | Shared display scale",
-            note="Dates selected by shared prediction coverage. Each target Landsat acquisition was withheld from prediction.",
-            legend=legend,
-        )
-        settings = QgsLayoutExporter.ImageExportSettings()
-        settings.dpi = 180
-        target = directory / f"qgis_{variable.lower()}_comparison.png"
-        if QgsLayoutExporter(layout).exportToImage(str(target), settings) != QgsLayoutExporter.Success:
-            raise RuntimeError(f"QGIS could not render {target}")
+        for title, (methods, headings, filename) in layouts.items():
+            rows = [(row["date"], [layers[variable, row["date"], name] for name in methods], extent)
+                    for row in selected]
+            layout = make_layout(
+                project, f"{variable} | {title}", f"Clayton Township | {title.capitalize()}",
+                headings, rows, "scene", subtitle=f"Withheld 2025 Landsat acquisitions | {units} | Shared display scale",
+                note="Dates selected by shared prediction coverage. Each target Landsat acquisition was withheld from prediction.",
+                legend=legend,
+            )
+            settings = QgsLayoutExporter.ImageExportSettings()
+            settings.dpi = 180
+            target = directory / f"qgis_{variable.lower()}_{filename}.png"
+            if QgsLayoutExporter(layout).exportToImage(str(target), settings) != QgsLayoutExporter.Success:
+                raise RuntimeError(f"QGIS could not render {target}")
     path = directory / "training_history_comparison.qgz"
     if not project.write(str(path)):
         raise RuntimeError(f"QGIS could not save {path}")
     expected = len(layers)
     project.clear()
+    layout_count = len(VIEWS) * len(layouts)
     if (not project.read(str(path)) or len(project.mapLayers()) != expected
-            or len(project.layoutManager().layouts()) != len(VIEWS)):
+            or len(project.layoutManager().layouts()) != layout_count):
         raise RuntimeError("QGIS could not reopen all comparison layers and layouts")
     for layer in project.mapLayers().values():
         renderer = layer.renderer()
@@ -100,7 +110,7 @@ def build(directory):
         _, bounds = next(settings for settings in VIEWS.values() if settings[0] == renderer.band())
         if (renderer.classificationMin(), renderer.classificationMax()) != bounds:
             raise RuntimeError("QGIS changed a shared display scale")
-    print(f"{path} ({expected} styled layers, {len(VIEWS)} layouts)", flush=True)
+    print(f"{path} ({expected} styled layers, {layout_count} layouts)", flush=True)
 
 
 if __name__ == "__main__":

@@ -101,6 +101,45 @@ Additional independent withheld years, sensor-era sensitivity, and
 quality-screened anchor comparisons are the next evaluation steps. The
 coverage gaps and Landsat-only control remain part of that evaluation.
 
+## Separate Landsat and MODIS inputs
+
+Run `python scripts/compare_training_history.py --compare-sensors` to fit
+three ridge corrections for each training history. The fused version uses
+the existing Landsat–MODIS residual fusion and target-date MODIS. The
+Landsat-only version uses two-sided interpolation of nearby Landsat
+observations. The MODIS-only version uses target-date MODIS resampled to
+the Landsat grid. Each learns the difference between its input estimate
+and QA-screened Landsat NIR and red. The MODIS-only version uses Landsat
+as training labels and for scoring. Its predictions use MODIS and the
+calendar date. Each history uses the same dates and pixels for all three
+fits. The fused coefficients match the original run.
+
+On 561,051 shared NDVI pixel-dates in 2025, the linear models achieved
+the following RMSE. Coverage is each method's share of eligible Landsat
+reference pixels with valid predictions, measured before intersecting
+the masks for scoring.
+
+| Prediction inputs | Six-month fit | Twenty-year fit | NDVI coverage |
+| --- | ---: | ---: | ---: |
+| Landsat and MODIS | 0.07327 | 0.07246 | 66.6% |
+| Landsat only | 0.07367 | 0.06962 | 97.4% |
+| MODIS only | 0.15768 | 0.14040 | 79.3% |
+
+Uncorrected Landsat interpolation scored 0.06896 on those same pixels.
+The 20-year fused correction had the lowest NIR and red RMSE, 0.04326
+and 0.02045 respectively. The 20-year Landsat-only correction had the
+lowest NDVI RMSE among the fitted models. The paired month-block interval
+for the 20-year fused minus Landsat-only NDVI RMSE spans zero. These
+results cover one chip and one evaluation year. The six-month model's
+September and October test dates are outside its training season.
+
+The sensor run writes six model files, per-date metrics, comparative
+GeoTIFFs and `run.json` to
+`outputs/fusion_validation/sensor_comparison_2005_2025/`. Its QGIS project
+uses the builder below with this sensor output directory. Under
+**Project → Layouts**, choose a sensor comparison for NIR, red, or NDVI,
+then choose the six-month or twenty-year training history.
+
 ## Reproduce and review in QGIS
 
 Run from the repository root with the project Python environment.

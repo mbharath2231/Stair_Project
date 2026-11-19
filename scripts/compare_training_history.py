@@ -21,7 +21,7 @@ sys.path.insert(0, str(ROOT))
 from scripts.collect_ndvi_inputs import GRID, SPRING_FALL_CACHE
 from scripts.export_stair_stages import NODATA, WINDOW
 from scripts.run_daily_ndvi import read_cache
-from stair.history_model import FEATURES, HistoryCorrection, fit_correction
+from stair.history_model import FEATURES, FEATURES_BY_SOURCE, HistoryCorrection, fit_correction
 from stair.ndvi import DailyNDVI, ndvi
 from stair.validation import score_holdout
 
@@ -34,6 +34,8 @@ METHODS = {
     "modis_only": "Daily MODIS resampled to 30 m",
 }
 VARIABLES = ("NIR", "Red", "NDVI")
+SENSOR_LABELS = {"fusion": "Landsat + MODIS", "landsat_only": "Landsat only", "modis_only": "MODIS only"}
+HISTORY_LABELS = {"six_month": "six months", "twenty_year": "20 years"}
 SHORT_START, SHORT_END = "2024-03-01", "2024-09-01"
 TEST_START, TEST_END = "2025-03-01", "2025-11-01"
 
@@ -46,7 +48,11 @@ def sha256(path):
     return digest.hexdigest()
 
 
-def training_samples(cache, years, first, end, minimum_clear, records):
+def correction_inputs(controls, source):
+    return controls[source], controls["modis_only"] if source == "fusion" else None
+
+
+def training_samples(cache, years, first, end, minimum_clear, records, *, source="fusion", matched=False):
     """Use known clear targets as labels after excluding them from their features."""
     for year in years:
         manifest, landsat, modis = read_cache(cache / f"clayton_{year}.npz", year)
@@ -61,14 +67,18 @@ def training_samples(cache, years, first, end, minimum_clear, records):
             clear = np.isfinite(ndvi(truth)[0])
             if clear.mean() < minimum_clear:
                 continue
-            fused = model.holdout_reflectance(day)["fusion"]
-            coarse = modis.get(day, model.missing)
-            valid = np.isfinite(np.concatenate((truth, fused, coarse))).all(axis=0)
+            controls = model.holdout_reflectance(day)
+            baseline, coarse = correction_inputs(controls, source)
+            required = (controls[name] for name in SENSOR_LABELS) if matched else (baseline, coarse)
+            valid = np.isfinite(truth).all(axis=0)
+            for image in required:
+                if image is not None:
+                    valid &= np.isfinite(image).all(axis=0)
             records.append({"date": day, "qa_clear_pixels": int(clear.sum()),
                             "training_pixels": int(valid.sum())})
             year_count += int(valid.any())
-            yield day, fused, coarse, truth
-        print(f"Training {year}: {year_count} supported withheld acquisitions", flush=True)
+            yield day, baseline, coarse, np.where(valid, truth, np.nan) if matched else truth
+        print(f"Training {year} ({SENSOR_LABELS[source]}): {year_count} supported withheld acquisitions", flush=True)
 
 
 def values_score(actual, predicted):
@@ -95,6 +105,7 @@ def compare_variables(truth, methods):
             "eligible_pixels": int(eligible.sum()), "common_pixels": int(common.sum()),
             "methods": {
                 name: {**values_score(samples[variable]["truth"], samples[variable][name]),
+                       "covered_pixels": int((eligible & valid[name]).sum()),
                        "coverage": float((eligible & valid[name]).sum() / eligible.sum()) if eligible.any() else None}
                 for name in methods
             },
@@ -102,20 +113,21 @@ def compare_variables(truth, methods):
     return scores, samples
 
 
-def pooled_scores(samples):
+def pooled_scores(samples, methods=METHODS):
     report = {}
     for variable in VARIABLES:
-        pooled = {name: np.concatenate([sample[variable][name] for sample in samples])
-                  for name in ("truth", *METHODS)}
-        report[variable] = {name: values_score(pooled["truth"], pooled[name]) for name in METHODS}
+        pooled = {name: np.concatenate([sample[variable][name] for sample in samples]) if samples else np.empty(0)
+                  for name in ("truth", *methods)}
+        report[variable] = {name: values_score(pooled["truth"], pooled[name]) for name in methods}
     return report
 
 
-def monthly_bootstrap(rows, *, seed=20261118, repeats=5000):
+def monthly_bootstrap(rows, *, seed=20261118, repeats=5000, extra_pairs=()):
     """Resample shared calendar-month blocks, preserving paired method comparisons."""
     months = sorted({row["date"][:7] for row in rows})
-    totals = np.zeros((len(months), 4))
-    names = ("fusion", "six_month", "twenty_year")
+    pairs = (("twenty_year", "six_month"), ("twenty_year", "fusion"), ("six_month", "fusion"), *extra_pairs)
+    names = tuple(dict.fromkeys(name for pair in pairs for name in pair))
+    totals = np.zeros((len(months), 1 + len(names)))
     for index, month in enumerate(months):
         for row in rows:
             if not row["date"].startswith(month):
@@ -135,9 +147,10 @@ def monthly_bootstrap(rows, *, seed=20261118, repeats=5000):
     combined = totals.sum(axis=0)
     actual_rmse = np.sqrt(combined[1:] / combined[0])
     comparisons = {}
-    for left, right in ((2, 1), (2, 0), (1, 0)):
+    for a, b in pairs:
+        left, right = names.index(a), names.index(b)
         delta = bootstrap_rmse[:, left] - bootstrap_rmse[:, right]
-        comparisons[f"{names[left]}_minus_{names[right]}"] = {
+        comparisons[f"{a}_minus_{b}"] = {
             "rmse_difference": float(actual_rmse[left] - actual_rmse[right]),
             "percentile_95_interval": np.quantile(delta, [0.025, 0.975]).tolist(),
         }
@@ -159,7 +172,7 @@ def write_raster(path, reflectance, day, method):
             output.update_tags(index, units="unitless" if variable == "NDVI" else "surface_reflectance")
 
 
-def evaluate(cache, work, models, minimum_clear):
+def evaluate(cache, work, models, minimum_clear, labels=METHODS):
     _, landsat, modis = read_cache(cache / "clayton_2025.npz", 2025)
     baseline = DailyNDVI(landsat, modis, min_clear_fraction=minimum_clear)
     rows, samples = [], []
@@ -171,9 +184,12 @@ def evaluate(cache, work, models, minimum_clear):
             continue
         controls = baseline.holdout_reflectance(day)
         coarse = modis.get(day, baseline.missing)
-        methods = {"fusion": controls["fusion"],
-                   **{name: model.predict(controls["fusion"], coarse, day) for name, model in models.items()},
-                   **{name: controls[name] for name in ("same_pairs_landsat", "landsat_only", "modis_only")}}
+        predictions = {}
+        for name, model in models.items():
+            base, extra = correction_inputs(controls, model.input_source)
+            predictions[name] = model.predict(base, extra, day)
+        all_methods = controls | predictions
+        methods = {name: all_methods[name] for name in labels}
         scores, sample = compare_variables(truth, methods)
         folder = work / "rasters" / day
         folder.mkdir(parents=True)
@@ -193,7 +209,7 @@ def evaluate(cache, work, models, minimum_clear):
     monthly = {}
     for month in sorted({row["date"][:7] for row in rows}):
         group = [sample for row, sample in zip(rows, samples) if row["date"].startswith(month)]
-        monthly[month] = pooled_scores(group)
+        monthly[month] = pooled_scores(group, labels)
     return rows, samples, monthly
 
 
@@ -225,7 +241,7 @@ def plot_results(work, rows, samples):
 
 def write_metrics(work, rows):
     with (work / "per_date_metrics.csv").open("w", newline="", encoding="utf-8") as output:
-        fields = ["date", "variable", "method", "eligible_pixels", "common_pixels", "coverage",
+        fields = ["date", "variable", "method", "eligible_pixels", "common_pixels", "covered_pixels", "coverage",
                   "rmse", "mae", "bias", "r2", "pearson_r", "wasserstein_1"]
         writer = csv.DictWriter(output, fieldnames=fields)
         writer.writeheader()
@@ -238,7 +254,7 @@ def write_metrics(work, rows):
                                      **{key: metrics[key] for key in fields[5:]}})
 
 
-def run(cache, work, ridge, minimum_clear):
+def run(cache, work, ridge, minimum_clear, *, compare_sensors=False):
     sources = []
     for year in range(2005, 2026):
         path = cache / f"clayton_{year}.npz"
@@ -246,21 +262,40 @@ def run(cache, work, ridge, minimum_clear):
             raise FileNotFoundError(f"Missing annual input {path}")
         sources.append({"year": year, "file": path.name, "sha256": sha256(path)})
     records, models = {}, {}
-    for name, years, first, end in (
+    labels = METHODS.copy()
+    sensor_models = {}
+    for history, years, first, end in (
         ("twenty_year", range(2005, 2025), "2005-03-01", "2024-11-01"),
         ("six_month", [2024], SHORT_START, SHORT_END),
     ):
-        records[name] = []
-        samples = training_samples(cache, years, first, end, minimum_clear, records[name])
-        model = fit_correction(samples, ridge=ridge)
-        if any(day >= TEST_START for day in model.training_dates):
-            raise RuntimeError("Test acquisition entered training")
-        path = work / f"{name}_model.npz"
-        model.save(path)
-        models[name] = HistoryCorrection.load(path)
-        np.testing.assert_array_equal(models[name].coefficients, model.coefficients)
-    rows, samples, monthly = evaluate(cache, work, models, minimum_clear)
-    summary = pooled_scores(samples)
+        sensor_models[history] = {}
+        for source in SENSOR_LABELS if compare_sensors else ("fusion",):
+            name = history if source == "fusion" else f"{source}_{history}"
+            sensor_models[history][source] = name
+            records[name] = []
+            samples = training_samples(cache, years, first, end, minimum_clear, records[name],
+                                       source=source, matched=compare_sensors)
+            model = fit_correction(samples, ridge=ridge, input_source=source)
+            if any(day >= "2025-01-01" for day in model.training_dates):
+                raise RuntimeError("Test acquisition entered training")
+            path = work / f"{name}_model.npz"
+            model.save(path)
+            models[name] = HistoryCorrection.load(path)
+            np.testing.assert_array_equal(models[name].coefficients, model.coefficients)
+            if compare_sensors:
+                labels[name] = f"{SENSOR_LABELS[source]} ridge correction ({HISTORY_LABELS[history]})"
+                if records[name] != records[history]:
+                    raise RuntimeError("Sensor models must use identical training support within a history")
+    rows, samples, monthly = evaluate(cache, work, models, minimum_clear, labels)
+    summary = pooled_scores(samples, labels)
+    coverage = {}
+    for variable in VARIABLES:
+        scores = [row["scores"][variable] for row in rows]
+        eligible = sum(score["eligible_pixels"] for score in scores)
+        coverage[variable] = {name: sum(score["methods"][name]["covered_pixels"] for score in scores) / eligible
+                              if eligible else None for name in labels}
+    extra_pairs = [(group["fusion"], name) for group in sensor_models.values()
+                   for source, name in group.items() if source != "fusion"]
     report = {
         "created_utc": datetime.now(timezone.utc).isoformat(),
         "python": platform.python_version(), "numpy": np.__version__, "grid": GRID,
@@ -290,13 +325,24 @@ def run(cache, work, ridge, minimum_clear):
         "training": {name: {"supported_dates": len(model.training_dates),
                              "training_pixel_dates": model.training_pixel_dates,
                              "dates": model.training_dates, "candidate_dates": records[name],
+                             "input_source": model.input_source, "features": FEATURES_BY_SOURCE[model.input_source],
                              "coefficients": model.coefficients.tolist()}
                      for name, model in models.items()},
-        "methods": METHODS, "raster_bands": VARIABLES, "ndvi_display_limits": [-0.2, 1.0],
+        "methods": labels, "raster_bands": VARIABLES, "ndvi_display_limits": [-0.2, 1.0],
         "test_acquisitions": len(rows), "summary": summary, "monthly": monthly,
-        "march_august_summary": pooled_scores([sample for row, sample in zip(rows, samples) if row["date"] < "2025-09-01"]),
-        "month_block_bootstrap": monthly_bootstrap(rows), "dates": rows,
+        "coverage": coverage,
+        "march_august_summary": pooled_scores([sample for row, sample in zip(rows, samples) if row["date"] < "2025-09-01"], labels),
+        "month_block_bootstrap": monthly_bootstrap(rows, extra_pairs=extra_pairs), "dates": rows,
     }
+    if compare_sensors:
+        report["sensor_comparison"] = {
+            "models": sensor_models, "labels": SENSOR_LABELS, "histories": HISTORY_LABELS,
+            "target": "QA-screened Landsat NIR and red for all sensors",
+            "training_support": "Same pixels and dates for all three inputs within each history, selected where all inputs and truth are finite",
+            "training_baselines": {"fusion": "Landsat–MODIS residual fusion plus target-day MODIS features",
+                                   "landsat_only": "Nearest-clear two-sided Landsat interpolation",
+                                   "modis_only": "Target-day MODIS on the Landsat grid"},
+        }
     (work / "run.json").write_text(json.dumps(report, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     write_metrics(work, rows)
     plot_results(work, rows, samples)
@@ -305,10 +351,15 @@ def run(cache, work, ridge, minimum_clear):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cache", type=Path, default=SPRING_FALL_CACHE)
-    parser.add_argument("--output", type=Path, default=ROOT / "outputs/fusion_validation/history_comparison_2005_2025")
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--compare-sensors", action="store_true",
+                        help="Also fit independent Landsat-only and MODIS-only corrections on matched training pixels")
     parser.add_argument("--ridge", type=float, default=0.001)
     parser.add_argument("--minimum-clear", type=float, default=0.60)
     args = parser.parse_args()
+    if args.output is None:
+        folder = "sensor_comparison_2005_2025" if args.compare_sensors else "history_comparison_2005_2025"
+        args.output = ROOT / "outputs" / "fusion_validation" / folder
     if args.output.exists():
         parser.error("Choose a fresh output directory")
     if not np.isfinite(args.ridge) or args.ridge <= 0 or not 0 < args.minimum_clear <= 1:
@@ -317,7 +368,7 @@ def main():
     with TemporaryDirectory(prefix=".history_", dir=args.output.parent) as temporary:
         staging = Path(temporary) / args.output.name
         staging.mkdir()
-        run(args.cache, staging, args.ridge, args.minimum_clear)
+        run(args.cache, staging, args.ridge, args.minimum_clear, compare_sensors=args.compare_sensors)
         staging.rename(args.output)
     print(args.output.resolve(), flush=True)
 
