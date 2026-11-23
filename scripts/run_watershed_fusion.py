@@ -80,13 +80,13 @@ def temporal_from_files(paths, day, grid, *, observed=None, ages=False):
     return result, prior, later
 
 
-def restore(observed, temporal, reference):
+def restore(observed, temporal, reference, *, segmentation=None):
     """Correct supported gaps and keep allowed observations unchanged."""
     clear = validity(observed)
     supported = ~clear & validity(temporal)
     if reference is None or min(int(clear.sum()), int(supported.sum())) < 30:
         return temporal, temporal, {"fallback": "temporal", "classes": 0}
-    segments, centers, _, scores = segment_reference(reference)
+    segments, centers, _, scores = segment_reference(reference) if segmentation is None else segmentation
     offset, class_offsets, support = fit_spatial_offsets(observed, temporal, reference, segments)
     global_result = temporal.copy()
     adaptive = temporal.copy()

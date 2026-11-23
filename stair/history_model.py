@@ -13,6 +13,7 @@ FEATURES_BY_SOURCE = {
     "fusion": FEATURES,
     "landsat_only": ("intercept", "interpolated_nir", "interpolated_red", *FEATURES[-2:]),
     "modis_only": ("intercept", "modis_nir", "modis_red", *FEATURES[-2:]),
+    "spatial": ("intercept", "adaptive_nir", "adaptive_red", "reference_nir", "reference_red", *FEATURES[-2:]),
 }
 
 
@@ -74,44 +75,57 @@ class HistoryCorrection:
 
 
 def check_inputs(source, coarse):
-    if (coarse is not None) != (source == "fusion"):
-        raise ValueError("Only the fused model accepts a second reflectance input")
+    if coarse is None and source in ("fusion", "spatial"):
+        raise ValueError(f"The {source} model requires a second reflectance input")
+    if coarse is not None and source in ("landsat_only", "modis_only"):
+        raise ValueError(f"The {source} model accepts no second reflectance input")
 
 
-def fit_correction(samples, *, ridge=0.001, input_source="fusion"):
-    """Fit Landsat truth minus baseline, weighting each acquisition equally.
+class RidgeFit:
+    """Accumulate date-weighted sufficient statistics without retaining pixel arrays."""
 
-    samples yields (date, baseline, optional extra MODIS, QA-clear Landsat).
-    The caller constructs features without the target acquisition and restricts
-    labels and all training context to years preceding the test year.
-    """
-    if not np.isfinite(ridge) or ridge <= 0:
-        raise ValueError("ridge must be finite and positive")
-    columns = len(FEATURES_BY_SOURCE[input_source])
-    gram = np.zeros((columns, columns))
-    cross = np.zeros((columns, 2))
-    dates, seen, count = [], set(), 0
-    for day, baseline, coarse, truth in samples:
-        if day in seen:
+    def __init__(self, *, ridge=0.001, input_source="fusion"):
+        if not np.isfinite(ridge) or ridge <= 0:
+            raise ValueError("ridge must be finite and positive")
+        self.ridge = ridge
+        self.input_source = input_source
+        columns = len(FEATURES_BY_SOURCE[input_source])
+        self.gram = np.zeros((columns, columns))
+        self.cross = np.zeros((columns, 2))
+        self.dates, self.seen, self.count = [], set(), 0
+
+    def add(self, day, baseline, secondary, truth):
+        if day in self.seen:
             raise ValueError(f"Duplicate training date {day}")
-        seen.add(day)
-        check_inputs(input_source, coarse)
-        predictors = features(baseline, coarse, day)
+        check_inputs(self.input_source, secondary)
+        predictors = features(baseline, secondary, day)
         if truth.shape != baseline.shape:
             raise ValueError("Training truth must match the baseline grid")
+        self.seen.add(day)
         valid = np.isfinite(predictors).all(axis=0) & np.isfinite(truth).all(axis=0)
         n = int(valid.sum())
         if not n:
-            continue
+            return
         x = predictors[:, valid].T
         errors = (truth[:, valid] - baseline[:, valid]).T
-        gram += x.T @ x / n
-        cross += x.T @ errors / n
-        dates.append(day)
-        count += n
-    if not dates:
-        raise ValueError("No supported training dates")
-    penalty = np.eye(columns) * ridge
-    penalty[0, 0] = 0
-    coefficients = np.linalg.solve(gram / len(dates) + penalty, cross / len(dates))
-    return HistoryCorrection(coefficients, ridge, tuple(dates), count, input_source)
+        self.gram += x.T @ x / n
+        self.cross += x.T @ errors / n
+        self.dates.append(day)
+        self.count += n
+
+    def finish(self):
+        count = len(self.dates)
+        if not count:
+            raise ValueError("No supported training dates")
+        penalty = np.eye(len(self.gram)) * self.ridge
+        penalty[0, 0] = 0
+        coefficients = np.linalg.solve(self.gram / count + penalty, self.cross / count)
+        return HistoryCorrection(coefficients, self.ridge, tuple(self.dates), self.count, self.input_source)
+
+
+def fit_correction(samples, *, ridge=0.001, input_source="fusion"):
+    """Fit truth minus baseline from (date, baseline, optional secondary input, truth)."""
+    fit = RidgeFit(ridge=ridge, input_source=input_source)
+    for sample in samples:
+        fit.add(*sample)
+    return fit.finish()

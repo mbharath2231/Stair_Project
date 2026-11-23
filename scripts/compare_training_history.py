@@ -122,17 +122,18 @@ def pooled_scores(samples, methods=METHODS):
     return report
 
 
-def monthly_bootstrap(rows, *, seed=20261118, repeats=5000, extra_pairs=()):
+def monthly_bootstrap(rows, *, seed=20261118, repeats=5000, extra_pairs=(), variable="NDVI",
+                      comparisons=(("twenty_year", "six_month"), ("twenty_year", "fusion"), ("six_month", "fusion"))):
     """Resample shared calendar-month blocks, preserving paired method comparisons."""
     months = sorted({row["date"][:7] for row in rows})
-    pairs = (("twenty_year", "six_month"), ("twenty_year", "fusion"), ("six_month", "fusion"), *extra_pairs)
+    pairs = (*comparisons, *extra_pairs)
     names = tuple(dict.fromkeys(name for pair in pairs for name in pair))
     totals = np.zeros((len(months), 1 + len(names)))
     for index, month in enumerate(months):
         for row in rows:
             if not row["date"].startswith(month):
                 continue
-            scores = row["scores"]["NDVI"]
+            scores = row["scores"][variable]
             count = scores["common_pixels"]
             totals[index, 0] += count
             if count:
@@ -158,15 +159,18 @@ def monthly_bootstrap(rows, *, seed=20261118, repeats=5000, extra_pairs=()):
             "sampling_unit": "calendar month within Clayton in 2025", "comparisons": comparisons}
 
 
-def write_raster(path, reflectance, day, method):
+def write_raster(path, reflectance, day, method, *, spatial_holdout=None):
     values = np.concatenate((reflectance, ndvi(reflectance)))
     width, height = GRID["dimensions"]
     with rasterio.open(path, "w", driver="GTiff", width=width, height=height,
                        count=3, dtype="float32", crs=GRID["crs"], transform=Affine(*GRID["transform"]),
                        nodata=NODATA, compress="deflate", predictor=3) as output:
         output.write(np.where(np.isfinite(values), values, NODATA).astype(np.float32))
-        output.update_tags(target_date=day, method=method,
-                           target_landsat_excluded=str(method != "truth").lower())
+        output.update_tags(target_date=day, method=method)
+        if spatial_holdout is None:
+            output.update_tags(target_landsat_excluded=str(method != "truth").lower())
+        else:
+            output.update_tags(spatial_holdout=spatial_holdout, target_pixels_withheld=str(method != "truth").lower())
         for index, variable in enumerate(VARIABLES, start=1):
             output.set_band_description(index, variable)
             output.update_tags(index, units="unitless" if variable == "NDVI" else "surface_reflectance")

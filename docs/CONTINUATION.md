@@ -3,6 +3,15 @@
 Read [WORK_STATE.md](WORK_STATE.md) for the scientific checkpoint, tested
 entry points, and next validation task.
 
+## Start with the latest handoff
+
+Read the [November 23 study guide](handoffs/2026-11-23/STAIR_Clayton_Study_Guide_2026-11-23.docx).
+Download the [spatial correction archives](../outputs/README.md#clayton-spatial-correction-and-nonlinear-models-november-23)
+and extract them into the repository root. Start with the nonlinear QGIS
+project and the final page of the guide. The next experiment compares
+the benefit of adding neighborhood inputs while holding the tree size
+fixed. The [handoff index](handoffs/README.md) lists the dated guides.
+
 ## Get the handoff branch
 
 In the existing checkout, check `git status --short --branch` and preserve
@@ -21,9 +30,10 @@ and `git pull --ff-only`. For a new checkout:
 git clone --branch codex/stair-fcc-handoff https://github.com/mbharath2231/Stair_Project.git
 ```
 
-This branch carries source, tests, and documentation. The virtual environment,
-Earth Engine login, original papers, observation cache, and generated outputs
-live outside Git.
+This branch carries source, tests, and documentation, including the Word
+guides in `docs/handoffs/`. The virtual environment, Earth Engine login,
+original papers, observation caches, and large generated outputs live
+outside Git.
 
 ## Open the latest fusion results
 
@@ -51,7 +61,7 @@ analysis and the next validation task.
 
 ## Continue the Landsat and MODIS comparison
 
-The latest experiment fits Landsat-only, MODIS-only and fused linear
+The sensor comparison fits Landsat-only, MODIS-only and fused linear
 corrections for each training history. Download
 `clayton-sensor-comparison.zip` and extract it into the repository root.
 [Sensor comparison handoff](https://github.com/mbharath2231/Stair_Project/releases/tag/untagged-9ec4a8fa9ad617609df6)
@@ -64,9 +74,8 @@ folder has the six saved fits and a CSV of per-date scores. The
 describes how to reproduce the results with the historical input cache.
 
 Use the linear fits, existing fusion and plain Landsat interpolation as
-benchmarks for the planned nonlinear comparison. Keep the training
-inputs, target values and evaluation pixels consistent across model
-types. Tune nonlinear models within the training years.
+benchmarks when evaluating end-to-end daily fusion. The November 23
+nonlinear benchmark evaluates Landsat spatial correction before fusion.
 
 ## Continue the original training history comparison
 
@@ -106,6 +115,7 @@ From the repository root on Windows:
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements-nonlinear.txt
 .\.venv\Scripts\python.exe -m pytest -q
 .\.venv\Scripts\python.exe scripts/check_project.py --json
 ```
@@ -114,6 +124,15 @@ On macOS or Linux, use `python3` to create the environment and
 `.venv/bin/python` for the project commands. The test suite runs offline and
 does not need the observation cache. The readiness check reports a missing
 cache until it is copied or fetched.
+
+## Before the next device handoff
+
+Write or update that day's Word summary under `docs/handoffs/YYYY-MM-DD/`.
+Include the completed experiments, score tables and what they can show,
+paths to reproducible results, and the first task for the other device.
+Add the summary to the [handoff index](handoffs/README.md) and commit and
+push it with the code. List any new ZIPs in the
+[output download index](../outputs/README.md).
 
 ## Reopen the reviewed FCC in QGIS
 

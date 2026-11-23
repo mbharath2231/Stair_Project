@@ -1,5 +1,26 @@
 # STAIR output downloads
 
+## Clayton spatial correction and nonlinear models November 23
+
+Sign in with the GitHub account used for this repository and open the
+[November 23 spatial handoff](https://github.com/mbharath2231/Stair_Project/releases/tag/untagged-9230addca07727320612).
+Verify each downloaded ZIP against `SHA256SUMS.txt` and extract it into
+the repository root. Keep each QGIS project beside its `rasters/` folder.
+
+| ZIP | Contents and destination |
+| --- | --- |
+| `clayton-nonlinear-spatial.zip` | Latest benchmark, fitted models, 1,088 GeoTIFFs, QGIS projects, density curves, and scores in `outputs/spatial_validation/clayton_nonlinear_2005_2025/` |
+| `clayton-matched-season-spatial.zip` | March–October ridge comparison and additional spatial and temporal metrics in `outputs/spatial_validation/clayton_full_season_history_2005_2025/` |
+| `clayton-harmonized-spatial.zip` | Matched Landsat harmonization run in `outputs/spatial_validation/clayton_harmonization_2005_2025/`, plus `data/ndvi_inputs/march_october/landsat_mixed_provenance.npz` for offline reproduction |
+| `clayton-six-month-spatial.zip` | Earlier March–August comparison and full-season scores in `outputs/spatial_validation/clayton_history_2005_2025/` |
+
+Start with `spatial_history_cloud.qgz` or `spatial_history_stripes.qgz`
+in the latest benchmark directory. In QGIS, open **Project → Layouts →
+NDVI | Selected date comparisons**. Get the separate historical input
+cache below if you need to rerun training. Read the
+[November 23 study guide](../docs/handoffs/2026-11-23/STAIR_Clayton_Study_Guide_2026-11-23.docx)
+for the results and the next experiment.
+
 ## Clayton Landsat and MODIS comparison
 
 Sign in to GitHub with the account used for this repository and download

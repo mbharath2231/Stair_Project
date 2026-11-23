@@ -1,7 +1,29 @@
 # STAIR work checkpoint
 
-Updated 2026-11-18. This is the checkpoint for continuing on either device.
+Updated 2026-11-23. This is the checkpoint for continuing on either device.
 See [CONTINUATION.md](CONTINUATION.md) for setup and exact commands.
+
+## Clayton spatial correction benchmark
+
+The matched ridge comparison trains on March–October 2024 and on the same
+months in 2005–2024. The models were nearly tied on withheld 2025 Landsat
+pixels. A paired refit with older Landsat reflectance harmonized to the
+OLI scale slightly increased NDVI error.
+
+Five nonlinear candidates were fitted per training history. Gradient
+boosting with neighborhood inputs led the long-history comparison. It
+reduced NDVI RMSE from 0.06913 to 0.06790 on clouds and from 0.06658 to
+0.06478 on stripes. The cloud uncertainty interval includes zero. Ridge
+led both gap tests among the one-season models. The tests cover Landsat
+spatial correction before daily fusion.
+
+The [study guide](handoffs/2026-11-23/STAIR_Clayton_Study_Guide_2026-11-23.docx)
+explains the experiment and the next work. Compare boosting with and
+without neighborhood inputs at the same tree size, then verify gains
+on additional withheld years or sites. See the
+[validation guide](CLOUD_FILLING_VALIDATION.md) for reproducible commands and
+the [download index](../outputs/README.md#clayton-spatial-correction-and-nonlinear-models-november-23)
+for the QGIS projects, model files, and evaluation archives.
 
 ## Twenty-year versus six-month fusion training
 
