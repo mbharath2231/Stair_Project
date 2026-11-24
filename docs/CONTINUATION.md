@@ -5,12 +5,38 @@ entry points, and next validation task.
 
 ## Start with the latest handoff
 
-Read the [November 23 study guide](handoffs/2026-11-23/STAIR_Clayton_Study_Guide_2026-11-23.docx).
-Download the [spatial correction archives](../outputs/README.md#clayton-spatial-correction-and-nonlinear-models-november-23)
-and extract them into the repository root. Start with the nonlinear QGIS
-project and the final page of the guide. The next experiment compares
-the benefit of adding neighborhood inputs while holding the tree size
-fixed. The [handoff index](handoffs/README.md) lists the dated guides.
+Read the [November 24 study guide](handoffs/2026-11-24/STAIR_Study_Guide_2026-11-24.docx).
+Download the [2024 time-series archives](../outputs/README.md#clayton-2024-time-series-and-map-sheets-november-24)
+and extract them into the repository root. Start with
+`outputs/daily_ndvi/clayton_2024_acquisition_restoration/landsat_restoration_time_series.qgz`.
+In QGIS, open **Project → Layouts → Original NDVI | All 55 dates** and
+**Restored NDVI | All 55 dates**. The numbered layouts provide larger map
+sheets. The [handoff index](handoffs/README.md) also lists the November 23
+nonlinear spatial benchmark and its next experiment.
+
+The latest analysis compares original and restored Landsat on every actual
+acquisition from March through October 2024. Original observations retain
+their masks. The restored series uses temporal, global and adaptive stages,
+including flagged temporal fallback on fully masked acquisitions. Review
+coverage and source flags alongside the curves before interpreting changes
+on particular fields.
+
+The input-cache archive enables offline reruns with the project Python.
+Choose fresh output directories when reproducing an existing result.
+
+```sh
+python scripts/compare_landsat_season.py --year 2024 --output outputs/daily_ndvi/rerun_2024
+```
+
+Use the Python bundled with QGIS for the layout command. On macOS:
+
+```sh
+QT_QPA_PLATFORM=offscreen /Applications/QGIS.app/Contents/MacOS/python scripts/build_landsat_restoration_qgis.py outputs/daily_ndvi/rerun_2024
+```
+
+The same builder accepts the reproduced folder on Windows through its
+QGIS Python launcher. The source includes the full-year daily and
+observed-only seasonal exporters described in the study guide.
 
 ## Get the handoff branch
 

@@ -1,5 +1,33 @@
 # STAIR output downloads
 
+## Clayton 2024 time series and map sheets November 24
+
+Sign in to GitHub with the repository account and open the
+[November 24 time-series handoff](https://github.com/mbharath2231/Stair_Project/releases/tag/untagged-d2225b9b4dddddd99a2c).
+Download the archives you need and `SHA256SUMS.txt`. Verify each ZIP's
+checksum and extract it into the repository root. Every release ZIP
+contains repository-relative paths.
+
+| ZIP | Contents and destination |
+| --- | --- |
+| `clayton-2024-acquisition-restoration-qgis.zip` | Latest original/restored comparison for all 55 Landsat acquisition dates, 555 GeoTIFFs, both seasonal curves, 12 map-sheet PNGs and a 16-layout QGIS project in `outputs/daily_ndvi/clayton_2024_acquisition_restoration/` |
+| `clayton-2024-observed-landsat-qgis.zip` | Actual QA-screened Landsat observations, observed-only monthly maps, fixed-footprint seasonal curve and QGIS project in `outputs/daily_ndvi/clayton_2024_landsat_observed_march_october/` |
+| `clayton-2024-daily-ndvi-qgis.zip` | Initial full-calendar daily Landsat–MODIS NDVI run, source flags, monthly and seasonal review and QGIS project in `outputs/daily_ndvi/clayton_2024_timeseries/` |
+| `clayton-2024-input-cache.zip` | QA-screened Landsat and MODIS NIR/red arrays with boundary padding and scene provenance in `data/ndvi_inputs/clayton_2024.npz` |
+
+Start with `landsat_restoration_time_series.qgz` in the latest comparison
+folder. Open **Project → Layouts → Original NDVI | All 55 dates** and
+**Restored NDVI | All 55 dates** for the seasonal map overviews. Each series
+also has five numbered sheets, with up to 12 acquisition maps per sheet.
+The source GeoTIFFs, CSV and curves travel with the project. Keep the
+extracted directory structure together.
+
+The observed-only project is `landsat_observed_time_series.qgz`. The initial
+daily review project is `review/clayton_ndvi_time_series.qgz` inside its
+run folder. The [November 24 study guide](../docs/handoffs/2026-11-24/STAIR_Study_Guide_2026-11-24.docx)
+explains their different sampling and the next analysis steps. See the
+[continuation guide](../docs/CONTINUATION.md) for reproduction commands.
+
 ## Clayton spatial correction and nonlinear models November 23
 
 Sign in with the GitHub account used for this repository and open the

@@ -1,7 +1,60 @@
 # STAIR work checkpoint
 
-Updated 2026-11-23. This is the checkpoint for continuing on either device.
+Updated 2026-11-24. This is the checkpoint for continuing on either device.
 See [CONTINUATION.md](CONTINUATION.md) for setup and exact commands.
+
+## Clayton 2024 acquisition time series and map sheets
+
+The current user task follows every Landsat acquisition from March through
+October 2024 on the established 167 × 167, 30 m Clayton study grid. This
+5.01 km square contains 55 acquisition dates. QA-screened original NDVI is
+available on 47 dates. Temporal filling followed by global and adaptive
+spatial correction provides NDVI on all 55, with 99.792–100% area coverage.
+Clear reflectance and original valid NDVI are preserved exactly. Spatial
+offsets apply on 28 dates. Eight fully masked targets use flagged temporal
+interpolation because clear target support is absent.
+
+Run `scripts/compare_landsat_season.py --year 2024` from the cached
+observations. It writes original, temporal, global and adaptive reflectance
+and NDVI TIFFs for every acquisition, source flags, anchor ages, seasonal
+curves, and `all_acquisition_ndvi.csv`. Its independent reference is at least
+95% clear within 21 days, and temporal brackets extend up to 32 days per
+side. Segmentation uses the existing matched-season settings of 320 sample
+pixels, four null draws and seed 42.
+
+Build `landsat_restoration_time_series.qgz` with QGIS Python using
+`scripts/build_landsat_restoration_qgis.py`. The project has 168 layers and
+16 layouts. Original and restored overviews each show all 55 dates. Five
+larger sheets per series show up to 12 dates each with identical extents
+and NDVI scales. The project also includes the two individual seasonal
+curves, their overlay and illustrative acquisition comparisons.
+
+The curves use available-pixel medians and equally spaced acquisition-date
+labels. Their spatial support changes when clouds hide parts of the
+original scene. On June 8, the original median was 0.72963 over 1.925% of
+the grid, while the restored median was 0.40509 over the whole grid. This
+comparison describes coverage and seasonal behavior. Accuracy in natural
+gaps requires withholding known clear observations. Crop records support
+interpretation of crop identity and growth stages.
+
+Earlier outputs from today include the observed-only March–October review
+and an initial full-calendar daily Landsat–MODIS NDVI review. The observed
+curve uses the same 19,679 clear pixels across 27 high-coverage acquisitions.
+The initial daily product has 80.019% pixel-day coverage and 59 dates with
+no supported estimates. Its independently withheld-date fusion NDVI RMSE
+is 0.07584 on 37 dates, compared with 0.07308 for nearest-clear Landsat
+interpolation on the same common support.
+
+All 43 tests pass. Integration checks verified all 55 restoration sequences,
+source flags, temporal exclusion and preservation of clear observations.
+QGIS checks verified all 220 map-sheet panels and reopened the transferred
+project with all 168 layers and 16 layouts.
+
+Start with the [November 24 study guide](handoffs/2026-11-24/STAIR_Study_Guide_2026-11-24.docx)
+and the [time-series download index](../outputs/README.md#clayton-2024-time-series-and-map-sheets-november-24).
+Review the 2024 original and restored maps on the same fields, then select
+field polygons for curves over fixed locations and validate fills with
+controlled withholding. Extend to another year after reviewing this season.
 
 ## Clayton spatial correction benchmark
 
