@@ -1,7 +1,28 @@
 # STAIR work checkpoint
 
-Updated 2026-11-24. This is the checkpoint for continuing on either device.
+Updated 2026-11-25. This is the checkpoint for continuing on either device.
 See [CONTINUATION.md](CONTINUATION.md) for setup and exact commands.
+
+## Clayton spatial correction with CNN and recurrent models
+
+The 2025 Landsat holdout compares 20 methods on 32 acquisition dates and
+190,672 cloud and 249,039 stripe pixel-dates. The long-history models use
+325 March–October training acquisitions from 2005–2024. The one-season
+comparison uses 33 acquisitions in 2024. These experiments evaluate
+Landsat gap filling before Landsat–MODIS fusion.
+
+For ordinary gaps, long-history neighborhood boosting leads MAE, RMSE, NSE,
+and SSIM on both masks. Ridge has the lowest observed MAE in the two- and
+three-acquisition stress tests, with close boosting scores. The one-season
+CNN leads KGE. Forward validation on 2022–2024 improved the long-history
+CNN but it still trails boosting in pixel error. Both LSTMs selected four
+epochs and neither reduced ordinary-gap MAE relative to boosting.
+
+The [November 25 guide](handoffs/2026-11-25/STAIR_Study_Guide_2026-11-25.docx)
+includes the all-model comparison, how to inspect the QGIS maps, and
+reproduction order. Use the [release archives](../outputs/README.md#clayton-deep-learning-spatial-validation-november-25)
+to move the staged benchmark outputs. The next validation uses a new year
+or study area with the fitted methods and scoring protocol fixed in advance.
 
 ## Clayton 2024 acquisition time series and map sheets
 

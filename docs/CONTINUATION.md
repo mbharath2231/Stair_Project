@@ -5,6 +5,17 @@ entry points, and next validation task.
 
 ## Start with the latest handoff
 
+Read the [November 25 study guide](handoffs/2026-11-25/STAIR_Study_Guide_2026-11-25.docx)
+and extract the [CNN and LSTM archives](../outputs/README.md#clayton-deep-learning-spatial-validation-november-25)
+into the repository root. Open `spatial_history_cloud.qgz` or
+`spatial_history_stripes.qgz` under
+`outputs/spatial_validation/clayton_recurrent_2005_2025/` for the latest
+maps. Go to **Project → Layouts → NDVI | Selected date comparisons**.
+For training order, exact commands, and metric definitions, see
+[spatial validation](CLOUD_FILLING_VALIDATION.md#landsat-recurrent-spatial-correction).
+
+## Review the November 24 Landsat time series
+
 Read the [November 24 study guide](handoffs/2026-11-24/STAIR_Study_Guide_2026-11-24.docx).
 Download the [2024 time-series archives](../outputs/README.md#clayton-2024-time-series-and-map-sheets-november-24)
 and extract them into the repository root. Start with
@@ -14,7 +25,7 @@ In QGIS, open **Project → Layouts → Original NDVI | All 55 dates** and
 sheets. The [handoff index](handoffs/README.md) also lists the November 23
 nonlinear spatial benchmark and its next experiment.
 
-The latest analysis compares original and restored Landsat on every actual
+This analysis compares original and restored Landsat on every actual
 acquisition from March through October 2024. Original observations retain
 their masks. The restored series uses temporal, global and adaptive stages,
 including flagged temporal fallback on fully masked acquisitions. Review

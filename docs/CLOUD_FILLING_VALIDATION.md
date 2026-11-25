@@ -20,6 +20,286 @@ pixels per cloud test and all 8,489 per stripe test. April has 6,383 and
 because some withheld reference reflectance values fail the NDVI validity
 rule. No stage changed any observed reflectance outside the holdout.
 
+## Landsat recurrent spatial correction
+
+The pixel LSTM and ConvLSTM predict NIR and red residuals after adaptive
+STAIR. Each receives up to two Landsat acquisitions per side within
+32 days, using the aligned reflectance, a quality mask, and the signed
+day offset. Missing sequence slots carry a zero validity flag. The head
+also receives the same adaptive and reference features as the CNN.
+The pixel LSTM updates its state independently at each location with
+1 × 1 kernels. The ConvLSTM uses 3 × 3 kernels across the same input
+channels. It has more trainable parameters.
+
+Both models trained on the same 325 cloud holdouts from 2005–2024 as
+the long-history ridge and CNN. Each selected among two, four, and six
+epochs by mean validation-year NDVI MAE over forward-chaining 2022,
+2023, and 2024 folds. The regular 2025 cloud and stripe comparison keeps
+the same test dates, reference images, scoring pixels, and replayed
+baselines as the CNN experiment.
+
+The stress test takes disjoint blocks of two or three consecutive
+acquisitions. For each target, it masks the usual cloud-shaped area
+and excludes the entire block from temporal interpolation, reference
+selection, and recurrent inputs. Clear pixels outside the target's
+artificial gap remain available. Report coverage across all eligible
+targets, including the dates skipped when an independent reference
+is unavailable. Compare models within each block length, since
+different references and scoring support can make errors across block
+lengths incomparable.
+
+```powershell
+python scripts/compare_recurrent_spatial.py
+python scripts/evaluate_recurrent_changes.py outputs/spatial_validation/clayton_recurrent_2005_2025
+```
+
+This run uses the historical input cache and the preceding nonlinear
+and CNN checkpoints. The output folder contains the recurrent weights,
+cross-validation and test metrics, and aligned GeoTIFFs for the regular
+holdouts. The tile analysis measures changes in mean NDVI across
+consecutive scored dates using the same pixels on both dates. A 150 m
+tile requires at least 13 common withheld pixels. These fixed tiles
+serve as a field-scale proxy. The tile scores use the regular single
+holdouts, and the blocked-reference experiments have separate scores.
+
+Both recurrent models selected four epochs in development. The table
+reports 2025 NDVI MAE scored on common pixels within each column.
+
+| Model | Single cloud gap | Single stripe gap | Two-acquisition cloud gap | Three-acquisition cloud gap |
+| --- | ---: | ---: | ---: | ---: |
+| Adaptive STAIR | 0.04886 | 0.04370 | 0.04781 | 0.04585 |
+| Long-history ridge | 0.04753 | 0.04388 | **0.04673** | **0.04480** |
+| Neighborhood boosting | **0.04692** | **0.04269** | 0.04676 | 0.04515 |
+| Tuned CNN | 0.04854 | 0.04389 | 0.04756 | 0.04571 |
+| Pixel LSTM | 0.04869 | 0.04382 | 0.04769 | 0.04567 |
+| ConvLSTM | 0.04878 | 0.04377 | 0.04774 | 0.04567 |
+
+The single-gap tests scored 190,672 cloud and 249,039 stripe
+pixel-dates across 32 acquisitions. On the consecutive gaps, 30
+two-acquisition targets and 28 three-acquisition targets contributed
+common scores. The 95% month-block RMSE intervals favored boosting over
+both recurrent models in the regular tests. Both blocked-reference
+comparisons against boosting had intervals spanning zero. Overall
+coverage including skipped targets was about 96.6% and 90.6% on the
+two- and three-acquisition tests. The residual models share the adaptive
+prediction support and use the matching ridge fallback for invalid NDVI.
+
+On 150 m tiles, boosting had the lowest change MAE on both masks
+(0.04317 for cloud and 0.04139 for stripes). Pixel LSTM reached 0.04485
+and 0.04278, while ConvLSTM reached 0.04510 and 0.04287. These values
+describe changes between independently reconstructed acquisition maps.
+Both recurrent architectures used four sequence slots and one seed.
+
+Use `scripts/build_history_comparison_qgis.py` with the run directory
+and `--spatial-pattern cloud` or `--spatial-pattern stripes` to build
+the regular holdout projects. **Project → Layouts → NDVI | Selected date
+comparisons** compares ConvLSTM with neighborhood boosting on a shared
+scale.
+
+### Structure and change direction on the recurrent maps
+
+Run `python scripts/evaluate_recurrent_quality.py` with both the recurrent
+and original CNN benchmark folders available. It reconstructs the
+original common NDVI mask per date using all archived CNN comparison
+methods and the recurrent outputs. It verifies all 32 dates per mask,
+their selected references, and the shared scoring counts. Clear NIR
+and red match the masked input exactly for all six selected methods.
+The largest difference in derived NDVI at observed pixels is
+0.0000001192 from floating-point rounding.
+
+Each cell gives cloud gaps first and stripe gaps second. MAE and RMSE
+come from `run.json` on the same scoring support, with 190,672 cloud
+and 249,039 stripe pixel-dates. Lower error is better. Higher SSIM,
+transition F1, and direction agreement are better.
+
+| Model | NDVI MAE ↓ | NDVI RMSE ↓ | SSIM ↑ | Transition F1 ↑ | Change direction ↑ |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Adaptive STAIR | 0.04886 / 0.04370 | 0.07189 / 0.06791 | 0.8262 / 0.8379 | 0.5300 / **0.5244** | 79.83% / 82.58% |
+| Long-history ridge | 0.04753 / 0.04388 | 0.06913 / 0.06658 | 0.8339 / 0.8436 | **0.5329** / 0.5243 | 78.51% / 81.19% |
+| Neighborhood boosting | **0.04692 / 0.04269** | **0.06790 / 0.06478** | **0.8341 / 0.8448** | 0.5027 / 0.4966 | 80.10% / 81.61% |
+| Tuned CNN | 0.04854 / 0.04389 | 0.07084 / 0.06727 | 0.8271 / 0.8377 | 0.5288 / 0.5226 | **80.33% / 82.70%** |
+| Pixel LSTM | 0.04869 / 0.04382 | 0.07122 / 0.06735 | 0.8271 / 0.8389 | 0.5289 / 0.5228 | 79.87% / 82.40% |
+| ConvLSTM | 0.04878 / 0.04377 | 0.07140 / 0.06742 | 0.8270 / 0.8387 | 0.5293 / 0.5230 | 79.91% / 82.49% |
+
+SSIM compares local pattern and contrast in fully supported 5 × 5
+windows. Transition F1 combines precision and recall for an absolute
+NDVI jump of at least 0.10 in the same horizontal or vertical pixel
+pair. It evaluates local NDVI transitions. Identifying actual field
+boundaries requires independent field geometry. Boosting made fewer
+false alarms relative to its predicted transitions and recovered
+fewer observed transitions. The relative reduction in transition F1
+held at 0.05, 0.10, and 0.15 NDVI thresholds.
+
+Direction agreement uses 150 m tiles on shared withheld pixels between
+consecutive scored dates, with observed absolute change of at least
+0.05 NDVI. Paired bootstrap resampling groups values by calendar month
+and assigns each change pair to its later date. The difference between
+the tuned CNN and boosting in direction agreement spans zero on both
+masks. The complete metrics, thresholds, support counts, and intervals
+are in `additional_quality.json` beside the recurrent run manifest.
+
+### Percent bias and efficiency for all benchmark methods
+
+P-bias, NSE, and the original 2009 KGE use the same withheld 2025 NDVI
+pixels as MAE and RMSE. Each cell gives cloud results first and stripe
+results second. P-bias uses prediction minus observation divided by
+the observed mean. Positive values indicate overprediction. The ideal
+P-bias is zero, and the ideal NSE and KGE are one.
+
+| Method | P-bias | NSE ↑ | KGE ↑ |
+| --- | ---: | ---: | ---: |
+| Temporal interpolation | **−0.0331%** / −0.0337% | 0.88761 / 0.89741 | 0.93827 / 0.94185 |
+| Global correction | +0.1595% / +0.2270% | 0.88742 / 0.90394 | 0.94266 / 0.94938 |
+| Adaptive STAIR | +0.6290% / +0.0886% | 0.89674 / 0.91419 | 0.94762 / 0.95305 |
+| One-season ridge | +0.1709% / −0.3171% | 0.90536 / 0.91696 | 0.93872 / 0.93314 |
+| 20-year ridge | +0.6753% / +0.1372% | 0.90451 / 0.91751 | 0.93974 / 0.93514 |
+| One-season cubic splines | +0.3604% / −0.0214% | 0.90410 / 0.91396 | 0.93121 / 0.92265 |
+| 20-year cubic splines | +0.4638% / −0.0354% | 0.90488 / 0.91705 | 0.93708 / 0.93077 |
+| One-season random forest | +0.4777% / **−0.0060%** | 0.89981 / 0.91520 | 0.93644 / 0.93246 |
+| 20-year random forest | +0.6417% / +0.1149% | 0.90359 / 0.91702 | 0.93915 / 0.93215 |
+| One-season Extra Trees | +0.7144% / +0.2936% | 0.89798 / 0.91353 | 0.93553 / 0.93097 |
+| 20-year Extra Trees | +0.6882% / +0.1657% | 0.90222 / 0.91717 | 0.93946 / 0.93395 |
+| One-season histogram boosting | −0.3260% / −0.7112% | 0.90238 / 0.91311 | 0.93533 / 0.92928 |
+| 20-year histogram boosting | +0.6528% / +0.1842% | 0.90404 / 0.91722 | 0.93735 / 0.93111 |
+| One-season neighborhood boosting | −0.4082% / −0.8309% | 0.90162 / 0.91253 | 0.93639 / 0.93597 |
+| 20-year neighborhood boosting | +0.3134% / +0.0063% | **0.90790** / **0.92191** | 0.94068 / 0.94006 |
+| One-season CNN | +0.4914% / −0.0427% | 0.89663 / 0.91414 | **0.94790** / **0.95375** |
+| 20-year CNN | +0.4713% / +0.1015% | 0.89893 / 0.91517 | 0.94414 / 0.94706 |
+| Tuned 20-year CNN | +0.2826% / −0.0641% | 0.89974 / 0.91580 | 0.94552 / 0.94844 |
+| Pixel LSTM | +0.7685% / +0.1996% | 0.89867 / 0.91560 | 0.94330 / 0.94359 |
+| ConvLSTM | +0.8787% / +0.3292% | 0.89815 / 0.91543 | 0.94477 / 0.94626 |
+
+Neighborhood boosting leads NSE on both masks. On fixed reference
+pixels, NSE gives the same ranking as RMSE. The one-season CNN has
+the highest KGE on both masks, slightly ahead of adaptive STAIR. Its
+spread is close to the observed spread. Temporal interpolation has the
+smallest absolute cloud P-bias, while the one-season random forest and
+long-history neighborhood boosting are nearly tied for stripes.
+P-bias can cancel opposing errors across pixels and dates, so read
+it with the error and spatial metrics above. The `ndvi_diagnostics`
+entries in the recurrent `run.json` include each model's correlation,
+spread ratio, and mean ratio.
+
+## CNN spatial correction benchmark
+
+The CNN learns NIR and red corrections to the adaptive STAIR estimate.
+Its inputs are the same adaptive and reference reflectance and calendar
+features used by ridge, arranged on the 30 m grid, plus validity flags
+for the two reflectance inputs. Its three convolution layers give each
+prediction an 11 × 11 neighborhood, or 330 m across. The model starts
+from the adaptive estimate and updates only the pixels inside each
+artificial gap.
+
+Training uses the same held-out pixels and acquisition dates as the
+previous nonlinear run. The loss averages the squared band residual
+errors within each acquisition before combining acquisitions. We
+selected the number of training epochs with the existing pre-2025
+development blocks. The test replays the saved ridge and nonlinear fits
+on the same two masks and verifies the preceding benchmark's support and
+per-date baseline scores before reporting any comparison.
+
+The development blocks selected one epoch for the 2024 CNN and 13 for
+the 2005–2024 CNN out of 16 candidates. The two final fits used 33 and
+325 acquisitions, respectively. The table reports pooled NDVI RMSE on
+190,672 common cloud and 249,039 common stripe pixel-dates.
+
+| Model | Cloud | Stripes |
+| --- | ---: | ---: |
+| Adaptive STAIR | 0.07189 | 0.06791 |
+| One-season ridge | 0.06883 | 0.06681 |
+| One-season CNN | 0.07193 | 0.06793 |
+| Long-history ridge | 0.06913 | 0.06658 |
+| Long-history neighborhood boosting | **0.06790** | **0.06478** |
+| Long-history CNN | 0.07113 | 0.06752 |
+
+The long CNN lowered RMSE relative to adaptive STAIR. Both ridge fits
+beat their corresponding CNN on both masks, and long-history
+neighborhood boosting had the lowest RMSE. The paired 95% month-block
+interval for long CNN minus
+neighborhood boosting was +0.00129 to +0.00557 on clouds and +0.00134
+to +0.00470 on stripes. The long CNN's NDVI standard deviation was
+97.9% of the observed spread on clouds and 97.0% on stripes. Boosting
+retained 96.4% and 95.5%, respectively. This explains the long CNN's
+higher KGE compared with boosting even though its pixel error was
+larger. Long CNN predictions used the matching ridge fallback at
+7 cloud pixels and 14 stripe pixels across the benchmark.
+
+The CNN beat long-history boosting on 9 of 32 cloud dates and 5 of 32
+stripe dates. The best relative examples were June 11 for clouds and
+October 18 for stripes. March 15 had the largest increase in error for
+both masks and had incomplete scoring coverage. These comparisons
+describe a single compact CNN on the Clayton 2025 test.
+
+Use the historical input cache and extract the previous nonlinear
+benchmark archive into the repository root. Both archives are listed in
+the [output download index](../outputs/README.md).
+
+```powershell
+python -m pip install -r requirements-cnn.txt
+python scripts/compare_spatial_cnn.py
+$env:QT_QPA_PLATFORM = 'windows'
+& 'C:\Program Files\QGIS 3.44.15\bin\python-qgis-ltr.bat' scripts/build_history_comparison_qgis.py outputs/spatial_validation/clayton_cnn_2005_2025 --spatial-pattern cloud
+```
+
+Repeat the QGIS command with `--spatial-pattern stripes`. Both projects
+use a common display stretch. Open **Project → Layouts → NDVI | Selected
+date comparisons** for dates with the lowest and highest NDVI RMSE
+difference between long-history CNN and neighborhood boosting. The run
+records the fitted CNN checkpoints, per-date scores, paired monthly
+intervals, smooth density curves and pooled NDVI diagnostics.
+
+### Time ordered cross validation and CNN tuning
+
+The long-history CNN can be tuned on three forward-chaining folds.
+Use March–October acquisitions in 2005–2021 to validate on 2022, in
+2005–2022 to validate on 2023, and in 2005–2023 to validate on 2024.
+Each held-out year uses whole acquisitions. Train the same architecture
+at two learning rates, 0.001 and 0.002, and compare checkpoints after
+4, 8, and 13 epochs. Choose the lowest mean validation-fold NDVI MAE.
+Each validation year contributes the same weight to the selection.
+
+The script writes the selected settings before evaluating 2025. It
+refits using March–October 2005–2024 and compares the result with the
+previous CNN, ridge and neighborhood boosting on the original 2025
+scoring masks. The 2025 results are a repeat comparison with the
+established test year.
+
+```powershell
+python scripts/tune_spatial_cnn.py
+```
+
+The tuning run uses the same input cache and nonlinear benchmark as
+the CNN benchmark, plus the original CNN checkpoints and manifest.
+Under `outputs/spatial_validation/clayton_cnn_rolling_2005_2025/`,
+`cross_validation.json` records all candidate scores, dates, and
+training support. `run.json` contains the repeated 2025 evaluation,
+including Lin's concordance correlation, average bias in low and high
+observed NDVI, empirical signed-error percentiles, and paired MAE
+differences with calendar-month bootstrap intervals. The saved
+checkpoint is `twenty_full_cnn_tuned.pt`.
+
+The folds selected a learning rate of 0.001 and eight epochs.
+Mean validation-fold MAE was 0.04679, compared with 0.04703 for the
+original 13-epoch settings across the same folds. The selected CNN's
+MAE was 0.04168 on the 2022 fold, 0.04852 on 2023, and 0.05017 on
+2024. The validation seasons differed more than the candidate averages.
+
+| 2025 model | Cloud MAE | Stripe MAE | Cloud Lin concordance | Stripe Lin concordance |
+| --- | ---: | ---: | ---: | ---: |
+| Long-history ridge | 0.04753 | 0.04388 | 0.95057 | 0.95667 |
+| Original long-history CNN | 0.04893 | 0.04429 | 0.94837 | 0.95627 |
+| Tuned long-history CNN | 0.04854 | 0.04389 | 0.94890 | 0.95668 |
+| Long-history neighborhood boosting | **0.04692** | **0.04269** | **0.95227** | **0.95916** |
+
+Tuning lowered MAE relative to the original CNN by 0.00039 on clouds
+and 0.00040 on stripes. The paired 95% month-block intervals for tuned
+minus original were −0.00064 to −0.00018 for clouds and −0.00061 to
+−0.00021 for stripes. Relative to neighborhood boosting, the tuned
+CNN's MAE was higher by 0.00162 and 0.00120, respectively. The
+intervals for those differences were positive on both masks. The
+intervals use eight months of the same previously reviewed Clayton
+benchmark. An independent year or site is needed to check transfer.
+
 ## Nonlinear spatial correction benchmark
 
 The fitted models estimate the NIR and red residuals between QA-clear

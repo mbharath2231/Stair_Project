@@ -49,7 +49,7 @@ def scenarios(cache, year, patterns, skipped):
     yield from scenarios_for_images(images, patterns, skipped)
 
 
-def scenarios_for_images(images, patterns, skipped):
+def scenarios_for_images(images, patterns, skipped, *, excluded_by_target=None):
     days = sorted(images)
     fractions = {day: float(validity(image).mean()) for day, image in images.items()}
     references = [(date.fromisoformat(day), day) for day, fraction in fractions.items()
@@ -60,11 +60,14 @@ def scenarios_for_images(images, patterns, skipped):
         target = date.fromisoformat(day)
         if not 3 <= target.month <= 10:
             continue
+        if excluded_by_target is not None and day not in excluded_by_target:
+            continue
+        excluded = () if excluded_by_target is None else excluded_by_target[day]
         if fractions[day] < MIN_TARGET_CLEAR:
             skipped.append({"date": day, "reason": "less than 60% valid target reflectance"})
             continue
         options = [(abs((d - target).days), d > target, key) for d, key in references
-                   if 0 < abs((d - target).days) <= REFERENCE_DAYS]
+                   if key not in excluded and 0 < abs((d - target).days) <= REFERENCE_DAYS]
         if not options:
             skipped.append({"date": day, "reason": "no independent 95% clear Landsat reference within 21 days"})
             continue
@@ -74,7 +77,7 @@ def scenarios_for_images(images, patterns, skipped):
             segments[reference_day] = segment_reference(reference, **SEGMENT_SETTINGS)
         lo = bisect_left(days, (target - timedelta(days=WINDOW)).isoformat())
         hi = bisect_right(days, (target + timedelta(days=WINDOW)).isoformat())
-        neighbors = [key for key in days[lo:hi] if key != day]
+        neighbors = [key for key in days[lo:hi] if key != day and key not in excluded]
         stack = np.stack([images[key] for key in neighbors])
         truth = images[day]
         for pattern, forbidden in masks.items():
@@ -128,12 +131,13 @@ def gradient_scores(truth, stages, common):
     return {"pairs": count, "squared_error": values}
 
 
-def evaluate(cache, work, models, *, linear_fallbacks=None):
+def evaluate(cache, work, models, *, linear_fallbacks=None, save_rasters=True, cases=None, export_methods=None):
     rows = {pattern: [] for pattern in PATTERNS}
     samples = {pattern: [] for pattern in PATTERNS}
     skipped = []
-    for day, pattern, holdout, truth, observed, reference, reference_day, info, stages in scenarios(
-            cache, 2025, PATTERNS, skipped):
+    if cases is None:
+        cases = scenarios(cache, 2025, PATTERNS, skipped)
+    for day, pattern, holdout, truth, observed, reference, reference_day, info, stages in cases:
         applied = {}
         for name, model in models.items():
             stages[name], applied[name] = calibrate(model, stages["adaptive"], reference, day, holdout)
@@ -149,13 +153,15 @@ def evaluate(cache, work, models, *, linear_fallbacks=None):
         scores, sample = compare_variables(withheld, stages)
         common = np.logical_and.reduce([np.isfinite(ndvi(image)[0]) for image in (withheld, *stages.values())])
         gradients = gradient_scores(withheld, stages, common)
-        folder = work / "rasters" / pattern / day
-        folder.mkdir(parents=True)
         paths = {}
-        for name, image in {"truth": truth, "masked": observed, **stages}.items():
-            path = folder / f"{name}.tif"
-            write_raster(path, image, day, name, spatial_holdout=pattern)
-            paths[name] = path.relative_to(work).as_posix()
+        if save_rasters:
+            folder = work / "rasters" / pattern / day
+            folder.mkdir(parents=True)
+            products = {"truth": truth, "masked": observed, **stages}
+            for name in products if export_methods is None else export_methods:
+                path = folder / f"{name}.tif"
+                write_raster(path, products[name], day, name, spatial_holdout=pattern)
+                paths[name] = path.relative_to(work).as_posix()
         rows[pattern].append({"date": day, "reference": reference_day, "spatial_fit": info,
                               "calibrated_pixels": applied, "linear_fallback_pixels": fallback_counts,
                               "scores": scores, "gradients": gradients,

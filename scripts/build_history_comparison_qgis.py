@@ -33,7 +33,13 @@ def build(directory, spatial_pattern=None):
     layouts = {"training histories": (PRIMARY, HEADINGS, "comparison")}
     if spatial_pattern:
         labels["masked"] = "Landsat with simulated gap"
-        if nonlinear:
+        if report.get("recurrent_comparison"):
+            fit_names = ("twenty_full_spatial_boosting", "twenty_full_cnn_tuned", "pixel_lstm", "conv_lstm")
+            fit_headings = ("Neighborhood boosting", "Tuned CNN", "Pixel LSTM", "ConvLSTM")
+        elif report.get("cnn_comparison"):
+            fit_names = ("twenty_full", "twenty_full_spatial_boosting", "one_season_cnn", "twenty_full_cnn")
+            fit_headings = ("2005–2024 Ridge", "2005–2024 Boosting", "2024 CNN", "2005–2024 CNN")
+        elif nonlinear:
             choices = nonlinear["selected"]
             fit_names = ("one_season", choices["one_season"], "twenty_full", choices["twenty_full"])
             fit_headings = ("2024 Ridge", "2024 Nonlinear", "2005–2024 Ridge", "2005–2024 Nonlinear")

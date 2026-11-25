@@ -1,5 +1,27 @@
 # STAIR output downloads
 
+## Clayton deep learning spatial validation November 25
+
+Sign in to GitHub with the repository account and open the
+[November 25 spatial validation draft release](https://github.com/mbharath2231/Stair_Project/releases/tag/untagged-09b011ce34b8e5743536).
+Download the ZIPs and `SHA256SUMS.txt`, verify the checksums, and extract
+each ZIP into the repository root.
+
+| ZIP | Contents and destination |
+| --- | --- |
+| `clayton-cnn-spatial.zip` | Original CNN benchmark, two checkpoints, 1,216 GeoTIFFs, cloud and stripe density curves, two QGIS projects, and scores in `outputs/spatial_validation/clayton_cnn_2005_2025/` |
+| `clayton-cnn-tuning.zip` | Forward cross-validation, tuned checkpoint, and paired 2025 test results in `outputs/spatial_validation/clayton_cnn_rolling_2005_2025/` |
+| `clayton-recurrent-spatial.zip` | Pixel LSTM and ConvLSTM checkpoints, 640 GeoTIFFs, two QGIS projects, and cross-validation, consecutive-gap, tile-change, structure, and pooled metrics in `outputs/spatial_validation/clayton_recurrent_2005_2025/` |
+
+Open `spatial_history_cloud.qgz` or `spatial_history_stripes.qgz` inside
+either mapped benchmark folder. In **Project → Layouts → NDVI | Selected
+date comparisons**, compare the estimates and withheld Landsat on the
+same NDVI scale. Keep each project beside its `rasters/` directory.
+The [November 25 study guide](../docs/handoffs/2026-11-25/STAIR_Study_Guide_2026-11-25.docx)
+has the full table of 20 methods and a reproduction checklist. For offline
+training, also extract the [historical input cache](#clayton-historical-imagery-and-validation)
+and [November 23 nonlinear baseline](#clayton-spatial-correction-and-nonlinear-models-november-23).
+
 ## Clayton 2024 time series and map sheets November 24
 
 Sign in to GitHub with the repository account and open the

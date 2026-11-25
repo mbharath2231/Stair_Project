@@ -1,6 +1,7 @@
 import numpy as np
 
 from scripts import compare_spatial_history as experiment
+from scripts.evaluate_recurrent_quality import METHODS as QUALITY_METHODS, change_signs, edge_counts, edge_metrics
 from scripts.evaluate_spatial_history import gap_depth, ssim_windows
 from stair.history_model import RidgeFit
 from stair.landsat_harmonization import harmonize_observations, to_oli
@@ -48,6 +49,29 @@ def test_ssim_distinguishes_a_spatial_reversal_with_identical_histogram():
     reference = np.array([[0.2, 0.3, 0.6, 0.8]])
     np.testing.assert_allclose(ssim_windows(reference, reference), [1.0])
     assert ssim_windows(reference, reference[:, ::-1])[0] < 0
+
+
+def test_transition_scores_count_matches_extras_and_misses():
+    observed = np.array([0.15, 0.04, 0.15, 0.03])
+    predicted = np.array([0.17, 0.12, 0.06, 0.03])
+    summary = edge_metrics(edge_counts(observed, predicted, 0.10))
+    assert summary == {"true_positive": 1, "false_positive": 1, "false_negative": 1,
+                       "precision": 0.5, "recall": 0.5, "f1": 0.5}
+
+
+def test_change_direction_requires_shared_support_and_reference_change():
+    observed = np.zeros((5, 10))
+    previous = dict.fromkeys(("truth", *QUALITY_METHODS), observed)
+    later_truth = np.full_like(observed, 0.08)
+    later_truth[:, 5:] = 0.03
+    current = dict.fromkeys(("truth", *QUALITY_METHODS), later_truth)
+    current["pixel_lstm"] = -later_truth
+    common = np.ones_like(observed, dtype=bool)
+    total, correct = change_signs(previous, current, common)
+    assert total == 1
+    assert correct["adaptive"] == 1 and correct["pixel_lstm"] == 0
+    common[:3, :5] = False
+    assert change_signs(previous, current, common)[0] == 0
 
 
 def test_mixed_mosaic_harmonization_preserves_modern_pixels_and_source_mask():
